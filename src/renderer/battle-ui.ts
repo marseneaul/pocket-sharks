@@ -4,7 +4,7 @@ import { drawText, drawTextRightAligned, drawTypewriter, startTypewriter, isType
 import { drawCreatureSprite } from './sprites.ts';
 import type { BattleState, CreatureInstance } from '../types/index.ts';
 
-const MENU_ITEMS = ['FIGHT', 'BAG', 'SHARK', 'RUN'];
+const MENU_ITEMS = ['FIGHT', 'BAG', 'SHARKS', 'RUN'];
 
 export function renderBattle(state: BattleState): void {
   clear();
@@ -161,25 +161,22 @@ function renderMessage(): void {
 }
 
 function renderActionMenu(selectedIndex: number): void {
-  // Draw the message on the left side
-  drawTypewriter();
-
-  // Draw menu box on the right side (2x2 grid like Pokemon)
-  const menuX = BATTLE_UI.MENU_X;
+  // Menu takes ~60% of width (right side)
+  const menuX = 50;
   const menuY = BATTLE_UI.TEXT_BOX_Y;
   const menuWidth = SCREEN_WIDTH - menuX;
   const menuHeight = BATTLE_UI.TEXT_BOX_HEIGHT;
 
   drawBox(menuX, menuY, menuWidth, menuHeight);
 
-  // 2x2 grid layout with proper spacing:
+  // 2x2 grid layout:
   // FIGHT  BAG
-  // SHARK  RUN
+  // SHARKS RUN
   const positions = [
-    { x: menuX + 10, y: menuY + 10 },  // FIGHT (0) - top left
-    { x: menuX + 46, y: menuY + 10 },  // BAG (1) - top right
-    { x: menuX + 10, y: menuY + 26 },  // SHARK (2) - bottom left
-    { x: menuX + 46, y: menuY + 26 },  // RUN (3) - bottom right
+    { x: menuX + 12, y: menuY + 10 },  // FIGHT (0) - top left
+    { x: menuX + 66, y: menuY + 10 },  // BAG (1) - top right
+    { x: menuX + 12, y: menuY + 26 },  // SHARKS (2) - bottom left
+    { x: menuX + 66, y: menuY + 26 },  // RUN (3) - bottom right
   ];
 
   for (let i = 0; i < MENU_ITEMS.length; i++) {
