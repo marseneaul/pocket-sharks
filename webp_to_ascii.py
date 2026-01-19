@@ -6,7 +6,7 @@ from PIL import Image, ImageOps
 IN_DIR = Path("assets/references")
 OUT_DIR = Path("output_ascii")
 
-SIZE = (48, 48)
+SIZE = (64, 64)
 
 # Transparency cutoff: pixels with alpha below this become '.'
 ALPHA_CUTOFF = 32  # 0-255
@@ -30,11 +30,33 @@ MARGIN = 2
 # Choose one:
 USE_ADAPTIVE_THRESHOLDS = True
 
+# Number of colors/tones (excluding transparent)
+# GBC sprites: 4 colors per palette, 1 transparent = 3 visible
+NUM_COLORS = 4
+
 # Fixed thresholds (0..255 luma). Used if USE_ADAPTIVE_THRESHOLDS = False
-T0, T1, T2 = 64, 128, 192
+# These are generated based on NUM_COLORS if not manually set
+FIXED_THRESHOLDS = None  # Set to list like [51, 102, 153, 204] for 5 colors
 
 # Character mapping by tone index (dark -> light)
-TONES = ['#', '@', 'o', 'O']  # indices 0..3
+# Must have exactly NUM_COLORS characters
+TONES_5 = ['#', '@', 'x', 'o', 'O']  # 5 colors: black, dark, medium, light, white
+TONES_4 = ['#', '@', 'o', 'O']       # 4 colors: black, dark, light, white
+TONES_3 = ['#', '@', 'O']            # 3 colors: black, gray, white
+
+def get_tones(num_colors):
+    """Get the appropriate tone characters for the given number of colors"""
+    if num_colors == 5:
+        return TONES_5
+    elif num_colors == 4:
+        return TONES_4
+    elif num_colors == 3:
+        return TONES_3
+    else:
+        # Generate a generic set
+        chars = '#@x+oO'
+        step = max(1, len(chars) // num_colors)
+        return [chars[min(i * step, len(chars) - 1)] for i in range(num_colors)]
 
 
 def luma_from_rgb(r, g, b):
@@ -42,40 +64,56 @@ def luma_from_rgb(r, g, b):
     return int(0.2126 * r + 0.7152 * g + 0.0722 * b)
 
 
-def adaptive_thresholds(lumas):
+def adaptive_thresholds(lumas, num_colors):
     """
-    Compute 3 thresholds that split the sprite into 4 buckets.
-    Uses quartiles of non-transparent pixels to keep contrast.
+    Compute thresholds that split the sprite into num_colors buckets.
+    Uses quantiles of non-transparent pixels to keep contrast.
+    Returns a list of (num_colors - 1) thresholds.
     """
+    num_thresholds = num_colors - 1
+
     if not lumas:
-        return 64, 128, 192
+        # Return evenly spaced thresholds
+        step = 256 // num_colors
+        return [step * (i + 1) for i in range(num_thresholds)]
+
     s = sorted(lumas)
+
     def q(p):
         idx = int(p * (len(s) - 1))
         return s[idx]
-    t0 = q(0.25)
-    t1 = q(0.50)
-    t2 = q(0.75)
+
+    # Compute quantile-based thresholds
+    thresholds = []
+    for i in range(num_thresholds):
+        percentile = (i + 1) / num_colors
+        thresholds.append(q(percentile))
 
     # Guard against flat images (thresholds collapsing)
-    if t0 == t1 == t2:
-        # Spread them a bit around the median
-        mid = t1
-        t0 = max(0, mid - 32)
-        t2 = min(255, mid + 32)
-    elif t0 == t1:
-        t1 = min(255, t1 + 16)
-    elif t1 == t2:
-        t1 = max(0, t1 - 16)
+    # Ensure minimum spacing between thresholds
+    min_spacing = 16
+    for i in range(len(thresholds) - 1):
+        if thresholds[i + 1] <= thresholds[i]:
+            thresholds[i + 1] = min(255, thresholds[i] + min_spacing)
 
-    return t0, t1, t2
+    return thresholds
 
 
-def tone_index(l, t0, t1, t2):
-    if l < t0: return 0
-    if l < t1: return 1
-    if l < t2: return 2
-    return 3
+def get_fixed_thresholds(num_colors):
+    """Generate evenly spaced thresholds for fixed mode"""
+    if FIXED_THRESHOLDS is not None:
+        return FIXED_THRESHOLDS
+    num_thresholds = num_colors - 1
+    step = 256 // num_colors
+    return [step * (i + 1) for i in range(num_thresholds)]
+
+
+def tone_index(luma, thresholds):
+    """Return the tone index for a given luma value based on thresholds list"""
+    for i, t in enumerate(thresholds):
+        if luma < t:
+            return i
+    return len(thresholds)
 
 
 def auto_crop_to_content(im: Image.Image) -> Image.Image:
@@ -107,13 +145,17 @@ def auto_crop_to_content(im: Image.Image) -> Image.Image:
     return im.crop((min_x, min_y, max_x + 1, max_y + 1))
 
 
-def convert_image_to_ascii(path: Path, h_stretch: float = None, rotation: float = None, margin: int = None) -> str:
+def convert_image_to_ascii(path: Path, h_stretch: float = None, rotation: float = None, margin: int = None, num_colors: int = None) -> str:
     if h_stretch is None:
         h_stretch = HORIZONTAL_STRETCH
     if rotation is None:
         rotation = ROTATION
     if margin is None:
         margin = MARGIN
+    if num_colors is None:
+        num_colors = NUM_COLORS
+
+    tones = get_tones(num_colors)
 
     im = Image.open(path).convert("RGBA")
 
@@ -144,7 +186,7 @@ def convert_image_to_ascii(path: Path, h_stretch: float = None, rotation: float 
 
     im = im.resize((new_w, new_h), resample=Image.Resampling.LANCZOS)
 
-    # Paste onto 32x32 canvas, centered
+    # Paste onto canvas, centered
     canvas = Image.new('RGBA', SIZE, (0, 0, 0, 0))
     offset_x = (SIZE[0] - new_w) // 2
     offset_y = (SIZE[1] - new_h) // 2
@@ -165,9 +207,9 @@ def convert_image_to_ascii(path: Path, h_stretch: float = None, rotation: float 
                 lumas.append(luma_from_rgb(r, g, b))
 
     if USE_ADAPTIVE_THRESHOLDS:
-        t0, t1, t2 = adaptive_thresholds(lumas)
+        thresholds = adaptive_thresholds(lumas, num_colors)
     else:
-        t0, t1, t2 = T0, T1, T2
+        thresholds = get_fixed_thresholds(num_colors)
 
     lines = []
     for y in range(SIZE[1]):
@@ -178,8 +220,8 @@ def convert_image_to_ascii(path: Path, h_stretch: float = None, rotation: float 
                 row.append('.')
             else:
                 l = luma_from_rgb(r, g, b)
-                idx = tone_index(l, t0, t1, t2)
-                row.append(TONES[idx])
+                idx = tone_index(l, thresholds)
+                row.append(tones[idx])
         lines.append("".join(row))
 
     return "\n".join(lines)
@@ -197,11 +239,12 @@ def format_for_typescript(ascii_sprite: str, name: str = "sprite") -> str:
 
 def main():
     # Handle command line arguments
-    # Usage: python3 webp_to_ascii.py [file.webp] [--stretch=1.5] [--rotate=30] [--margin=2] [--size=48]
+    # Usage: python3 webp_to_ascii.py [file.webp] [--stretch=1.5] [--rotate=30] [--margin=2] [--size=56] [--colors=5]
     global SIZE
     h_stretch = HORIZONTAL_STRETCH
     rotation = ROTATION
     margin = MARGIN
+    num_colors = NUM_COLORS
     files = []
 
     for arg in sys.argv[1:]:
@@ -220,6 +263,10 @@ def main():
         elif arg.startswith('--size='):
             size = int(arg.split('=')[1])
             SIZE = (size, size)
+        elif arg.startswith('--colors='):
+            num_colors = int(arg.split('=')[1])
+        elif arg.startswith('-c') and arg[2:3].isdigit():
+            num_colors = int(arg[2:])
         else:
             files.append(arg)
 
@@ -230,8 +277,8 @@ def main():
             if not p.exists():
                 print(f"Error: File not found: {p}")
                 continue
-            print(f"\n=== {p.name} (stretch={h_stretch}, rotate={rotation}, margin={margin}) ===\n")
-            ascii_sprite = convert_image_to_ascii(p, h_stretch, rotation, margin)
+            print(f"\n=== {p.name} (stretch={h_stretch}, rotate={rotation}, margin={margin}, colors={num_colors}, size={SIZE[0]}x{SIZE[1]}) ===\n")
+            ascii_sprite = convert_image_to_ascii(p, h_stretch, rotation, margin, num_colors)
             print(ascii_sprite)
             print(f"\n=== TypeScript format ===\n")
             print(format_for_typescript(ascii_sprite, p.stem))
@@ -241,7 +288,7 @@ def main():
         found = False
         for p in IN_DIR.glob("*.webp"):
             found = True
-            ascii_sprite = convert_image_to_ascii(p)
+            ascii_sprite = convert_image_to_ascii(p, num_colors=num_colors)
             out_path = OUT_DIR / f"{p.stem}.txt"
             out_path.write_text(ascii_sprite + "\n", encoding="utf-8")
             print(f"Converted: {p.name} -> {out_path}")

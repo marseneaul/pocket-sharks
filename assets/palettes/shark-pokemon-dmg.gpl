@@ -2,7 +2,7 @@ GIMP Palette
 Name: Shark Pokemon DMG
 Columns: 4
 #
- 15  15  15	Black (transparent in sprites)
+ 15  15  15	Black (darkest)
  85  85  85	Dark Gray
 170 170 170	Light Gray
-240 240 240	White
+240 240 240	White (lightest)

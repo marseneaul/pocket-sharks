@@ -5,15 +5,21 @@ export const SCALE = 4; // Higher scale = more screen pixels per game pixel
 export const CANVAS_WIDTH = SCREEN_WIDTH * SCALE;
 export const CANVAS_HEIGHT = SCREEN_HEIGHT * SCALE;
 
-// Classic grayscale palette (darkest to lightest)
+// GBC palette colors
+// Background/UI uses all 4 colors
+// Sprites use 3 visible colors (index 0 is transparent)
 export const DMG_PALETTE = {
-  BLACK: '#0f0f0f',
-  DARK: '#555555',
-  LIGHT: '#aaaaaa',
-  WHITE: '#f0f0f0'
+  BLACK: '#0f0f0f',  // Darkest (UI text, borders)
+  DARK: '#555555',   // Dark gray
+  LIGHT: '#aaaaaa',  // Light gray
+  WHITE: '#f0f0f0',  // Lightest (backgrounds)
+  // Sprite-specific aliases (3 visible colors)
+  SPRITE_DARK: '#0f0f0f',
+  SPRITE_MID: '#555555',
+  SPRITE_LIGHT: '#aaaaaa'
 } as const;
 
-// Palette as array for indexed access
+// Palette as array for indexed access (UI/background)
 export const DMG_COLORS = [
   DMG_PALETTE.BLACK,
   DMG_PALETTE.DARK,
@@ -23,7 +29,7 @@ export const DMG_COLORS = [
 
 // Tile and sprite sizes
 export const TILE_SIZE = 8;
-export const SPRITE_SIZE = 48; // Creature sprites are 48x48 (6 tiles)
+export const SPRITE_SIZE = 64; // Creature sprites are 64x64 (8 tiles)
 
 // Text rendering
 export const FONT_CHAR_WIDTH = 8;
