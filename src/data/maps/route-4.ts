@@ -88,7 +88,7 @@ export const ROUTE_4: MapData = {
         name: 'Fisher Wade',
         team: [
           { speciesId: 15, level: 14 },  // Lanternshark
-          { speciesId: 14, level: 14 }   // Rayling
+          { speciesId: 14, level: 14 }   // Atlantic Stingray
         ],
         defeatedDialogue: [
           'Good battle!',

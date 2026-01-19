@@ -86,7 +86,7 @@ export const ROUTE_2: MapData = {
       trainer: {
         name: 'Finner Grunt',
         team: [
-          { speciesId: 13, level: 8 }   // Puptooth
+          { speciesId: 13, level: 8 }   // Nurse Shark
         ],
         defeatedDialogue: [
           'Tch! You got lucky!',
@@ -111,8 +111,8 @@ export const ROUTE_2: MapData = {
       trainer: {
         name: 'Finner Grunt',
         team: [
-          { speciesId: 12, level: 7 },  // Sandswim
-          { speciesId: 14, level: 7 }   // Rayling
+          { speciesId: 12, level: 7 },  // Lemon Shark
+          { speciesId: 14, level: 7 }   // Atlantic Stingray
         ],
         defeatedDialogue: [
           'Argh! Fine!',

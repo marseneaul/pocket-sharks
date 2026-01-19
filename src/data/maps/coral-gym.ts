@@ -70,8 +70,8 @@ export const CORAL_GYM: MapData = {
       trainer: {
         name: 'Leader Marina',
         team: [
-          { speciesId: 10, level: 12 },  // Hammerpup
-          { speciesId: 11, level: 14 }   // Hammerhead
+          { speciesId: 10, level: 12 },  // Bonnethead
+          { speciesId: 11, level: 14 }   // Scalloped Hammerhead
         ],
         defeatedDialogue: [
           'Incredible!',
@@ -98,7 +98,7 @@ export const CORAL_GYM: MapData = {
       trainer: {
         name: 'Swimmer Kai',
         team: [
-          { speciesId: 10, level: 10 }   // Hammerpup
+          { speciesId: 10, level: 10 }   // Bonnethead
         ],
         defeatedDialogue: [
           'You broke my focus!',
@@ -122,8 +122,8 @@ export const CORAL_GYM: MapData = {
       trainer: {
         name: 'Swimmer Nami',
         team: [
-          { speciesId: 10, level: 9 },   // Hammerpup
-          { speciesId: 18, level: 9 }    // Coralclaw
+          { speciesId: 10, level: 9 },   // Bonnethead
+          { speciesId: 18, level: 9 }    // Coral Catshark
         ],
         defeatedDialogue: [
           'I still have much',

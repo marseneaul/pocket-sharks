@@ -69,7 +69,7 @@ export const FINNER_HQ: MapData = {
       trainer: {
         name: 'Finner Grunt',
         team: [
-          { speciesId: 13, level: 14 }   // Puptooth
+          { speciesId: 13, level: 14 }   // Nurse Shark
         ],
         defeatedDialogue: [
           'Ugh! Fine!',
@@ -94,7 +94,7 @@ export const FINNER_HQ: MapData = {
       trainer: {
         name: 'Finner Grunt',
         team: [
-          { speciesId: 12, level: 13 },  // Sandswim
+          { speciesId: 12, level: 13 },  // Lemon Shark
           { speciesId: 28, level: 13 }   // Southern Stingray
         ],
         defeatedDialogue: [
@@ -121,8 +121,8 @@ export const FINNER_HQ: MapData = {
       trainer: {
         name: 'Finner Grunt',
         team: [
-          { speciesId: 13, level: 15 },  // Puptooth
-          { speciesId: 13, level: 15 }   // Puptooth
+          { speciesId: 13, level: 15 },  // Nurse Shark
+          { speciesId: 13, level: 15 }   // Nurse Shark
         ],
         defeatedDialogue: [
           'Argh! You\'re',

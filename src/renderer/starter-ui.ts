@@ -9,9 +9,9 @@ let animFrame = 0;
 
 // The three starters
 const STARTERS = [
-  { id: 1, name: 'BLACKNOSE', type: 'FIRE', desc1: 'SPEEDY HUNTER', desc2: 'FIERY METABOLISM' },
-  { id: 4, name: 'WHITENOSE', type: 'FIGHT', desc1: 'BOLD BRAWLER', desc2: 'FEARS NOTHING' },
-  { id: 7, name: 'HARDNOSE', type: 'STEEL', desc1: 'ARMORED TANK', desc2: 'TOUGH AS NAILS' }
+  { id: 1, name: 'BLACKTIP REEF', type: 'FIRE', desc1: 'SPEEDY HUNTER', desc2: 'FIERY METABOLISM' },
+  { id: 4, name: 'WHITETIP REEF', type: 'FIGHT', desc1: 'BOLD BRAWLER', desc2: 'FEARS NOTHING' },
+  { id: 7, name: 'GREY REEF', type: 'STEEL', desc1: 'ARMORED TANK', desc2: 'TOUGH AS NAILS' }
 ];
 
 export function initStarterSelect(): void {

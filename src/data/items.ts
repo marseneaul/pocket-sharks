@@ -281,7 +281,7 @@ export function getSpeciesCatchRate(speciesId: number): number {
     // Special/rare
     22: 90, 23: 45, 24: 60, 25: 75, 26: 75, 27: 60, 28: 90,
     // Fossils - rare
-    29: 45, 30: 60, 31: 3  // Megashark is legendary-tier
+    29: 45, 30: 60, 31: 3  // Megalodon is legendary-tier
   };
   return catchRates[speciesId] || 100;
 }

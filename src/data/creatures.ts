@@ -1,10 +1,10 @@
 import type { CreatureSpecies } from '../types/index.ts';
 
 export const CREATURES: Record<number, CreatureSpecies> = {
-  // === STARTER LINE 1: Fire (Blacknose → Blacktip Reef → Oceanic Blacktip) ===
+  // === STARTER LINE 1: Fire (Blacktip Reef Shark evolution line) ===
   1: {
     id: 1,
-    name: 'Blacknose Shark',
+    name: 'Blacktip Reef Shark',
     types: ['shark'],
     baseStats: {
       hp: 44,
@@ -22,11 +22,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 19, moveId: 61 }  // Fire Fang
     ],
     evolvesTo: { speciesId: 2, level: 16 },
-    description: 'A curious reef shark with a distinctive dark snout. Its metabolism runs hot, warming the water around it.'
+    description: 'A curious reef shark with distinctive black-tipped fins. Its metabolism runs hot, warming the water around it.'
   },
   2: {
     id: 2,
-    name: 'Blacktip Reef Shark',
+    name: 'Blacktip Shark',
     types: ['shark', 'fire'],
     baseStats: {
       hp: 59,
@@ -50,7 +50,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
   3: {
     id: 3,
-    name: 'Oceanic Blacktip',
+    name: 'Dusky Shark',
     types: ['shark', 'fire'],
     baseStats: {
       hp: 78,
@@ -68,13 +68,13 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 40, moveId: 63 }, // Flamethrower
       { level: 48, moveId: 31 }  // Crunch
     ],
-    description: 'The oceanic blacktip at its peak. Water sizzles in its wake as it pursues prey at blazing speed.'
+    description: 'The dusky shark at its peak. Water sizzles in its wake as it pursues prey at blazing speed.'
   },
 
-  // === STARTER LINE 2: Fighting (Whitenose → Whitetip Reef → Oceanic Whitetip) ===
+  // === STARTER LINE 2: Fighting (Whitetip Reef Shark evolution line) ===
   4: {
     id: 4,
-    name: 'Whitenose Shark',
+    name: 'Whitetip Reef Shark',
     types: ['shark'],
     baseStats: {
       hp: 46,
@@ -92,11 +92,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 19, moveId: 21 }  // Thrash
     ],
     evolvesTo: { speciesId: 5, level: 16 },
-    description: 'A bold young shark with a pale snout. Fearlessly approaches anything new, even creatures much larger than itself.'
+    description: 'A bold reef shark with white-tipped fins. Fearlessly approaches anything new, even creatures much larger than itself.'
   },
   5: {
     id: 5,
-    name: 'Whitetip Reef Shark',
+    name: 'Oceanic Whitetip',
     types: ['shark', 'fighting'],
     baseStats: {
       hp: 61,
@@ -120,7 +120,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
   6: {
     id: 6,
-    name: 'Oceanic Whitetip',
+    name: 'Bull Shark',
     types: ['shark', 'fighting'],
     baseStats: {
       hp: 80,
@@ -141,10 +141,10 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     description: 'The most dangerous shark in open ocean. Its persistence and aggression are legendary.'
   },
 
-  // === STARTER LINE 3: Steel (Hardnose → Grey Reef → Silvertip) ===
+  // === STARTER LINE 3: Steel (Grey Reef Shark evolution line) ===
   7: {
     id: 7,
-    name: 'Hardnose Shark',
+    name: 'Grey Reef Shark',
     types: ['shark'],
     baseStats: {
       hp: 48,
@@ -166,7 +166,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
   8: {
     id: 8,
-    name: 'Grey Reef Shark',
+    name: 'Galapagos Shark',
     types: ['shark', 'steel'],
     baseStats: {
       hp: 65,

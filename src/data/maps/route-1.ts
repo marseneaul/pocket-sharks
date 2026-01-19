@@ -70,9 +70,9 @@ export const ROUTE_1: MapData = {
   ],
   npcs: [],
   encounterTable: [
-    { speciesId: 4, minLevel: 2, maxLevel: 4, weight: 40 },  // Whitenose (common)
-    { speciesId: 7, minLevel: 2, maxLevel: 4, weight: 40 },  // Hardnose (common)
-    { speciesId: 10, minLevel: 3, maxLevel: 5, weight: 20 }  // Hammerpup (uncommon)
+    { speciesId: 4, minLevel: 2, maxLevel: 4, weight: 40 },  // Whitetip Reef Shark (common)
+    { speciesId: 7, minLevel: 2, maxLevel: 4, weight: 40 },  // Grey Reef Shark (common)
+    { speciesId: 10, minLevel: 3, maxLevel: 5, weight: 20 }  // Bonnethead (uncommon)
   ],
   isOutdoor: true
 };
