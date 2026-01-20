@@ -13,6 +13,7 @@ import { initInput, updateInput, getJustPressed, getDirectionPressed } from './e
 import { handleInput as handleBattleInput, updateHpAnimation } from './engine/battle.ts';
 import { updateOverworld, handleOverworldInput } from './engine/overworld.ts';
 import { initStorage } from './engine/storage.ts';
+import { initAudio, tryStartMusic } from './engine/audio.ts';
 import {
   initGameState,
   getGameMode,
@@ -45,6 +46,7 @@ function init(): void {
   initCanvas();
   initInput();
   initStorage();
+  initAudio();
 
   // Initialize game state
   initGameState();
@@ -92,6 +94,12 @@ function gameLoop(currentTime: number): void {
 
 function update(deltaTime: number): void {
   const mode = getGameMode();
+
+  // Try to start music on any user input (browsers require interaction first)
+  const pressed = getJustPressed();
+  if (pressed.a || pressed.b || pressed.start || pressed.select || getDirectionPressed()) {
+    tryStartMusic();
+  }
 
   if (mode === 'overworld') {
     updateOverworldMode(deltaTime);
