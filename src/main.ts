@@ -253,9 +253,9 @@ function updateBattleMode(deltaTime: number): void {
       while (!isTypewriterComplete()) {
         advanceTypewriter();
       }
-    } else {
-      handleBattleInput(battleState, 'a');
     }
+    // Always handle the input (both to advance messages and select actions)
+    handleBattleInput(battleState, 'a');
   }
 
   if (pressed.b) {

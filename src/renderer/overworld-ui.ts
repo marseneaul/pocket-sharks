@@ -1,5 +1,5 @@
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../constants.ts';
-import { clear } from './canvas.ts';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, DMG_PALETTE } from '../constants.ts';
+import { clear, getContext } from './canvas.ts';
 import { drawText } from './text.ts';
 import { drawTile, drawPlayer } from './tileset.ts';
 import { getPlayer, getCurrentMap } from '../engine/game-state.ts';
@@ -93,8 +93,27 @@ function renderPlayer(player: PlayerState, cameraX: number, cameraY: number): vo
 }
 
 function renderMapName(name: string): void {
-  // Draw map name at top of screen
-  const textWidth = name.length * 8;
-  const x = Math.floor((SCREEN_WIDTH - textWidth) / 2);
-  drawText(name.toUpperCase(), x, 2);
+  const ctx = getContext();
+  const displayName = name.toUpperCase();
+
+  // Truncate if too long (max 18 chars to fit with padding)
+  const truncated = displayName.length > 18
+    ? displayName.substring(0, 17) + '.'
+    : displayName;
+
+  const textWidth = truncated.length * 8;
+  const boxWidth = textWidth + 8;  // 4px padding each side
+  const boxX = Math.floor((SCREEN_WIDTH - boxWidth) / 2);
+  const textX = boxX + 4;
+
+  // Draw background box
+  ctx.fillStyle = DMG_PALETTE.WHITE;
+  ctx.fillRect(boxX, 0, boxWidth, 12);
+
+  // Draw border
+  ctx.strokeStyle = DMG_PALETTE.BLACK;
+  ctx.strokeRect(boxX + 0.5, 0.5, boxWidth - 1, 11);
+
+  // Draw text
+  drawText(truncated, textX, 2);
 }
