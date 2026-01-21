@@ -109,39 +109,47 @@ export function renderSettings(): void {
   // Background
   fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 3);
 
-  // Title
-  drawBox(10, 4, SCREEN_WIDTH - 20, 20);
-  drawTextCentered('OPTIONS', 0, SCREEN_WIDTH, 10);
+  // Title bar
+  drawBox(8, 4, SCREEN_WIDTH - 16, 18);
+  drawTextCentered('OPTIONS', 0, SCREEN_WIDTH, 9);
 
-  // Settings box
-  const boxY = 30;
-  const boxHeight = 100;
-  drawBox(8, boxY, SCREEN_WIDTH - 16, boxHeight);
+  // Settings box - leave room for instructions at bottom
+  const boxX = 8;
+  const boxY = 26;
+  const boxWidth = SCREEN_WIDTH - 16;  // 144px
+  const boxHeight = 86;  // Ends at y=112
+  drawBox(boxX, boxY, boxWidth, boxHeight);
+
+  // Option spacing
+  const optionX = boxX + 8;  // 16px from left
+  const arrowX = optionX - 2;
+  const valueX = 72;  // Right-aligned values start here
+  const lineHeight = 24;  // Generous spacing between options
 
   // Music volume option
   const musicY = boxY + 12;
-  if (menuIndex === 0) drawText('>', 14, musicY);
-  drawText('MUSIC', 24, musicY);
-  renderVolumeBar(80, musicY, getMusicVolume(), isMusicMuted());
+  if (menuIndex === 0) drawText('>', arrowX, musicY);
+  drawText('MUSIC', optionX + 6, musicY);
+  renderVolumeBar(valueX, musicY, getMusicVolume(), isMusicMuted());
 
   // Text speed option
-  const textY = boxY + 32;
-  if (menuIndex === 1) drawText('>', 14, textY);
-  drawText('TEXT', 24, textY);
-  drawText('[' + TEXT_SPEEDS[textSpeedIndex] + ']', 80, textY);
+  const textY = boxY + 12 + lineHeight;
+  if (menuIndex === 1) drawText('>', arrowX, textY);
+  drawText('TEXT', optionX + 6, textY);
+  drawText(TEXT_SPEEDS[textSpeedIndex], valueX + 16, textY);
 
   // Back option
-  const backY = boxY + 70;
-  if (menuIndex === 2) drawText('>', 14, backY);
-  drawText('BACK', 24, backY);
+  const backY = boxY + 12 + lineHeight * 2;
+  if (menuIndex === 2) drawText('>', arrowX, backY);
+  drawText('BACK', optionX + 6, backY);
 
-  // Instructions at bottom
-  drawText('LEFT/RIGHT: Adjust', 8, SCREEN_HEIGHT - 20);
-  drawText('A: Toggle/Select', 8, SCREEN_HEIGHT - 10);
+  // Instructions at bottom (below box)
+  drawText('L/R: ADJUST', 8, SCREEN_HEIGHT - 22);
+  drawText('A: SELECT  B: BACK', 8, SCREEN_HEIGHT - 10);
 }
 
 function renderVolumeBar(x: number, y: number, volume: number, muted: boolean): void {
-  const barWidth = 60;
+  const barWidth = 72;  // Fits from x=72 to x=144 (within 144px box)
   const barHeight = 8;
 
   // Border
@@ -151,8 +159,8 @@ function renderVolumeBar(x: number, y: number, volume: number, muted: boolean): 
   fillRect(x + 1, y + 1, barWidth - 2, barHeight - 2, 1);
 
   if (muted) {
-    // Show "MUTE" text instead of bar
-    drawText('MUTE', x + 10, y);
+    // Show "MUTE" text centered in bar area
+    drawText('MUTE', x + 20, y, 3);
   } else {
     // Fill based on volume
     const fillWidth = Math.floor((barWidth - 4) * volume);

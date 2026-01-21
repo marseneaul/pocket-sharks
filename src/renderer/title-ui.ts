@@ -63,46 +63,54 @@ export function renderTitleScreen(): void {
   // Title area
   drawTitleLogo();
 
-  // Menu box
-  const menuY = 90;
-  const menuHeight = 50;
-  drawBox(30, menuY, SCREEN_WIDTH - 60, menuHeight);
+  // Menu box - centered, sized to fit content
+  // 3 items * 10px line height + 8px padding top/bottom = 46px
+  const menuBoxWidth = 88;  // Fits "CONTINUE" (8 chars = 64px) + arrow + padding
+  const menuBoxX = (SCREEN_WIDTH - menuBoxWidth) / 2;  // Center: (160-88)/2 = 36
+  const menuY = 88;
+  const menuHeight = 46;
+  drawBox(menuBoxX, menuY, menuBoxWidth, menuHeight);
 
-  // Menu items
+  // Menu items - left aligned within the box with arrow
+  const itemX = menuBoxX + 16;  // 16px from box left edge for arrow + spacing
+  const lineHeight = 12;  // 8px char height + 4px spacing
+
   for (let i = 0; i < MENU_ITEMS.length; i++) {
-    const y = menuY + 10 + i * 14;
+    const y = menuY + 8 + i * lineHeight;
     const item = MENU_ITEMS[i];
 
     // Dim CONTINUE if no save data
     if (i === 1 && !hasSaveData) {
-      // Draw dimmed text (using the dark color)
-      drawTextCentered(item, 0, SCREEN_WIDTH, y, 1);
+      drawText(item, itemX, y, 1);
     } else {
       // Draw selector arrow
       if (i === menuIndex) {
-        drawText('>', 40, y);
+        drawText('>', itemX - 10, y);
       }
-      drawTextCentered(item, 0, SCREEN_WIDTH, y);
+      drawText(item, itemX, y);
     }
   }
 
-  // Version/credits at bottom
-  drawText('v0.1', 4, SCREEN_HEIGHT - 10);
+  // Version at bottom left
+  drawText('V0.1', 4, SCREEN_HEIGHT - 12);
 }
 
 function drawTitleLogo(): void {
-  // Simple text-based logo for now
-  // Could be replaced with pixel art later
+  // Title box positioned at top with proper margins
+  const boxY = 12;
+  const boxHeight = 56;
+  const boxWidth = SCREEN_WIDTH - 24;  // 12px margin each side
+  const boxX = 12;
 
-  const titleY = 20;
+  drawBox(boxX, boxY, boxWidth, boxHeight);
 
-  // Draw a decorative box for the title
-  drawBox(10, titleY - 4, SCREEN_WIDTH - 20, 50);
+  // Game title - centered in screen
+  // "SHARK" = 5 chars = 40px, "POKEMON" = 7 chars = 56px
+  const lineHeight = 14;  // 8px char + 6px spacing for title
+  drawTextCentered('SHARK', 0, SCREEN_WIDTH, boxY + 10);
+  drawTextCentered('POKEMON', 0, SCREEN_WIDTH, boxY + 10 + lineHeight);
 
-  // Game title
-  drawTextCentered('SHARK', 0, SCREEN_WIDTH, titleY + 8);
-  drawTextCentered('POKEMON', 0, SCREEN_WIDTH, titleY + 22);
-
-  // Subtitle
-  drawTextCentered('Ocean Edition', 0, SCREEN_WIDTH, titleY + 38);
+  // Subtitle - smaller spacing
+  // "OCEAN EDITION" = 13 chars = 104px (fits in 136px box width)
+  drawTextCentered('OCEAN EDITION', 0, SCREEN_WIDTH, boxY + 10 + lineHeight * 2 + 4);
 }

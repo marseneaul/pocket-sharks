@@ -262,8 +262,8 @@ export function renderShop(): void {
 
   // Empty list message
   if (items.length === 0) {
-    const msg = uiState.mode === 'buy' ? 'No items available' : 'Nothing to sell';
-    drawText(msg, 20, listStartY + 20, 2);
+    const msg = uiState.mode === 'buy' ? 'NO ITEMS' : 'NOTHING TO SELL';
+    drawText(msg, 40, listStartY + 20, 2);
   }
 
   // Bottom panel
