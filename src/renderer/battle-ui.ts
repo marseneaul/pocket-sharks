@@ -2,6 +2,7 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT, BATTLE_UI } from '../constants.ts';
 import { clear, fillRect, drawBox } from './canvas.ts';
 import { drawText, drawTextRightAligned, drawTypewriter, startTypewriter, isTypewriterComplete } from './text.ts';
 import { drawCreatureSprite } from './sprites.ts';
+import { getEntryAnimationOffsets, getAttackAnimationEffects } from '../engine/battle.ts';
 import type { BattleState, CreatureInstance } from '../types/index.ts';
 
 const MENU_ITEMS = ['FIGHT', 'BAG', 'SHARKS', 'RUN'];
@@ -12,9 +13,22 @@ export function renderBattle(state: BattleState): void {
   // Draw battle scene background (simple for now)
   renderBattleBackground();
 
-  // Draw creatures
-  renderEnemyCreature(state.enemyCreature);
-  renderPlayerCreature(state.playerCreature);
+  // Get animation offsets
+  const entryOffsets = getEntryAnimationOffsets(state);
+  const attackEffects = getAttackAnimationEffects(state);
+
+  // Combine offsets
+  const enemyX = entryOffsets.enemyX + attackEffects.enemyOffsetX + attackEffects.enemyShake;
+  const playerX = entryOffsets.playerX + attackEffects.playerOffsetX + attackEffects.playerShake;
+
+  // Draw creatures with animation offsets
+  renderEnemyCreature(state.enemyCreature, enemyX);
+  renderPlayerCreature(state.playerCreature, playerX);
+
+  // Draw screen flash for special attacks
+  if (attackEffects.screenFlash > 0) {
+    fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 3);  // White flash
+  }
 
   // Draw info boxes
   renderEnemyInfo(state.enemyCreature, state.animatingHp.enemy);
@@ -50,21 +64,21 @@ function renderBattleBackground(): void {
   fillRect(4, 80, 56, 2, 1);
 }
 
-function renderEnemyCreature(creature: CreatureInstance): void {
+function renderEnemyCreature(creature: CreatureInstance, offsetX: number = 0): void {
   // Enemy sprite (front view) - top left area
   drawCreatureSprite(
     creature.species.id,
-    BATTLE_UI.ENEMY_SPRITE_X,
+    BATTLE_UI.ENEMY_SPRITE_X + offsetX,
     BATTLE_UI.ENEMY_SPRITE_Y,
     true // front view
   );
 }
 
-function renderPlayerCreature(creature: CreatureInstance): void {
+function renderPlayerCreature(creature: CreatureInstance, offsetX: number = 0): void {
   // Player sprite (back view) - bottom right area
   drawCreatureSprite(
     creature.species.id,
-    BATTLE_UI.PLAYER_SPRITE_X,
+    BATTLE_UI.PLAYER_SPRITE_X + offsetX,
     BATTLE_UI.PLAYER_SPRITE_Y,
     false // back view
   );

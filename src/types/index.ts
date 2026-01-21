@@ -111,6 +111,20 @@ export type BattleAction =
   | { type: 'switch'; creatureIndex: number }
   | { type: 'run' };
 
+// Entry animation phases
+export type EntryAnimationPhase = 'enemy-enter' | 'player-enter' | 'complete';
+
+// Attack animation types
+export type AttackAnimationType = 'physical' | 'special' | 'status';
+
+// Attack animation state
+export interface AttackAnimation {
+  active: boolean;
+  type: AttackAnimationType;
+  attacker: 'player' | 'enemy';
+  progress: number;  // 0-1
+}
+
 // Battle state
 export interface BattleState {
   playerCreature: CreatureInstance;
@@ -128,6 +142,13 @@ export interface BattleState {
     player: number;
     enemy: number;
   };
+  // Entry animation state
+  entryAnimation: {
+    phase: EntryAnimationPhase;
+    progress: number;  // 0-1
+  };
+  // Attack animation state
+  attackAnimation: AttackAnimation;
 }
 
 // Type effectiveness result

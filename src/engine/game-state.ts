@@ -4,6 +4,24 @@ import type { InventorySlot } from '../data/items.ts';
 import { createCreatureInstance, createBattleState, initBattle } from './battle.ts';
 import { getCreature } from '../data/creatures.ts';
 
+// Screen transition state
+export interface TransitionState {
+  active: boolean;
+  type: 'fade-out' | 'fade-in';
+  progress: number;  // 0-1
+  duration: number;  // ms
+  onMidpoint?: () => void;  // Called when fade-out completes
+}
+
+const TRANSITION_DURATION = 250;  // ms for each fade direction
+
+let transitionState: TransitionState = {
+  active: false,
+  type: 'fade-out',
+  progress: 0,
+  duration: TRANSITION_DURATION
+};
+
 let gameState: GameState;
 let battleState: BattleState | null = null;
 let currentTrainerNpc: NPC | null = null;  // Track current trainer for post-battle
@@ -60,6 +78,57 @@ export function setGameMode(mode: GameMode): void {
   gameState.mode = mode;
 }
 
+// Transition system
+export function getTransitionState(): TransitionState {
+  return transitionState;
+}
+
+export function isTransitioning(): boolean {
+  return transitionState.active;
+}
+
+export function startTransition(onMidpoint: () => void): void {
+  transitionState = {
+    active: true,
+    type: 'fade-out',
+    progress: 0,
+    duration: TRANSITION_DURATION,
+    onMidpoint
+  };
+}
+
+export function updateTransition(deltaTime: number): void {
+  if (!transitionState.active) return;
+
+  const progressDelta = deltaTime / transitionState.duration;
+  transitionState.progress += progressDelta;
+
+  if (transitionState.progress >= 1) {
+    if (transitionState.type === 'fade-out') {
+      // Midpoint reached - execute callback and start fade-in
+      if (transitionState.onMidpoint) {
+        transitionState.onMidpoint();
+      }
+      transitionState.type = 'fade-in';
+      transitionState.progress = 0;
+    } else {
+      // Fade-in complete
+      transitionState.active = false;
+      transitionState.progress = 0;
+    }
+  }
+}
+
+export function getTransitionAlpha(): number {
+  if (!transitionState.active) return 0;
+
+  if (transitionState.type === 'fade-out') {
+    return transitionState.progress;  // 0 → 1
+  } else {
+    return 1 - transitionState.progress;  // 1 → 0
+  }
+}
+
 export function getCurrentMap(): MapData {
   return gameState.overworld.currentMap;
 }
@@ -82,7 +151,8 @@ export function getBattleState(): BattleState | null {
   return battleState;
 }
 
-export function startWildBattle(enemyCreature: CreatureInstance): void {
+// Internal battle start (called after transition)
+function _startWildBattleInternal(enemyCreature: CreatureInstance): void {
   const playerCreature = gameState.overworld.player.party[0];
   if (!playerCreature) throw new Error('No creature in party');
 
@@ -94,7 +164,7 @@ export function startWildBattle(enemyCreature: CreatureInstance): void {
   gameState.mode = 'battle';
 }
 
-export function startTrainerBattle(npc: NPC): void {
+function _startTrainerBattleInternal(npc: NPC): void {
   if (!npc.trainer || npc.defeated) return;
 
   const playerCreature = gameState.overworld.player.party[0];
@@ -114,6 +184,16 @@ export function startTrainerBattle(npc: NPC): void {
   battleState.canRun = false;  // Can't run from trainer battles
   initBattle(battleState);
   gameState.mode = 'battle';
+}
+
+// Public battle start functions with transitions
+export function startWildBattle(enemyCreature: CreatureInstance): void {
+  startTransition(() => _startWildBattleInternal(enemyCreature));
+}
+
+export function startTrainerBattle(npc: NPC): void {
+  if (!npc.trainer || npc.defeated) return;
+  startTransition(() => _startTrainerBattleInternal(npc));
 }
 
 export function isTrainerBattle(): boolean {
@@ -158,7 +238,7 @@ export function sendOutNextTrainerCreature(): CreatureInstance | null {
   return createCreatureInstance(enemySpecies, nextEnemy.level);
 }
 
-export function endBattle(): void {
+function _endBattleInternal(): void {
   // Sync all creature data from battle back to party
   if (battleState) {
     const partyCreature = gameState.overworld.player.party[0];
@@ -200,6 +280,10 @@ export function endBattle(): void {
   currentTrainerNpc = null;
   trainerCreatureIndex = 0;
   gameState.mode = 'overworld';
+}
+
+export function endBattle(): void {
+  startTransition(_endBattleInternal);
 }
 
 // Heal party at healing pool

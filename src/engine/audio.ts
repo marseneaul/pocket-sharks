@@ -47,6 +47,14 @@ export function isMusicPlaying(): boolean {
   return bgMusic ? !bgMusic.paused : false;
 }
 
+export function getMusicVolume(): number {
+  return musicVolume;
+}
+
+export function isMusicMuted(): boolean {
+  return isMuted;
+}
+
 // Try to start music (call after user interaction)
 export function tryStartMusic(): void {
   if (bgMusic && bgMusic.paused && !isMuted) {

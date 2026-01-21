@@ -1,5 +1,5 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle } from './game-state.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition } from './game-state.ts';
 import { getTileDef, canWalkOn, shouldSwim } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
 
@@ -84,17 +84,19 @@ function doWarp(warp: Warp): void {
     return;
   }
 
-  const player = getPlayer();
-  setCurrentMap(targetMap);
+  startTransition(() => {
+    const player = getPlayer();
+    setCurrentMap(targetMap);
 
-  player.x = warp.targetX;
-  player.y = warp.targetY;
-  player.pixelX = warp.targetX * TILE_SIZE;
-  player.pixelY = warp.targetY * TILE_SIZE;
+    player.x = warp.targetX;
+    player.y = warp.targetY;
+    player.pixelX = warp.targetX * TILE_SIZE;
+    player.pixelY = warp.targetY * TILE_SIZE;
 
-  // Update swimming state based on new tile
-  const newTile = targetMap.tiles[player.y]?.[player.x];
-  player.isSwimming = shouldSwim(newTile);
+    // Update swimming state based on new tile
+    const newTile = targetMap.tiles[player.y]?.[player.x];
+    player.isSwimming = shouldSwim(newTile);
+  });
 }
 
 export function tryMove(direction: Direction): boolean {

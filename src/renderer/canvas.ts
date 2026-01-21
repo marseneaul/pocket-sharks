@@ -68,3 +68,10 @@ export function drawBox(x: number, y: number, w: number, h: number): void {
   // Inner border with dark
   drawRect(x + 1, y + 1, w - 2, h - 2, 1);
 }
+
+// Draw a fade overlay for screen transitions (0 = transparent, 1 = fully black)
+export function drawFadeOverlay(alpha: number): void {
+  if (alpha <= 0) return;
+  offscreenCtx.fillStyle = `rgba(15, 15, 15, ${Math.min(1, alpha)})`;
+  offscreenCtx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+}

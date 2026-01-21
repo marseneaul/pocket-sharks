@@ -1,4 +1,4 @@
-import { initCanvas, present } from './renderer/canvas.ts';
+import { initCanvas, present, drawFadeOverlay } from './renderer/canvas.ts';
 import { renderBattle } from './renderer/battle-ui.ts';
 import { renderOverworld } from './renderer/overworld-ui.ts';
 import { renderPartyMenu, handlePartyInput, handleBattlePartyInput, initPartyMenu } from './renderer/party-ui.ts';
@@ -6,11 +6,13 @@ import { renderStarterSelect, handleStarterInput, getSelectedStarterId, initStar
 import { renderPC, handlePCInput, initPCUI } from './renderer/pc-ui.ts';
 import { renderShop, handleShopInput, initShopUI } from './renderer/shop-ui.ts';
 import { renderTMUI, handleTMInput, initTMUI } from './renderer/tm-ui.ts';
+import { renderTitleScreen, handleTitleInput, initTitleScreen } from './renderer/title-ui.ts';
+import { renderSettings, handleSettingsInput, initSettingsUI, getPreviousMode } from './renderer/settings-ui.ts';
 import { getItem } from './data/items.ts';
 import { getShop } from './data/shops.ts';
 import { advanceTypewriter, isTypewriterComplete } from './renderer/text.ts';
 import { initInput, updateInput, getJustPressed, getDirectionPressed } from './engine/input.ts';
-import { handleInput as handleBattleInput, updateHpAnimation } from './engine/battle.ts';
+import { handleInput as handleBattleInput, updateHpAnimation, updateEntryAnimation, updateAttackAnimation } from './engine/battle.ts';
 import { updateOverworld, handleOverworldInput } from './engine/overworld.ts';
 import { initStorage } from './engine/storage.ts';
 import { initAudio, tryStartMusic } from './engine/audio.ts';
@@ -24,7 +26,10 @@ import {
   registerMap,
   getPlayer,
   getParty,
-  setStarterCreature
+  setStarterCreature,
+  updateTransition,
+  getTransitionAlpha,
+  isTransitioning
 } from './engine/game-state.ts';
 import { RESEARCH_STATION } from './data/maps/research-station.ts';
 import { ROUTE_1 } from './data/maps/route-1.ts';
@@ -71,9 +76,9 @@ function init(): void {
   player.pixelX = player.x * 8;
   player.pixelY = player.y * 8;
 
-  // Start in starter selection mode
-  initStarterSelect();
-  setGameMode('starter-select');
+  // Start at title screen
+  initTitleScreen();
+  setGameMode('title');
 
   // Start game loop
   requestAnimationFrame(gameLoop);
@@ -93,6 +98,12 @@ function gameLoop(currentTime: number): void {
 }
 
 function update(deltaTime: number): void {
+  // Update screen transitions
+  updateTransition(deltaTime);
+
+  // Block gameplay updates during transitions
+  if (isTransitioning()) return;
+
   const mode = getGameMode();
 
   // Try to start music on any user input (browsers require interaction first)
@@ -101,7 +112,11 @@ function update(deltaTime: number): void {
     tryStartMusic();
   }
 
-  if (mode === 'overworld') {
+  if (mode === 'title') {
+    updateTitleMode();
+  } else if (mode === 'settings') {
+    updateSettingsMode();
+  } else if (mode === 'overworld') {
     updateOverworldMode(deltaTime);
   } else if (mode === 'battle') {
     updateBattleMode(deltaTime);
@@ -117,6 +132,60 @@ function update(deltaTime: number): void {
     updateShopMode();
   } else if (mode === 'tm') {
     updateTMMode();
+  }
+}
+
+function updateTitleMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'a' | 'b' | null = null;
+  if (direction === 'up') input = 'up';
+  else if (direction === 'down') input = 'down';
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+
+  if (input) {
+    const result = handleTitleInput(input);
+    if (result === 'new-game') {
+      // Start new game - go to starter selection
+      initStarterSelect();
+      setGameMode('starter-select');
+    } else if (result === 'continue') {
+      // Load saved game (not implemented yet)
+      // For now, just start new game
+      initStarterSelect();
+      setGameMode('starter-select');
+    } else if (result === 'options') {
+      // Go to settings
+      initSettingsUI('title');
+      setGameMode('settings');
+    }
+  }
+}
+
+function updateSettingsMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | null = null;
+  if (direction) input = direction;
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+
+  if (input) {
+    const result = handleSettingsInput(input);
+    if (result === 'close') {
+      // Return to previous mode
+      const prevMode = getPreviousMode();
+      if (prevMode === 'title') {
+        initTitleScreen();
+        setGameMode('title');
+      } else {
+        initPartyMenu();
+        setGameMode('party-menu');
+      }
+    }
   }
 }
 
@@ -165,8 +234,10 @@ function updateBattleMode(deltaTime: number): void {
     }
   }
 
-  // Update HP bar animation
+  // Update animations
   updateHpAnimation(battleState, deltaTime);
+  updateEntryAnimation(battleState, deltaTime);
+  updateAttackAnimation(battleState, deltaTime);
 
   // Handle input
   const pressed = getJustPressed();
@@ -334,7 +405,11 @@ function updateTMMode(): void {
 function render(): void {
   const mode = getGameMode();
 
-  if (mode === 'overworld') {
+  if (mode === 'title') {
+    renderTitleScreen();
+  } else if (mode === 'settings') {
+    renderSettings();
+  } else if (mode === 'overworld') {
     renderOverworld();
   } else if (mode === 'battle') {
     const battleState = getBattleState();
@@ -353,6 +428,12 @@ function render(): void {
     renderShop();
   } else if (mode === 'tm') {
     renderTMUI();
+  }
+
+  // Draw screen transition overlay
+  const transitionAlpha = getTransitionAlpha();
+  if (transitionAlpha > 0) {
+    drawFadeOverlay(transitionAlpha);
   }
 
   present();

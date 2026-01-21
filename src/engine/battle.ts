@@ -66,6 +66,16 @@ export function createBattleState(
     animatingHp: {
       player: playerCreature.currentHp,
       enemy: enemyCreature.currentHp
+    },
+    entryAnimation: {
+      phase: 'enemy-enter',
+      progress: 0
+    },
+    attackAnimation: {
+      active: false,
+      type: 'physical',
+      attacker: 'player',
+      progress: 0
     }
   };
 }
@@ -412,6 +422,9 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
   // Queue attack message
   queueMessage(state, `${attackerName} used ${move.name}!`);
 
+  // Start attack animation based on move category
+  startAttackAnimation(state, attacker, move.category);
+
   // Calculate damage
   const result = calculateDamage(attackerCreature, defenderCreature, move);
 
@@ -599,4 +612,158 @@ export function updateHpAnimation(state: BattleState, deltaTime: number): void {
       state.animatingHp.enemy = state.enemyCreature.currentHp;
     }
   }
+}
+
+// Entry animation duration in ms
+const ENTRY_ANIMATION_DURATION = 400;
+
+// Update entry animation (creatures sliding into position)
+export function updateEntryAnimation(state: BattleState, deltaTime: number): void {
+  if (state.entryAnimation.phase === 'complete') return;
+
+  const progressDelta = deltaTime / ENTRY_ANIMATION_DURATION;
+  state.entryAnimation.progress += progressDelta;
+
+  if (state.entryAnimation.progress >= 1) {
+    state.entryAnimation.progress = 1;
+
+    if (state.entryAnimation.phase === 'enemy-enter') {
+      // Enemy finished entering, now player enters
+      state.entryAnimation.phase = 'player-enter';
+      state.entryAnimation.progress = 0;
+    } else if (state.entryAnimation.phase === 'player-enter') {
+      // Both have entered, animation complete
+      state.entryAnimation.phase = 'complete';
+    }
+  }
+}
+
+// Easing function for smooth deceleration
+export function easeOutQuad(t: number): number {
+  return 1 - (1 - t) * (1 - t);
+}
+
+// Get current sprite positions based on entry animation
+export function getEntryAnimationOffsets(state: BattleState): { enemyX: number; playerX: number } {
+  const enemyStartX = 100;  // Start off-screen right
+  const playerStartX = -70; // Start off-screen left
+
+  let enemyOffset = 0;
+  let playerOffset = 0;
+
+  if (state.entryAnimation.phase === 'enemy-enter') {
+    // Enemy sliding in from right
+    const easedProgress = easeOutQuad(state.entryAnimation.progress);
+    enemyOffset = enemyStartX * (1 - easedProgress);
+    playerOffset = playerStartX; // Player still off-screen
+  } else if (state.entryAnimation.phase === 'player-enter') {
+    // Enemy in position, player sliding in from left
+    enemyOffset = 0;
+    const easedProgress = easeOutQuad(state.entryAnimation.progress);
+    playerOffset = playerStartX * (1 - easedProgress);
+  }
+  // If 'complete', both offsets are 0
+
+  return { enemyX: enemyOffset, playerX: playerOffset };
+}
+
+// Attack animation duration in ms
+const ATTACK_ANIMATION_DURATION = 300;
+
+// Start an attack animation
+export function startAttackAnimation(
+  state: BattleState,
+  attacker: 'player' | 'enemy',
+  type: 'physical' | 'special' | 'status'
+): void {
+  state.attackAnimation = {
+    active: true,
+    type,
+    attacker,
+    progress: 0
+  };
+}
+
+// Update attack animation
+export function updateAttackAnimation(state: BattleState, deltaTime: number): void {
+  if (!state.attackAnimation.active) return;
+
+  const progressDelta = deltaTime / ATTACK_ANIMATION_DURATION;
+  state.attackAnimation.progress += progressDelta;
+
+  if (state.attackAnimation.progress >= 1) {
+    state.attackAnimation.active = false;
+    state.attackAnimation.progress = 0;
+  }
+}
+
+// Get attack animation visual effects
+export function getAttackAnimationEffects(state: BattleState): {
+  playerOffsetX: number;
+  enemyOffsetX: number;
+  playerShake: number;
+  enemyShake: number;
+  screenFlash: number;
+} {
+  const result = {
+    playerOffsetX: 0,
+    enemyOffsetX: 0,
+    playerShake: 0,
+    enemyShake: 0,
+    screenFlash: 0
+  };
+
+  if (!state.attackAnimation.active) return result;
+
+  const { type, attacker, progress } = state.attackAnimation;
+
+  if (type === 'physical') {
+    // Attacker lunges forward, target shakes
+    const lungeAmount = 12;
+    const lungeProgress = progress < 0.5
+      ? easeOutQuad(progress * 2)  // Lunge out
+      : easeOutQuad((1 - progress) * 2);  // Return
+
+    if (attacker === 'player') {
+      result.playerOffsetX = lungeAmount * lungeProgress;
+      // Target shakes in second half of animation
+      if (progress > 0.4 && progress < 0.8) {
+        result.enemyShake = Math.sin(progress * 50) * 3;
+      }
+    } else {
+      result.enemyOffsetX = -lungeAmount * lungeProgress;
+      if (progress > 0.4 && progress < 0.8) {
+        result.playerShake = Math.sin(progress * 50) * 3;
+      }
+    }
+  } else if (type === 'special') {
+    // Screen flash, target shakes
+    if (progress < 0.3) {
+      result.screenFlash = easeOutQuad(progress / 0.3) * 0.6;
+    } else if (progress < 0.5) {
+      result.screenFlash = (1 - (progress - 0.3) / 0.2) * 0.6;
+    }
+
+    // Target shakes
+    if (progress > 0.3 && progress < 0.8) {
+      const shakeAmount = Math.sin(progress * 50) * 3;
+      if (attacker === 'player') {
+        result.enemyShake = shakeAmount;
+      } else {
+        result.playerShake = shakeAmount;
+      }
+    }
+  } else if (type === 'status') {
+    // Subtle pulse on target
+    if (progress > 0.2 && progress < 0.8) {
+      const pulseAmount = Math.sin((progress - 0.2) * Math.PI / 0.6) * 2;
+      if (attacker === 'player') {
+        result.enemyShake = pulseAmount;
+      } else {
+        result.playerShake = pulseAmount;
+      }
+    }
+  }
+
+  return result;
 }
