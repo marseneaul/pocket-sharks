@@ -206,52 +206,47 @@ function renderActionMenu(selectedIndex: number): void {
 }
 
 function renderMoveMenu(creature: CreatureInstance, selectedIndex: number): void {
-  // Layout: moves list on left (2 columns), info box on right
-  // Text box: y=96, height=48, full width=160
+  // Layout: Single column move list on left, compact info on right
+  // Text box: y=96, height=48, width=160
   const boxY = BATTLE_UI.TEXT_BOX_Y;
 
-  // Info box on right side (shows PP and type for selected move)
-  const infoBoxWidth = 56;
-  const infoBoxX = SCREEN_WIDTH - infoBoxWidth - 4;  // x=100
-  const infoBoxY = boxY + 4;
-  const infoBoxHeight = 40;
-
-  drawBox(infoBoxX, infoBoxY, infoBoxWidth, infoBoxHeight);
-
-  const selectedMove = creature.moves[selectedIndex];
-  if (selectedMove) {
-    // PP display - use 2 lines for clarity
-    drawText('PP', infoBoxX + 4, infoBoxY + 6);
-    const ppText = `${selectedMove.currentPp}/${selectedMove.move.pp}`;
-    drawText(ppText, infoBoxX + 4, infoBoxY + 16);
-
-    // Type display
-    const typeDisplay = selectedMove.move.type.toUpperCase().substring(0, 6);
-    drawText(typeDisplay, infoBoxX + 4, infoBoxY + 28);
-  }
-
-  // Moves list - fits in remaining space (x=0 to x=96)
-  // 2x2 grid like action menu for up to 4 moves
-  const movesStartX = 8;
-  const movesStartY = boxY + 8;
-  const colWidth = 44;  // Each move column is ~5 chars + arrow
-  const rowHeight = 18;
+  // Moves list - single column, 10 chars max for names
+  const movesX = 6;
+  const movesY = boxY + 6;
+  const lineHeight = 10;
 
   for (let i = 0; i < creature.moves.length && i < 4; i++) {
     const move = creature.moves[i];
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const x = movesStartX + col * colWidth;
-    const y = movesStartY + row * rowHeight;
+    const y = movesY + i * lineHeight;
 
     // Selector arrow
     if (i === selectedIndex) {
-      drawText('>', x, y);
+      drawText('>', movesX, y);
     }
 
-    // Move name - truncate to 4 chars to fit 2-column layout
-    const displayName = move.move.name.substring(0, 4);
-    drawText(displayName, x + 8, y);
+    // Move name - allow up to 10 chars (80px)
+    const displayName = move.move.name.length > 10
+      ? move.move.name.substring(0, 9) + '.'
+      : move.move.name;
+    drawText(displayName, movesX + 10, y);
+  }
+
+  // Info box on right - compact layout
+  const selectedMove = creature.moves[selectedIndex];
+  if (selectedMove) {
+    const infoX = 100;
+    const infoY = boxY + 4;
+    drawBox(infoX, infoY, 56, 40);
+
+    // Type on top line
+    const typeDisplay = selectedMove.move.type.toUpperCase();
+    const truncType = typeDisplay.length > 6 ? typeDisplay.substring(0, 5) + '.' : typeDisplay;
+    drawText(truncType, infoX + 4, infoY + 6);
+
+    // PP label and value
+    drawText('PP', infoX + 4, infoY + 18);
+    const ppText = `${selectedMove.currentPp}/${selectedMove.move.pp}`;
+    drawText(ppText, infoX + 4, infoY + 28);
   }
 }
 
