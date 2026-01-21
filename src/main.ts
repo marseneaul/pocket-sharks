@@ -8,6 +8,7 @@ import { renderShop, handleShopInput, initShopUI } from './renderer/shop-ui.ts';
 import { renderTMUI, handleTMInput, initTMUI } from './renderer/tm-ui.ts';
 import { renderTitleScreen, handleTitleInput, initTitleScreen } from './renderer/title-ui.ts';
 import { renderSettings, handleSettingsInput, initSettingsUI, getPreviousMode } from './renderer/settings-ui.ts';
+import { renderDebug, handleDebugInput, initDebugUI } from './renderer/debug-ui.ts';
 import { getItem } from './data/items.ts';
 import { getShop } from './data/shops.ts';
 import { advanceTypewriter, isTypewriterComplete } from './renderer/text.ts';
@@ -29,8 +30,12 @@ import {
   setStarterCreature,
   updateTransition,
   getTransitionAlpha,
-  isTransitioning
+  isTransitioning,
+  startWildBattle,
+  getMap
 } from './engine/game-state.ts';
+import { getCreature } from './data/creatures.ts';
+import { createCreatureInstance } from './engine/battle.ts';
 import { RESEARCH_STATION } from './data/maps/research-station.ts';
 import { ROUTE_1 } from './data/maps/route-1.ts';
 import { ROUTE_2 } from './data/maps/route-2.ts';
@@ -76,9 +81,18 @@ function init(): void {
   player.pixelX = player.x * 8;
   player.pixelY = player.y * 8;
 
-  // Start at title screen
-  initTitleScreen();
-  setGameMode('title');
+  // Check for debug mode URL parameter (?debug=1)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('debug') === '1') {
+    // Start directly in debug mode with a starter so battles work
+    setStarterCreature(1);
+    initDebugUI();
+    setGameMode('debug');
+  } else {
+    // Start at title screen
+    initTitleScreen();
+    setGameMode('title');
+  }
 
   // Start game loop
   requestAnimationFrame(gameLoop);
@@ -112,10 +126,20 @@ function update(deltaTime: number): void {
     tryStartMusic();
   }
 
+  // Select button opens debug mode from most screens
+  if (pressed.select && mode !== 'debug' && mode !== 'battle') {
+    previousModeBeforeDebug = mode;
+    initDebugUI();
+    setGameMode('debug');
+    return;
+  }
+
   if (mode === 'title') {
     updateTitleMode();
   } else if (mode === 'settings') {
     updateSettingsMode();
+  } else if (mode === 'debug') {
+    updateDebugMode();
   } else if (mode === 'overworld') {
     updateOverworldMode(deltaTime);
   } else if (mode === 'battle') {
@@ -184,6 +208,71 @@ function updateSettingsMode(): void {
       } else {
         initPartyMenu();
         setGameMode('party-menu');
+      }
+    }
+  }
+}
+
+let previousModeBeforeDebug: ReturnType<typeof getGameMode> = 'title';
+
+function updateDebugMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'l' | 'r' | null = null;
+  if (direction) input = direction;
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+  else if (pressed.l) input = 'l';
+  else if (pressed.r) input = 'r';
+
+  if (input) {
+    const result = handleDebugInput(input);
+
+    if (result.type === 'close') {
+      setGameMode(previousModeBeforeDebug);
+    } else if (result.type === 'warp') {
+      const map = getMap(result.mapId);
+      if (map) {
+        setCurrentMap(map);
+        const player = getPlayer();
+        player.x = 5;
+        player.y = 5;
+        player.pixelX = player.x * 8;
+        player.pixelY = player.y * 8;
+        setGameMode('overworld');
+      }
+    } else if (result.type === 'battle') {
+      const species = getCreature(result.creatureId);
+      if (species) {
+        const enemy = createCreatureInstance(species, result.level);
+        startWildBattle(enemy);
+      }
+    } else if (result.type === 'screen') {
+      switch (result.screen) {
+        case 'title':
+          initTitleScreen();
+          setGameMode('title');
+          break;
+        case 'starter-select':
+          initStarterSelect();
+          setGameMode('starter-select');
+          break;
+        case 'overworld':
+          setGameMode('overworld');
+          break;
+        case 'party-menu':
+          initPartyMenu();
+          setGameMode('party-menu');
+          break;
+        case 'pc':
+          initPCUI();
+          setGameMode('pc');
+          break;
+        case 'settings':
+          initSettingsUI('title');
+          setGameMode('settings');
+          break;
       }
     }
   }
@@ -409,6 +498,8 @@ function render(): void {
     renderTitleScreen();
   } else if (mode === 'settings') {
     renderSettings();
+  } else if (mode === 'debug') {
+    renderDebug();
   } else if (mode === 'overworld') {
     renderOverworld();
   } else if (mode === 'battle') {
