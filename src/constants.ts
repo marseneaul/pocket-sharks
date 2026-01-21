@@ -13,7 +13,7 @@ export const DMG_PALETTE = {
   DARK: '#555555',   // Dark gray
   LIGHT: '#aaaaaa',  // Light gray
   WHITE: '#f0f0f0',  // Lightest (backgrounds)
-  // Sprite-specific aliases (3 visible colors)
+  // Sprite-specific aliases (3 visible colors) - legacy, use SPRITE_PALETTES instead
   SPRITE_DARK: '#0f0f0f',
   SPRITE_MID: '#555555',
   SPRITE_LIGHT: '#aaaaaa'
@@ -26,6 +26,46 @@ export const DMG_COLORS = [
   DMG_PALETTE.LIGHT,
   DMG_PALETTE.WHITE
 ] as const;
+
+// GBC-style sprite palettes (8 palettes, 3 visible colors each)
+// Index 0 is transparent, indices 1-3 are dark/mid/light
+export const SPRITE_PALETTES: readonly (readonly [null, string, string, string])[] = [
+  // Palette 0: Gray (default - great whites, reef sharks)
+  [null, '#1a1a2e', '#4a4a6a', '#8a8aaa'],
+
+  // Palette 1: Blue (oceanic sharks, blue sharks)
+  [null, '#1a2a4e', '#3a5a8e', '#6a9ace'],
+
+  // Palette 2: Yellow/Tan (lemon shark, nurse shark)
+  [null, '#4a3a1a', '#8a7a3a', '#caba6a'],
+
+  // Palette 3: Brown (wobbegong, carpet sharks)
+  [null, '#3a2a1a', '#6a4a2a', '#9a7a4a'],
+
+  // Palette 4: Red/Orange (fire types, blacktip)
+  [null, '#4a1a1a', '#8a3a2a', '#ca6a4a'],
+
+  // Palette 5: Purple/Deep (deep sea, goblin shark)
+  [null, '#2a1a3a', '#5a3a6a', '#8a6a9a'],
+
+  // Palette 6: Green (algae types, kelp sharks)
+  [null, '#1a3a2a', '#3a6a4a', '#6a9a7a'],
+
+  // Palette 7: White/Pale (ghost sharks, albino)
+  [null, '#5a5a6a', '#9a9aaa', '#dadaea'],
+] as const;
+
+// Palette indices for easy reference
+export const PALETTE = {
+  GRAY: 0,
+  BLUE: 1,
+  YELLOW: 2,
+  BROWN: 3,
+  RED: 4,
+  PURPLE: 5,
+  GREEN: 6,
+  WHITE: 7,
+} as const;
 
 // Tile and sprite sizes
 export const TILE_SIZE = 8;

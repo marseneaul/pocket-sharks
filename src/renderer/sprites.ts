@@ -1,5 +1,5 @@
 import { getContext } from './canvas.ts';
-import { DMG_PALETTE } from '../constants.ts';
+import { SPRITE_PALETTES, PALETTE } from '../constants.ts';
 
 interface SpriteData {
   width: number;
@@ -3015,24 +3015,66 @@ export function getSprite(creatureId: number, isFront: boolean): SpriteData {
   return spriteCache.get(key)!;
 }
 
-export function drawSprite(sprite: SpriteData, x: number, y: number, flipX: boolean = false): void {
+export function drawSprite(sprite: SpriteData, x: number, y: number, flipX: boolean = false, paletteIndex: number = 0): void {
   const ctx = getContext();
-  // GBC sprite palette: transparent + 3 visible colors
-  const colors = [null, DMG_PALETTE.SPRITE_DARK, DMG_PALETTE.SPRITE_MID, DMG_PALETTE.SPRITE_LIGHT];
+  // Use GBC sprite palette (index 0 is transparent, 1-3 are visible colors)
+  const palette = SPRITE_PALETTES[paletteIndex] || SPRITE_PALETTES[0];
 
   for (let row = 0; row < sprite.height; row++) {
     for (let col = 0; col < sprite.width; col++) {
       const srcCol = flipX ? sprite.width - 1 - col : col;
       const colorIndex = sprite.pixels[row][srcCol];
-      if (colorIndex > 0) {
-        ctx.fillStyle = colors[colorIndex]!;
+      if (colorIndex > 0 && palette[colorIndex]) {
+        ctx.fillStyle = palette[colorIndex]!;
         ctx.fillRect(Math.floor(x + col), Math.floor(y + row), 1, 1);
       }
     }
   }
 }
 
+// Creature ID to palette mapping
+const CREATURE_PALETTES: Record<number, number> = {
+  // Starters and evolutions
+  1: PALETTE.RED,      // Blacktip Reef (fire type)
+  2: PALETTE.RED,      // Blacktip evolution
+  3: PALETTE.RED,      // Blacktip final
+  4: PALETTE.GRAY,     // Whitetip Reef (fighting)
+  5: PALETTE.GRAY,     // Whitetip evolution
+  6: PALETTE.GRAY,     // Whitetip final
+  7: PALETTE.BLUE,     // Grey Reef (steel) - blue-gray
+  8: PALETTE.BLUE,     // Grey Reef evolution
+  9: PALETTE.BLUE,     // Grey Reef final
+
+  // Other sharks by type/appearance
+  10: PALETTE.GRAY,    // Great White
+  11: PALETTE.GRAY,    // Great White evo
+  12: PALETTE.PURPLE,  // Hammerhead (psychic)
+  13: PALETTE.PURPLE,  // Hammerhead evo
+  14: PALETTE.BLUE,    // Stingray (ray type)
+  15: PALETTE.PURPLE,  // Lanternshark (electric/deep)
+  16: PALETTE.YELLOW,  // Lemon Shark
+  17: PALETTE.YELLOW,  // Lemon Shark evo
+  18: PALETTE.BROWN,   // Wobbegong (algae)
+  19: PALETTE.BROWN,   // Wobbegong evo
+  20: PALETTE.WHITE,   // Ghost Shark
+  21: PALETTE.WHITE,   // Ghost Shark evo
+  22: PALETTE.PURPLE,  // Goblin Shark (deepsea)
+  23: PALETTE.PURPLE,  // Goblin Shark evo
+  24: PALETTE.BLUE,    // Whale Shark (steel)
+  25: PALETTE.GREEN,   // Greenland Shark (ice)
+  26: PALETTE.BLUE,    // Mako (electric)
+  27: PALETTE.BLUE,    // Manta Ray
+  28: PALETTE.GRAY,    // Tiger Shark
+  29: PALETTE.BLUE,    // Blue Shark
+  30: PALETTE.BROWN,   // Nurse Shark
+};
+
+export function getCreaturePalette(creatureId: number): number {
+  return CREATURE_PALETTES[creatureId] ?? PALETTE.GRAY;
+}
+
 export function drawCreatureSprite(creatureId: number, x: number, y: number, isFront: boolean): void {
   const sprite = getSprite(creatureId, isFront);
-  drawSprite(sprite, x, y, false);
+  const palette = getCreaturePalette(creatureId);
+  drawSprite(sprite, x, y, false, palette);
 }
