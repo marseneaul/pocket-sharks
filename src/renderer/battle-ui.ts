@@ -206,37 +206,52 @@ function renderActionMenu(selectedIndex: number): void {
 }
 
 function renderMoveMenu(creature: CreatureInstance, selectedIndex: number): void {
-  // Moves on the left, PP info on the right
-  const movesX = 8;
-  const movesY = BATTLE_UI.TEXT_BOX_Y + 8;
+  // Layout: moves list on left (2 columns), info box on right
+  // Text box: y=96, height=48, full width=160
+  const boxY = BATTLE_UI.TEXT_BOX_Y;
 
-  // Draw moves list (up to 4, in a column for clarity)
+  // Info box on right side (shows PP and type for selected move)
+  const infoBoxWidth = 56;
+  const infoBoxX = SCREEN_WIDTH - infoBoxWidth - 4;  // x=100
+  const infoBoxY = boxY + 4;
+  const infoBoxHeight = 40;
+
+  drawBox(infoBoxX, infoBoxY, infoBoxWidth, infoBoxHeight);
+
+  const selectedMove = creature.moves[selectedIndex];
+  if (selectedMove) {
+    // PP display - use 2 lines for clarity
+    drawText('PP', infoBoxX + 4, infoBoxY + 6);
+    const ppText = `${selectedMove.currentPp}/${selectedMove.move.pp}`;
+    drawText(ppText, infoBoxX + 4, infoBoxY + 16);
+
+    // Type display
+    const typeDisplay = selectedMove.move.type.toUpperCase().substring(0, 6);
+    drawText(typeDisplay, infoBoxX + 4, infoBoxY + 28);
+  }
+
+  // Moves list - fits in remaining space (x=0 to x=96)
+  // 2x2 grid like action menu for up to 4 moves
+  const movesStartX = 8;
+  const movesStartY = boxY + 8;
+  const colWidth = 44;  // Each move column is ~5 chars + arrow
+  const rowHeight = 18;
+
   for (let i = 0; i < creature.moves.length && i < 4; i++) {
     const move = creature.moves[i];
-    const y = movesY + i * 10;
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const x = movesStartX + col * colWidth;
+    const y = movesStartY + row * rowHeight;
 
     // Selector arrow
     if (i === selectedIndex) {
-      drawText('>', movesX, y);
+      drawText('>', x, y);
     }
 
-    // Move name (truncate to 7 chars)
-    const displayName = move.move.name.substring(0, 7);
-    drawText(displayName, movesX + 8, y);
-  }
-
-  // Draw PP info box on the right
-  const selectedMove = creature.moves[selectedIndex];
-  if (selectedMove) {
-    const infoX = 96;
-    const infoY = BATTLE_UI.TEXT_BOX_Y + 4;
-    drawBox(infoX, infoY, 60, 40);
-
-    drawText('PP', infoX + 4, infoY + 6);
-    drawText(`${selectedMove.currentPp}/${selectedMove.move.pp}`, infoX + 24, infoY + 6);
-
-    const typeDisplay = selectedMove.move.type.toUpperCase().substring(0, 8);
-    drawText(typeDisplay, infoX + 4, infoY + 20);
+    // Move name - truncate to 4 chars to fit 2-column layout
+    const displayName = move.move.name.substring(0, 4);
+    drawText(displayName, x + 8, y);
   }
 }
 
