@@ -36,7 +36,14 @@ import {
 } from './engine/game-state.ts';
 import { getCreature } from './data/creatures.ts';
 import { createCreatureInstance } from './engine/battle.ts';
-import { RESEARCH_STATION } from './data/maps/research-station.ts';
+// San Diego Region maps (Region 1)
+import { SCRIPPS_LAB } from './data/maps/research-station.ts';
+import { LA_JOLLA_SHORES } from './data/maps/la-jolla-shores.ts';
+import { LA_JOLLA_TIDE_POOLS } from './data/maps/la-jolla-tide-pools.ts';
+import { KELP_FOREST_ROUTE } from './data/maps/kelp-forest-route.ts';
+import { SAN_DIEGO_BAY } from './data/maps/san-diego-bay.ts';
+import { RAYS_GYM } from './data/maps/rays-gym.ts';
+// Legacy maps (will be reworked later)
 import { ROUTE_1 } from './data/maps/route-1.ts';
 import { ROUTE_2 } from './data/maps/route-2.ts';
 import { ROUTE_3 } from './data/maps/route-3.ts';
@@ -61,8 +68,14 @@ function init(): void {
   // Initialize game state
   initGameState();
 
-  // Register and load maps
-  registerMap(RESEARCH_STATION);
+  // Register San Diego Region maps (Region 1)
+  registerMap(SCRIPPS_LAB);
+  registerMap(LA_JOLLA_SHORES);
+  registerMap(LA_JOLLA_TIDE_POOLS);
+  registerMap(KELP_FOREST_ROUTE);
+  registerMap(SAN_DIEGO_BAY);
+  registerMap(RAYS_GYM);
+  // Register legacy maps (for backwards compatibility during transition)
   registerMap(ROUTE_1);
   registerMap(ROUTE_2);
   registerMap(ROUTE_3);
@@ -72,7 +85,8 @@ function init(): void {
   registerMap(KELP_GYM);
   registerMap(ROUTE_4);
   registerMap(FINNER_HQ);
-  setCurrentMap(RESEARCH_STATION);
+  // Start player in Scripps Marine Lab (San Diego starting area)
+  setCurrentMap(SCRIPPS_LAB);
 
   // Position player in research station
   const player = getPlayer();

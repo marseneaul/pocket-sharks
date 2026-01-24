@@ -1,4 +1,5 @@
-import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC } from '../types/overworld.ts';
+import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel } from '../types/overworld.ts';
+import { CERT_HIERARCHY } from '../types/overworld.ts';
 import type { BattleState, CreatureInstance } from '../types/index.ts';
 import type { InventorySlot } from '../data/items.ts';
 import { createCreatureInstance, createBattleState, initBattle } from './battle.ts';
@@ -44,7 +45,8 @@ export function initGameState(): void {
     isMoving: false,
     isSwimming: false,
     moveProgress: 0,
-    party: []  // Empty until starter is chosen
+    party: [],  // Empty until starter is chosen
+    certifications: ['wading']  // Start with basic wading/snorkeling
   };
 
   // Maps will be loaded separately
@@ -353,3 +355,46 @@ export function setStarterCreature(speciesId: number): void {
   const starter = createCreatureInstance(starterSpecies, 5);
   gameState.overworld.player.party = [starter];
 }
+
+// Certification management
+export function getPlayerCertifications(): CertificationLevel[] {
+  return gameState.overworld.player.certifications;
+}
+
+export function hasCertification(cert: CertificationLevel): boolean {
+  const playerCerts = gameState.overworld.player.certifications;
+  if (playerCerts.length === 0) return cert === 'wading';
+
+  const playerHighestIndex = Math.max(
+    ...playerCerts.map(c => CERT_HIERARCHY.indexOf(c))
+  );
+  const requiredIndex = CERT_HIERARCHY.indexOf(cert);
+
+  return playerHighestIndex >= requiredIndex;
+}
+
+export function grantCertification(cert: CertificationLevel): void {
+  if (!gameState.overworld.player.certifications.includes(cert)) {
+    gameState.overworld.player.certifications.push(cert);
+  }
+}
+
+export function getHighestCertification(): CertificationLevel {
+  const certs = gameState.overworld.player.certifications;
+  if (certs.length === 0) return 'wading';
+
+  const highestIndex = Math.max(
+    ...certs.map(c => CERT_HIERARCHY.indexOf(c))
+  );
+  return CERT_HIERARCHY[highestIndex];
+}
+
+// Human-readable certification names
+export const CERT_NAMES: Record<CertificationLevel, string> = {
+  'wading': 'Wading/Snorkeling',
+  'openwater': 'Open Water SCUBA',
+  'advanced': 'Advanced SCUBA',
+  'tech': 'Technical Diving',
+  'openocean': 'Open Ocean Swimming',
+  'submarine': 'Submarine Operation'
+};

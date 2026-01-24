@@ -124,6 +124,111 @@ function generateTileSprite(tileIndex: number): TileSprite {
       pixels[4][2] = 3; pixels[4][3] = 3; pixels[4][4] = 3; pixels[4][5] = 3;
       pixels[5][3] = 3; pixels[5][4] = 3;
       break;
+
+    case TILE.REEF:
+      // Reef water - slightly different pattern from regular water
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          const pattern = (x + y) % 3;
+          if (pattern === 0) pixels[y][x] = 1;
+          else pixels[y][x] = 2;
+        }
+      }
+      // Coral-like dots
+      pixels[1][1] = 3; pixels[2][5] = 3;
+      pixels[4][2] = 3; pixels[5][6] = 3;
+      pixels[6][1] = 3; pixels[7][4] = 3;
+      break;
+
+    case TILE.DEEP_REEF:
+      // Deeper reef - darker with some coral
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          const pattern = (x + y) % 3;
+          if (pattern === 0) pixels[y][x] = 0;
+          else pixels[y][x] = 1;
+        }
+      }
+      // Dim coral highlights
+      pixels[1][3] = 2; pixels[3][6] = 2;
+      pixels[5][1] = 2; pixels[6][5] = 2;
+      break;
+
+    case TILE.CAVE:
+      // Cave - very dark with occasional lighter spots
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = 0;
+        }
+      }
+      // Rock texture hints
+      pixels[0][4] = 1; pixels[2][1] = 1;
+      pixels[4][6] = 1; pixels[6][3] = 1;
+      pixels[3][3] = 1; pixels[7][7] = 1;
+      break;
+
+    case TILE.PELAGIC:
+      // Open ocean - blue gradient effect
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          if ((x + y) % 5 === 0) pixels[y][x] = 1;
+          else if ((x + y) % 3 === 0) pixels[y][x] = 2;
+          else pixels[y][x] = 2;
+        }
+      }
+      // Wave pattern
+      pixels[2][1] = 3; pixels[2][2] = 3;
+      pixels[6][5] = 3; pixels[6][6] = 3;
+      break;
+
+    case TILE.ABYSS:
+      // Abyssal depths - near black
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = 0;
+        }
+      }
+      // Occasional bioluminescence
+      pixels[2][5] = 1;
+      pixels[5][2] = 1;
+      break;
+
+    case TILE.REEF_KELP:
+      // Reef with kelp overlay
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          const pattern = (x + y) % 3;
+          if (pattern === 0) pixels[y][x] = 1;
+          else pixels[y][x] = 2;
+        }
+      }
+      // Kelp strands (like regular kelp)
+      pixels[1][2] = 0; pixels[2][2] = 1; pixels[3][3] = 0;
+      pixels[4][2] = 1; pixels[5][2] = 0; pixels[6][3] = 1;
+      // Coral dots
+      pixels[2][6] = 3; pixels[5][5] = 3;
+      break;
+
+    case TILE.TIDE_POOL:
+      // Tide pool - shallow rocky pool
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          const dist = Math.abs(x - 3.5) + Math.abs(y - 3.5);
+          if (dist < 3) {
+            // Water in center
+            pixels[y][x] = 2;
+          } else {
+            // Rocky edge
+            pixels[y][x] = 1;
+          }
+        }
+      }
+      // Water highlights
+      pixels[3][3] = 3; pixels[4][4] = 3;
+      // Rock texture
+      pixels[0][0] = 0; pixels[0][7] = 0;
+      pixels[7][0] = 0; pixels[7][7] = 0;
+      break;
   }
 
   return { pixels };

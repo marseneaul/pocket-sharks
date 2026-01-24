@@ -1,4 +1,5 @@
-import type { EncounterEntry, MapData } from '../types/overworld.ts';
+import type { EncounterEntry, MapData, CertificationLevel } from '../types/overworld.ts';
+import { CERT_HIERARCHY } from '../types/overworld.ts';
 import type { CreatureInstance } from '../types/index.ts';
 import { createCreatureInstance } from '../engine/battle.ts';
 import { getCreature } from './creatures.ts';
@@ -8,18 +9,42 @@ export function checkEncounter(encounterRate: number): boolean {
   return Math.random() * 100 < encounterRate;
 }
 
+// Check if player has required certification for an encounter
+function hasRequiredCert(
+  playerCerts: CertificationLevel[],
+  requiredCert: CertificationLevel | undefined
+): boolean {
+  if (!requiredCert) return true;
+  if (playerCerts.length === 0) return requiredCert === 'wading';
+
+  const playerHighestIndex = Math.max(
+    ...playerCerts.map(c => CERT_HIERARCHY.indexOf(c))
+  );
+  const requiredIndex = CERT_HIERARCHY.indexOf(requiredCert);
+
+  return playerHighestIndex >= requiredIndex;
+}
+
 // Generate a wild creature from encounter table
-export function generateWildCreature(encounterTable: EncounterEntry[]): CreatureInstance | null {
-  if (encounterTable.length === 0) return null;
+export function generateWildCreature(
+  encounterTable: EncounterEntry[],
+  playerCerts: CertificationLevel[] = ['wading']
+): CreatureInstance | null {
+  // Filter encounters by player's certification
+  const availableEncounters = encounterTable.filter(
+    entry => hasRequiredCert(playerCerts, entry.requiredCert)
+  );
+
+  if (availableEncounters.length === 0) return null;
 
   // Calculate total weight
-  const totalWeight = encounterTable.reduce((sum, entry) => sum + entry.weight, 0);
+  const totalWeight = availableEncounters.reduce((sum, entry) => sum + entry.weight, 0);
 
   // Roll for which species
   let roll = Math.random() * totalWeight;
   let selectedEntry: EncounterEntry | null = null;
 
-  for (const entry of encounterTable) {
+  for (const entry of availableEncounters) {
     roll -= entry.weight;
     if (roll <= 0) {
       selectedEntry = entry;
@@ -28,7 +53,7 @@ export function generateWildCreature(encounterTable: EncounterEntry[]): Creature
   }
 
   if (!selectedEntry) {
-    selectedEntry = encounterTable[0];
+    selectedEntry = availableEncounters[0];
   }
 
   // Get species
@@ -43,7 +68,11 @@ export function generateWildCreature(encounterTable: EncounterEntry[]): Creature
 }
 
 // Try to trigger an encounter on a kelp tile
-export function tryEncounter(map: MapData, encounterRate: number): CreatureInstance | null {
+export function tryEncounter(
+  map: MapData,
+  encounterRate: number,
+  playerCerts: CertificationLevel[] = ['wading']
+): CreatureInstance | null {
   if (!checkEncounter(encounterRate)) return null;
-  return generateWildCreature(map.encounterTable);
+  return generateWildCreature(map.encounterTable, playerCerts);
 }

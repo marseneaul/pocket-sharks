@@ -1,7 +1,28 @@
 import type { CreatureInstance } from './index.ts';
 
+// Diving certification levels (progression system)
+export type CertificationLevel =
+  | 'wading'      // Start - tide pools, beaches, snorkeling
+  | 'openwater'   // SCUBA Open Water - reefs to ~60ft
+  | 'advanced'    // Advanced SCUBA - deep reefs, wrecks, night diving
+  | 'tech'        // Tech Diving - cave systems, deep wrecks
+  | 'openocean'   // Open Ocean Swimming - pelagic encounters
+  | 'submarine';  // Submarine - abyssal depths
+
+// Certification hierarchy (each level includes all previous)
+export const CERT_HIERARCHY: CertificationLevel[] = [
+  'wading',
+  'openwater',
+  'advanced',
+  'tech',
+  'openocean',
+  'submarine'
+];
+
 // Tile types
-export type TileType = 'floor' | 'wall' | 'water' | 'kelp' | 'deep' | 'sand' | 'dock' | 'heal';
+export type TileType =
+  | 'floor' | 'wall' | 'water' | 'kelp' | 'deep' | 'sand' | 'dock' | 'heal'
+  | 'shallow' | 'reef' | 'deep_reef' | 'cave' | 'pelagic' | 'abyss';
 
 // Direction for player facing and movement
 export type Direction = 'up' | 'down' | 'left' | 'right';
@@ -14,6 +35,7 @@ export interface TileDef {
   encounter: boolean;       // Can trigger wild encounters
   encounterRate: number;    // 0-100 chance per step
   heal?: boolean;           // Heals party when stepped on
+  requiredCert?: CertificationLevel;  // Certification needed to access this tile
 }
 
 // Warp point to another map
@@ -23,6 +45,8 @@ export interface Warp {
   targetMap: string;
   targetX: number;
   targetY: number;
+  requiredCert?: CertificationLevel;  // Certification needed to use this warp
+  blockedMessage?: string;            // Message shown if player lacks cert
 }
 
 // Trainer definition for NPC battles
@@ -53,6 +77,8 @@ export interface EncounterEntry {
   minLevel: number;
   maxLevel: number;
   weight: number;
+  requiredCert?: CertificationLevel;  // Only encounter if player has this cert
+  method?: 'wading' | 'snorkel' | 'scuba' | 'fishing' | 'night' | 'submarine';  // How this species is encountered
 }
 
 // Map data structure
@@ -79,6 +105,7 @@ export interface PlayerState {
   isSwimming: boolean;
   moveProgress: number;        // 0-1 for animation
   party: CreatureInstance[];
+  certifications: CertificationLevel[];  // Diving certifications earned
 }
 
 // Overworld state

@@ -1,13 +1,40 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition } from './game-state.ts';
-import { getTileDef, canWalkOn, shouldSwim } from '../data/tiles.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification } from './game-state.ts';
+import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
+
+// Message to display when movement is blocked (certification required)
+let blockedMessage: string | null = null;
+let blockedMessageTimer: number = 0;
+const BLOCKED_MESSAGE_DURATION = 2000; // 2 seconds
+
+export function getBlockedMessageState(): { message: string | null; timer: number } {
+  return { message: blockedMessage, timer: blockedMessageTimer };
+}
+
+export function clearBlockedMessage(): void {
+  blockedMessage = null;
+  blockedMessageTimer = 0;
+}
+
+function showBlockedMessage(message: string): void {
+  blockedMessage = message;
+  blockedMessageTimer = BLOCKED_MESSAGE_DURATION;
+}
 
 const TILE_SIZE = 8;
 const MOVE_SPEED = 2; // Pixels per frame
 
-export function updateOverworld(_deltaTime: number): void {
+export function updateOverworld(deltaTime: number): void {
   const player = getPlayer();
+
+  // Update blocked message timer
+  if (blockedMessageTimer > 0) {
+    blockedMessageTimer -= deltaTime;
+    if (blockedMessageTimer <= 0) {
+      clearBlockedMessage();
+    }
+  }
 
   if (player.isMoving) {
     // Continue movement animation
@@ -59,13 +86,19 @@ function onTileLand(player: PlayerState): void {
   // Check for warp
   const warp = findWarp(map, player.x, player.y);
   if (warp) {
+    // Check certification requirement for warp
+    if (warp.requiredCert && !hasCertification(warp.requiredCert)) {
+      const message = warp.blockedMessage || `You need a higher diving certification to go here.`;
+      showBlockedMessage(message);
+      return;
+    }
     doWarp(warp);
     return;
   }
 
   // Check for wild encounter
   if (tileDef.encounter && tileDef.encounterRate > 0) {
-    const wildCreature = tryEncounter(map, tileDef.encounterRate);
+    const wildCreature = tryEncounter(map, tileDef.encounterRate, getPlayerCertifications());
     if (wildCreature) {
       startWildBattle(wildCreature);
       return;
@@ -102,6 +135,7 @@ function doWarp(warp: Warp): void {
 export function tryMove(direction: Direction): boolean {
   const player = getPlayer();
   const map = getCurrentMap();
+  const playerCerts = getPlayerCertifications();
 
   // Can't move if already moving
   if (player.isMoving) return false;
@@ -140,18 +174,25 @@ export function tryMove(direction: Direction): boolean {
   // Check if we can move there
   const targetIsWater = shouldSwim(targetTile);
 
+  // Check for certification-blocked tiles first
+  const certBlockMessage = getBlockedMessage(targetTile, playerCerts);
+  if (certBlockMessage) {
+    showBlockedMessage(certBlockMessage);
+    return false;
+  }
+
   // Handle land/water transitions
   if (player.isSwimming && !targetIsWater) {
     // Exiting water onto land
-    if (!canWalkOn(targetTile, false)) return false;
+    if (!canWalkOn(targetTile, false, playerCerts)) return false;
     // Will transition to walking
   } else if (!player.isSwimming && targetIsWater) {
     // Entering water from land
-    if (!canWalkOn(targetTile, true)) return false;
+    if (!canWalkOn(targetTile, true, playerCerts)) return false;
     // Will transition to swimming
   } else {
     // Same terrain type
-    if (!canWalkOn(targetTile, player.isSwimming)) return false;
+    if (!canWalkOn(targetTile, player.isSwimming, playerCerts)) return false;
   }
 
   // Check for NPC collision
