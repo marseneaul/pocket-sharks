@@ -2,7 +2,9 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT, DMG_PALETTE } from '../constants.ts';
 import { clear, getContext } from './canvas.ts';
 import { drawText } from './text.ts';
 import { drawTile, drawPlayer } from './tileset.ts';
+import { drawNPC } from './npc-sprites.ts';
 import { getPlayer, getCurrentMap } from '../engine/game-state.ts';
+import { getNPCRenderPosition, getNPCWalkFrame } from '../engine/npc-movement.ts';
 import type { MapData, PlayerState } from '../types/overworld.ts';
 
 const TILE_SIZE = 8;
@@ -62,14 +64,29 @@ function renderTiles(map: MapData, cameraX: number, cameraY: number): void {
 
 function renderNPCs(map: MapData, cameraX: number, cameraY: number): void {
   for (const npc of map.npcs) {
-    const screenX = npc.x * TILE_SIZE - cameraX;
-    const screenY = npc.y * TILE_SIZE - cameraY;
+    // Get smooth pixel position for wandering NPCs
+    const pos = getNPCRenderPosition(npc);
+    const screenX = pos.x - cameraX;
+    const screenY = pos.y - cameraY;
 
     // Only draw if on screen
     if (screenX >= -PLAYER_SIZE && screenX < SCREEN_WIDTH &&
         screenY >= -PLAYER_SIZE && screenY < SCREEN_HEIGHT) {
-      // Draw NPC as simple figure (reuse player sprite for now)
-      drawPlayer(screenX - 4, screenY - 8, npc.facing, 0, false);
+      // Offset to center 16x16 sprite on 8x8 tile
+      const drawX = screenX - 4;
+      const drawY = screenY - 8;
+
+      // Get walk animation frame
+      const walkFrame = getNPCWalkFrame(npc);
+
+      // Try to draw NPC-specific sprite, fall back to player sprite
+      const spriteType = npc.spriteType || 'player';
+      const drawn = drawNPC(drawX, drawY, spriteType, npc.facing, walkFrame);
+
+      if (!drawn) {
+        // Fall back to player sprite for 'player' type or unknown types
+        drawPlayer(drawX, drawY, npc.facing, walkFrame, false);
+      }
     }
   }
 }

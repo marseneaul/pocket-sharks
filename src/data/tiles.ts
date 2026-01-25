@@ -18,7 +18,15 @@ export const TILE = {
   ABYSS: 12,     // Abyssal depths - requires submarine cert
   // Additional encounter tiles
   REEF_KELP: 13, // Reef with kelp encounters (openwater)
-  TIDE_POOL: 14  // Tide pools (wading, high encounter rate)
+  TIDE_POOL: 14, // Tide pools (wading, high encounter rate)
+  // Decorative tiles
+  CORAL: 15,     // Coral reef decoration (swim-only, encounter)
+  SEAGRASS: 16,  // Underwater grass (swim-only, encounter)
+  ROCK: 17,      // Land boulder (solid, blocking)
+  FLOWER: 18,    // Beach/land flower decoration (walkable)
+  SHIPWRECK: 19, // Underwater wreck (solid, decorative)
+  PALM: 20,      // Palm tree (solid, decorative)
+  STAIRS: 21     // Stairs/ladder (walkable, connection point)
 } as const;
 
 // Tile definitions
@@ -138,6 +146,58 @@ export const TILES: Record<number, TileDef> = {
     encounter: true,
     encounterRate: 20,  // High encounter rate
     requiredCert: 'wading'
+  },
+  // Decorative tiles
+  [TILE.CORAL]: {
+    type: 'reef',
+    solid: false,
+    swimOnly: true,
+    encounter: true,
+    encounterRate: 18,
+    requiredCert: 'openwater'
+  },
+  [TILE.SEAGRASS]: {
+    type: 'kelp',
+    solid: false,
+    swimOnly: true,
+    encounter: true,
+    encounterRate: 12,
+    requiredCert: 'wading'
+  },
+  [TILE.ROCK]: {
+    type: 'wall',
+    solid: true,
+    swimOnly: false,
+    encounter: false,
+    encounterRate: 0
+  },
+  [TILE.FLOWER]: {
+    type: 'floor',
+    solid: false,
+    swimOnly: false,
+    encounter: false,
+    encounterRate: 0
+  },
+  [TILE.SHIPWRECK]: {
+    type: 'wall',
+    solid: true,
+    swimOnly: true,  // Only appears underwater
+    encounter: false,
+    encounterRate: 0
+  },
+  [TILE.PALM]: {
+    type: 'wall',
+    solid: true,
+    swimOnly: false,
+    encounter: false,
+    encounterRate: 0
+  },
+  [TILE.STAIRS]: {
+    type: 'floor',
+    solid: false,
+    swimOnly: false,
+    encounter: false,
+    encounterRate: 0
   }
 };
 

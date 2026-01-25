@@ -123,6 +123,7 @@ export interface AttackAnimation {
   type: AttackAnimationType;
   attacker: 'player' | 'enemy';
   progress: number;  // 0-1
+  hitSoundPlayed: boolean;  // Track if hit sound was played this animation
 }
 
 // Battle state

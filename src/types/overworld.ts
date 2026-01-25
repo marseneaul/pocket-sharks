@@ -27,6 +27,18 @@ export type TileType =
 // Direction for player facing and movement
 export type Direction = 'up' | 'down' | 'left' | 'right';
 
+// NPC sprite types for visual variety
+export type NPCSpriteType =
+  | 'player'     // Default, uses player sprite
+  | 'swimmer'    // Wetsuit, snorkel/mask
+  | 'scientist'  // Lab coat, glasses
+  | 'villain'    // Dark clothes, fin logo
+  | 'fisher'     // Hat, casual clothes
+  | 'shopkeeper' // Apron
+  | 'gymleader'  // Distinctive outfit
+  | 'diver'      // SCUBA gear
+  | 'kid';       // Small child NPC
+
 // Tile definition
 export interface TileDef {
   type: TileType;
@@ -57,6 +69,28 @@ export interface TrainerData {
   prizeMoney: number;
 }
 
+// NPC wandering configuration
+export interface NPCWander {
+  radius: number;     // How far from origin NPC can wander (in tiles)
+  speed: number;      // Tiles per second (0.5 = slow, 1.0 = normal)
+  pauseMin: number;   // Min ms to pause after moving
+  pauseMax: number;   // Max ms to pause after moving
+}
+
+// NPC runtime state (not stored in map definition)
+export interface NPCState {
+  originX: number;        // Starting position for wander radius
+  originY: number;
+  pixelX: number;         // Current pixel position for smooth movement
+  pixelY: number;
+  isMoving: boolean;
+  moveProgress: number;   // 0-1 for animation
+  targetX: number;        // Target tile when moving
+  targetY: number;
+  pauseTimer: number;     // Time remaining in pause state
+  walkFrame: number;      // Current walk animation frame
+}
+
 // NPC definition
 export interface NPC {
   id: string;
@@ -64,6 +98,9 @@ export interface NPC {
   y: number;
   sprite: number;
   facing: Direction;
+  spriteType?: NPCSpriteType;  // Visual appearance type (default: 'player')
+  wander?: NPCWander;          // If present, NPC will wander randomly
+  state?: NPCState;            // Runtime movement state
   dialogue?: string[];
   trainer?: TrainerData;  // If present, NPC is a trainer
   defeated?: boolean;     // Tracks if trainer has been beaten
@@ -81,6 +118,9 @@ export interface EncounterEntry {
   method?: 'wading' | 'snorkel' | 'scuba' | 'fishing' | 'night' | 'submarine';  // How this species is encountered
 }
 
+// Map palette type (imported from constants)
+export type MapPaletteId = 'default' | 'tropical' | 'deep' | 'night' | 'coral' | 'arctic';
+
 // Map data structure
 export interface MapData {
   id: string;
@@ -92,6 +132,7 @@ export interface MapData {
   npcs: NPC[];
   encounterTable: EncounterEntry[];
   isOutdoor: boolean;          // Affects rendering style
+  palette?: MapPaletteId;      // Color palette for this map (default: 'default')
 }
 
 // Player state

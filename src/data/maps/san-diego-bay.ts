@@ -82,6 +82,24 @@ export const SAN_DIEGO_BAY: MapData = {
       targetMap: 'rays-gym',
       targetX: 1,
       targetY: 10
+    },
+    // West dock to Hawaii (boat travel, requires Ray Badge)
+    // TODO: Implement badge check for warps
+    {
+      x: 1,
+      y: 2,
+      targetMap: 'hawaii-airport',
+      targetX: 10,
+      targetY: 14,
+      blockedMessage: 'The boat to Hawaii requires the Ray Badge.'
+    },
+    {
+      x: 2,
+      y: 2,
+      targetMap: 'hawaii-airport',
+      targetX: 10,
+      targetY: 14,
+      blockedMessage: 'The boat to Hawaii requires the Ray Badge.'
     }
   ],
   npcs: [

@@ -61,6 +61,7 @@ export const SCRIPPS_LAB: MapData = {
       y: 3,
       sprite: 0,
       facing: 'down',
+      spriteType: 'scientist',
       dialogue: [
         'Welcome to Scripps Marine Lab!',
         'I\'m Professor Marina.',
@@ -90,6 +91,7 @@ export const SCRIPPS_LAB: MapData = {
       y: 3,
       sprite: 0,
       facing: 'down',
+      spriteType: 'scientist',
       dialogue: [
         'Have you heard about Finnova Biotech?',
         'They claim to be developing sustainable shark products...',
@@ -103,6 +105,7 @@ export const SCRIPPS_LAB: MapData = {
       y: 8,
       sprite: 0,
       facing: 'right',
+      spriteType: 'diver',
       dialogue: [
         'Diving certifications unlock new areas!',
         'Wading: Tide pools and beaches',

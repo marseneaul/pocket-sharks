@@ -17,6 +17,7 @@ import {
   setGameMode
 } from './game-state.ts';
 import { initPartyMenu } from '../renderer/party-ui.ts';
+import { playHitSound } from './audio.ts';
 
 export function createCreatureInstance(species: CreatureSpecies, level: number): CreatureInstance {
   const stats = calculateStats(species, level);
@@ -75,7 +76,8 @@ export function createBattleState(
       active: false,
       type: 'physical',
       attacker: 'player',
-      progress: 0
+      progress: 0,
+      hitSoundPlayed: false
     }
   };
 }
@@ -680,7 +682,8 @@ export function startAttackAnimation(
     active: true,
     type,
     attacker,
-    progress: 0
+    progress: 0,
+    hitSoundPlayed: false
   };
 }
 
@@ -688,8 +691,18 @@ export function startAttackAnimation(
 export function updateAttackAnimation(state: BattleState, deltaTime: number): void {
   if (!state.attackAnimation.active) return;
 
+  const prevProgress = state.attackAnimation.progress;
   const progressDelta = deltaTime / ATTACK_ANIMATION_DURATION;
   state.attackAnimation.progress += progressDelta;
+
+  // Play hit sound at impact (midpoint) for physical/special attacks
+  if (!state.attackAnimation.hitSoundPlayed &&
+      state.attackAnimation.type !== 'status' &&
+      prevProgress < 0.5 &&
+      state.attackAnimation.progress >= 0.5) {
+    playHitSound();
+    state.attackAnimation.hitSoundPlayed = true;
+  }
 
   if (state.attackAnimation.progress >= 1) {
     state.attackAnimation.active = false;

@@ -1,6 +1,7 @@
 import { initCanvas, present, drawFadeOverlay } from './renderer/canvas.ts';
 import { renderBattle } from './renderer/battle-ui.ts';
 import { renderOverworld } from './renderer/overworld-ui.ts';
+import { renderDialogue, startDialogue, advanceDialogue, advanceDialogueChar, isDialogueComplete, isCurrentLineComplete, clearDialogue } from './renderer/dialogue-ui.ts';
 import { renderPartyMenu, handlePartyInput, handleBattlePartyInput, initPartyMenu } from './renderer/party-ui.ts';
 import { renderStarterSelect, handleStarterInput, getSelectedStarterId, initStarterSelect } from './renderer/starter-ui.ts';
 import { renderPC, handlePCInput, initPCUI } from './renderer/pc-ui.ts';
@@ -32,7 +33,9 @@ import {
   getTransitionAlpha,
   isTransitioning,
   startWildBattle,
-  getMap
+  startTrainerBattle,
+  getMap,
+  getCurrentMap
 } from './engine/game-state.ts';
 import { getCreature } from './data/creatures.ts';
 import { createCreatureInstance } from './engine/battle.ts';
@@ -43,6 +46,24 @@ import { LA_JOLLA_TIDE_POOLS } from './data/maps/la-jolla-tide-pools.ts';
 import { KELP_FOREST_ROUTE } from './data/maps/kelp-forest-route.ts';
 import { SAN_DIEGO_BAY } from './data/maps/san-diego-bay.ts';
 import { RAYS_GYM } from './data/maps/rays-gym.ts';
+// Hawaii Region maps (Region 2)
+import { HAWAII_AIRPORT } from './data/maps/hawaii-airport.ts';
+import { WAIKIKI_BEACH } from './data/maps/waikiki-beach.ts';
+import { DIVE_SCHOOL } from './data/maps/dive-school.ts';
+import { HAWAII_REEF } from './data/maps/hawaii-reef.ts';
+// Cabo / Baja Region maps (Region 3)
+import { CABO_HARBOR } from './data/maps/cabo-harbor.ts';
+import { CABO_BEACH } from './data/maps/cabo-beach.ts';
+import { CABO_REEF } from './data/maps/cabo-reef.ts';
+import { SEA_OF_CORTEZ } from './data/maps/sea-of-cortez.ts';
+import { CABO_TOWN } from './data/maps/cabo-town.ts';
+import { MARTILLO_GYM } from './data/maps/martillo-gym.ts';
+// Caribbean / Florida Region maps (Region 4)
+import { FLORIDA_AIRPORT } from './data/maps/florida-airport.ts';
+import { FLORIDA_KEYS } from './data/maps/florida-keys.ts';
+import { KEY_WEST } from './data/maps/key-west.ts';
+import { CARIBBEAN_REEF } from './data/maps/caribbean-reef.ts';
+import { CORAL_REEF_GYM } from './data/maps/coral-reef-gym.ts';
 // Legacy maps (will be reworked later)
 import { ROUTE_1 } from './data/maps/route-1.ts';
 import { ROUTE_2 } from './data/maps/route-2.ts';
@@ -57,6 +78,8 @@ import { TEXT_SPEED } from './constants.ts';
 
 let lastTime = 0;
 let typewriterTimer = 0;
+let dialogueTypewriterTimer = 0;
+let pendingTrainerNpcId: string | null = null;  // Track trainer battle after dialogue
 
 function init(): void {
   // Initialize systems
@@ -75,6 +98,24 @@ function init(): void {
   registerMap(KELP_FOREST_ROUTE);
   registerMap(SAN_DIEGO_BAY);
   registerMap(RAYS_GYM);
+  // Register Hawaii Region maps (Region 2)
+  registerMap(HAWAII_AIRPORT);
+  registerMap(WAIKIKI_BEACH);
+  registerMap(DIVE_SCHOOL);
+  registerMap(HAWAII_REEF);
+  // Register Cabo / Baja Region maps (Region 3)
+  registerMap(CABO_HARBOR);
+  registerMap(CABO_BEACH);
+  registerMap(CABO_REEF);
+  registerMap(SEA_OF_CORTEZ);
+  registerMap(CABO_TOWN);
+  registerMap(MARTILLO_GYM);
+  // Register Caribbean / Florida Region maps (Region 4)
+  registerMap(FLORIDA_AIRPORT);
+  registerMap(FLORIDA_KEYS);
+  registerMap(KEY_WEST);
+  registerMap(CARIBBEAN_REEF);
+  registerMap(CORAL_REEF_GYM);
   // Register legacy maps (for backwards compatibility during transition)
   registerMap(ROUTE_1);
   registerMap(ROUTE_2);
@@ -170,6 +211,8 @@ function update(deltaTime: number): void {
     updateShopMode();
   } else if (mode === 'tm') {
     updateTMMode();
+  } else if (mode === 'dialogue') {
+    updateDialogueMode(deltaTime);
   }
 }
 
@@ -311,12 +354,64 @@ function updateOverworldMode(deltaTime: number): void {
   if (result === 'pc') {
     initPCUI();
     setGameMode('pc');
-  } else if (result && typeof result === 'object' && result.type === 'shop') {
-    const shop = getShop(result.shopId);
-    if (shop) {
-      initShopUI(shop);
-      setGameMode('shop');
+  } else if (result && typeof result === 'object') {
+    if (result.type === 'shop') {
+      const shop = getShop(result.shopId);
+      if (shop) {
+        initShopUI(shop);
+        setGameMode('shop');
+      }
+    } else if (result.type === 'dialogue') {
+      startDialogue(result.lines, result.speakerName);
+      setGameMode('dialogue');
+    } else if (result.type === 'trainer') {
+      // Show pre-battle dialogue, then start battle
+      startDialogue(result.dialogue);
+      pendingTrainerNpcId = result.npcId;
+      setGameMode('dialogue');
     }
+  }
+}
+
+function updateDialogueMode(deltaTime: number): void {
+  const pressed = getJustPressed();
+
+  // Advance typewriter
+  if (!isCurrentLineComplete()) {
+    dialogueTypewriterTimer += deltaTime;
+    while (dialogueTypewriterTimer >= TEXT_SPEED) {
+      dialogueTypewriterTimer -= TEXT_SPEED;
+      advanceDialogueChar();
+    }
+  }
+
+  // A button advances dialogue or completes typewriter
+  if (pressed.a) {
+    advanceDialogue();
+
+    // Check if dialogue is complete
+    if (isDialogueComplete()) {
+      clearDialogue();
+      dialogueTypewriterTimer = 0;
+
+      // Check for pending trainer battle
+      if (pendingTrainerNpcId) {
+        const map = getCurrentMap();
+        const npc = map.npcs.find(n => n.id === pendingTrainerNpcId);
+        pendingTrainerNpcId = null;
+        if (npc) {
+          startTrainerBattle(npc);
+          return;
+        }
+      }
+
+      setGameMode('overworld');
+    }
+  }
+
+  // B button also completes typewriter
+  if (pressed.b && !isCurrentLineComplete()) {
+    advanceDialogue();
   }
 }
 
@@ -533,6 +628,10 @@ function render(): void {
     renderShop();
   } else if (mode === 'tm') {
     renderTMUI();
+  } else if (mode === 'dialogue') {
+    // Render overworld behind dialogue box
+    renderOverworld();
+    renderDialogue();
   }
 
   // Draw screen transition overlay

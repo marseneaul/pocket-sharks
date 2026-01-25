@@ -229,6 +229,130 @@ function generateTileSprite(tileIndex: number): TileSprite {
       pixels[0][0] = 0; pixels[0][7] = 0;
       pixels[7][0] = 0; pixels[7][7] = 0;
       break;
+
+    case TILE.CORAL:
+      // Coral reef - colorful reef pattern
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = ((x + y) % 3 === 0) ? 1 : 2;
+        }
+      }
+      // Coral formations (branching pattern)
+      pixels[1][1] = 3; pixels[1][2] = 3; pixels[2][1] = 3;
+      pixels[1][5] = 0; pixels[2][5] = 0; pixels[2][6] = 0;
+      pixels[5][2] = 3; pixels[5][3] = 3; pixels[6][3] = 3;
+      pixels[4][6] = 0; pixels[5][6] = 0; pixels[5][5] = 0;
+      break;
+
+    case TILE.SEAGRASS:
+      // Seagrass - underwater grass blades
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = 2;  // Water base
+        }
+      }
+      // Grass blades (wavy vertical lines)
+      for (let y = 2; y < 8; y++) {
+        pixels[y][1] = y % 2 === 0 ? 1 : 0;
+        pixels[y][3] = (y + 1) % 2 === 0 ? 1 : 0;
+        pixels[y][5] = y % 2 === 0 ? 1 : 0;
+        pixels[y][7] = (y + 1) % 2 === 0 ? 1 : 0;
+      }
+      break;
+
+    case TILE.ROCK:
+      // Rock boulder - solid rounded stone
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          const dist = Math.abs(x - 3.5) + Math.abs(y - 3.5);
+          if (dist < 4) {
+            pixels[y][x] = 1;  // Rock body
+          } else {
+            pixels[y][x] = 3;  // Ground/transparent
+          }
+        }
+      }
+      // Highlight and shadow
+      pixels[1][3] = 2; pixels[1][4] = 2;
+      pixels[2][2] = 2; pixels[2][3] = 2;
+      pixels[5][5] = 0; pixels[6][4] = 0;
+      break;
+
+    case TILE.FLOWER:
+      // Beach flower decoration
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = 3;  // Sand background
+        }
+      }
+      // Flower petals (small cross pattern)
+      pixels[2][3] = 0; pixels[2][4] = 0;
+      pixels[3][2] = 0; pixels[3][5] = 0;
+      pixels[4][2] = 0; pixels[4][5] = 0;
+      pixels[5][3] = 0; pixels[5][4] = 0;
+      // Center
+      pixels[3][3] = 2; pixels[3][4] = 2;
+      pixels[4][3] = 2; pixels[4][4] = 2;
+      // Stem
+      pixels[6][3] = 1; pixels[7][3] = 1;
+      break;
+
+    case TILE.SHIPWRECK:
+      // Underwater shipwreck - dark wooden planks
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = 0;  // Dark wood
+        }
+      }
+      // Plank lines and texture
+      for (let x = 0; x < TILE_SIZE; x++) {
+        if (x % 3 === 0) {
+          for (let y = 0; y < TILE_SIZE; y++) {
+            pixels[y][x] = 1;  // Gaps between planks
+          }
+        }
+      }
+      // Barnacles and decay
+      pixels[2][4] = 2; pixels[3][1] = 2;
+      pixels[5][5] = 2; pixels[6][2] = 2;
+      break;
+
+    case TILE.PALM:
+      // Palm tree - trunk with fronds
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          pixels[y][x] = 3;  // Background
+        }
+      }
+      // Trunk
+      pixels[4][3] = 1; pixels[4][4] = 1;
+      pixels[5][3] = 1; pixels[5][4] = 1;
+      pixels[6][3] = 1; pixels[6][4] = 1;
+      pixels[7][3] = 1; pixels[7][4] = 1;
+      // Fronds (dark leaves on top)
+      pixels[0][2] = 0; pixels[0][5] = 0;
+      pixels[1][1] = 0; pixels[1][2] = 0; pixels[1][5] = 0; pixels[1][6] = 0;
+      pixels[2][0] = 0; pixels[2][3] = 0; pixels[2][4] = 0; pixels[2][7] = 0;
+      pixels[3][2] = 0; pixels[3][3] = 0; pixels[3][4] = 0; pixels[3][5] = 0;
+      break;
+
+    case TILE.STAIRS:
+      // Stairs/ladder pattern
+      for (let y = 0; y < TILE_SIZE; y++) {
+        for (let x = 0; x < TILE_SIZE; x++) {
+          if (y % 2 === 0) {
+            pixels[y][x] = 2;  // Step surface
+          } else {
+            pixels[y][x] = 1;  // Step shadow
+          }
+        }
+      }
+      // Railing on sides
+      for (let y = 0; y < TILE_SIZE; y++) {
+        pixels[y][0] = 0;
+        pixels[y][7] = 0;
+      }
+      break;
   }
 
   return { pixels };

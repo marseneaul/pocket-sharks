@@ -2,6 +2,7 @@ import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.t
 import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification } from './game-state.ts';
 import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
+import { initNPCStates, updateNPCs } from './npc-movement.ts';
 
 // Message to display when movement is blocked (certification required)
 let blockedMessage: string | null = null;
@@ -27,6 +28,13 @@ const MOVE_SPEED = 2; // Pixels per frame
 
 export function updateOverworld(deltaTime: number): void {
   const player = getPlayer();
+  const map = getCurrentMap();
+
+  // Initialize NPC states if needed
+  initNPCStates(map);
+
+  // Update NPC movement
+  updateNPCs(map, deltaTime);
 
   // Update blocked message timer
   if (blockedMessageTimer > 0) {
@@ -129,6 +137,11 @@ function doWarp(warp: Warp): void {
     // Update swimming state based on new tile
     const newTile = targetMap.tiles[player.y]?.[player.x];
     player.isSwimming = shouldSwim(newTile);
+
+    // Reset NPC states for new map (will be re-initialized on next update)
+    for (const npc of targetMap.npcs) {
+      npc.state = undefined;
+    }
   });
 }
 
@@ -195,8 +208,14 @@ export function tryMove(direction: Direction): boolean {
     if (!canWalkOn(targetTile, player.isSwimming, playerCerts)) return false;
   }
 
-  // Check for NPC collision
-  const npcAtTarget = map.npcs.find(npc => npc.x === targetX && npc.y === targetY);
+  // Check for NPC collision (including moving NPCs)
+  const npcAtTarget = map.npcs.find(npc => {
+    // Check current position
+    if (npc.x === targetX && npc.y === targetY) return true;
+    // Check if NPC is moving to that position
+    if (npc.state?.isMoving && npc.state.targetX === targetX && npc.state.targetY === targetY) return true;
+    return false;
+  });
   if (npcAtTarget) return false;
 
   // Start movement
@@ -211,7 +230,15 @@ export function tryMove(direction: Direction): boolean {
   return true;
 }
 
-export function handleOverworldInput(direction: Direction | null, confirm: boolean, _cancel: boolean): 'pc' | { type: 'shop'; shopId: string } | null {
+// NPC dialogue result type
+export type NPCInteractionResult =
+  | 'pc'
+  | { type: 'shop'; shopId: string }
+  | { type: 'dialogue'; lines: string[]; speakerName?: string }
+  | { type: 'trainer'; npcId: string; dialogue: string[] }
+  | null;
+
+export function handleOverworldInput(direction: Direction | null, confirm: boolean, _cancel: boolean): NPCInteractionResult {
   if (direction) {
     tryMove(direction);
   }
@@ -224,7 +251,7 @@ export function handleOverworldInput(direction: Direction | null, confirm: boole
   return null;
 }
 
-function interactWithFacing(): 'pc' | { type: 'shop'; shopId: string } | null {
+function interactWithFacing(): NPCInteractionResult {
   const player = getPlayer();
   const map = getCurrentMap();
 
@@ -242,6 +269,15 @@ function interactWithFacing(): 'pc' | { type: 'shop'; shopId: string } | null {
   // Check for NPC
   const npc = map.npcs.find(n => n.x === targetX && n.y === targetY);
   if (npc) {
+    // Make NPC face toward player
+    const oppositeDir: Record<Direction, Direction> = {
+      'up': 'down',
+      'down': 'up',
+      'left': 'right',
+      'right': 'left'
+    };
+    npc.facing = oppositeDir[player.facing];
+
     // Check if this is a PC terminal
     if (npc.isPcTerminal) {
       return 'pc';
@@ -254,17 +290,18 @@ function interactWithFacing(): 'pc' | { type: 'shop'; shopId: string } | null {
 
     // Check if this is a trainer
     if (npc.trainer && !npc.defeated) {
-      // Log pre-battle dialogue, then start battle
+      // Return trainer dialogue to show before battle
       if (npc.dialogue) {
-        console.log(npc.dialogue.join('\n'));
+        return { type: 'trainer', npcId: npc.id, dialogue: npc.dialogue };
       }
+      // No dialogue, start battle immediately
       startTrainerBattle(npc);
     } else if (npc.defeated && npc.trainer?.defeatedDialogue) {
       // Show post-defeat dialogue
-      console.log(npc.trainer.defeatedDialogue.join('\n'));
+      return { type: 'dialogue', lines: npc.trainer.defeatedDialogue };
     } else if (npc.dialogue) {
       // Regular NPC dialogue
-      console.log(npc.dialogue.join('\n'));
+      return { type: 'dialogue', lines: npc.dialogue };
     }
   }
 

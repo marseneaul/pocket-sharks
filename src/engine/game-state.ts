@@ -4,6 +4,7 @@ import type { BattleState, CreatureInstance } from '../types/index.ts';
 import type { InventorySlot } from '../data/items.ts';
 import { createCreatureInstance, createBattleState, initBattle } from './battle.ts';
 import { getCreature } from '../data/creatures.ts';
+import { playBattleMusic, playOverworldMusic } from './audio.ts';
 
 // Screen transition state
 export interface TransitionState {
@@ -164,6 +165,9 @@ function _startWildBattleInternal(enemyCreature: CreatureInstance): void {
   battleState = createBattleState(playerCreature, enemyCreature, true);
   initBattle(battleState);
   gameState.mode = 'battle';
+
+  // Switch to battle music
+  playBattleMusic();
 }
 
 function _startTrainerBattleInternal(npc: NPC): void {
@@ -186,6 +190,9 @@ function _startTrainerBattleInternal(npc: NPC): void {
   battleState.canRun = false;  // Can't run from trainer battles
   initBattle(battleState);
   gameState.mode = 'battle';
+
+  // Switch to battle music
+  playBattleMusic();
 }
 
 // Public battle start functions with transitions
@@ -282,6 +289,9 @@ function _endBattleInternal(): void {
   currentTrainerNpc = null;
   trainerCreatureIndex = 0;
   gameState.mode = 'overworld';
+
+  // Switch back to overworld music
+  playOverworldMusic();
 }
 
 export function endBattle(): void {

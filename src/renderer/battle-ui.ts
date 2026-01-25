@@ -186,11 +186,14 @@ function renderActionMenu(selectedIndex: number): void {
   // 2x2 grid layout:
   // FIGHT  BAG
   // SHARKS RUN
+  const leftPadding = 12;
+  const topPadding = 10;
+  const secondLeftPadding = 70;
   const positions = [
-    { x: menuX + 12, y: menuY + 10 },  // FIGHT (0) - top left
-    { x: menuX + 66, y: menuY + 10 },  // BAG (1) - top right
-    { x: menuX + 12, y: menuY + 26 },  // SHARKS (2) - bottom left
-    { x: menuX + 66, y: menuY + 26 },  // RUN (3) - bottom right
+    { x: menuX + leftPadding, y: menuY + topPadding },  // FIGHT (0) - top left
+    { x: menuX + secondLeftPadding, y: menuY + topPadding },  // BAG (1) - top right
+    { x: menuX + leftPadding, y: menuY + 26 },  // SHARKS (2) - bottom left
+    { x: menuX + secondLeftPadding, y: menuY + 26 },  // RUN (3) - bottom right
   ];
 
   for (let i = 0; i < MENU_ITEMS.length; i++) {

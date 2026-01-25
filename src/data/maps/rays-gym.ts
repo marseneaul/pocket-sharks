@@ -61,6 +61,7 @@ export const RAYS_GYM: MapData = {
       y: 10,
       sprite: 0,
       facing: 'right',
+      spriteType: 'swimmer',
       dialogue: [
         'Welcome to Ray\'s Gym!',
         'This gym specializes in Ray-type sharks.',
@@ -75,6 +76,7 @@ export const RAYS_GYM: MapData = {
       y: 4,
       sprite: 0,
       facing: 'down',
+      spriteType: 'diver',
       dialogue: [
         'Rays are graceful but dangerous!',
         'Feel the sting of my team!'
@@ -82,8 +84,8 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Aquarist Tom',
         team: [
-          { speciesId: 14, level: 9 },   // Atlantic Stingray
-          { speciesId: 14, level: 10 }   // Atlantic Stingray
+          { speciesId: 47, level: 9 },   // Round Stingray
+          { speciesId: 57, level: 10 }   // Butterfly Ray
         ],
         defeatedDialogue: [
           'Your sharks outswam my rays!',
@@ -99,6 +101,7 @@ export const RAYS_GYM: MapData = {
       y: 7,
       sprite: 0,
       facing: 'left',
+      spriteType: 'scientist',
       dialogue: [
         'I\'ve studied ray behavior for years!',
         'Let me show you what I\'ve learned!'
@@ -106,9 +109,9 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Researcher Lisa',
         team: [
-          { speciesId: 14, level: 10 },  // Atlantic Stingray
-          { speciesId: 26, level: 10 },  // Torpedo Ray
-          { speciesId: 14, level: 11 }   // Atlantic Stingray
+          { speciesId: 47, level: 10 },  // Round Stingray
+          { speciesId: 54, level: 10 },  // Guitarfish
+          { speciesId: 58, level: 11 }   // Smooth Butterfly Ray
         ],
         defeatedDialogue: [
           'Remarkable battle tactics!',
@@ -124,6 +127,7 @@ export const RAYS_GYM: MapData = {
       y: 13,
       sprite: 0,
       facing: 'right',
+      spriteType: 'swimmer',
       dialogue: [
         'You think you can beat our leader?',
         'Prove yourself against me first!'
@@ -131,8 +135,8 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Swimmer Derek',
         team: [
-          { speciesId: 26, level: 11 },  // Torpedo Ray
-          { speciesId: 14, level: 11 }   // Atlantic Stingray
+          { speciesId: 55, level: 11 },  // Giant Guitarfish
+          { speciesId: 47, level: 11 }   // Round Stingray
         ],
         defeatedDialogue: [
           'Okay, you might have a chance.',
@@ -148,6 +152,7 @@ export const RAYS_GYM: MapData = {
       y: 2,
       sprite: 0,
       facing: 'down',
+      spriteType: 'gymleader',
       dialogue: [
         'So you\'ve made it through my gym!',
         'I\'m Ray, the Gym Leader of San Diego Bay.',
@@ -158,9 +163,10 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Leader Ray',
         team: [
-          { speciesId: 14, level: 12 },  // Atlantic Stingray (Round Stingray placeholder)
-          { speciesId: 26, level: 12 },  // Torpedo Ray (Electric Ray)
-          { speciesId: 27, level: 14 }   // Manta Ray (ace - Bat Ray placeholder)
+          { speciesId: 47, level: 12 },  // Round Stingray
+          { speciesId: 58, level: 12 },  // Smooth Butterfly Ray
+          { speciesId: 55, level: 13 },  // Giant Guitarfish
+          { speciesId: 60, level: 14 }   // Bat Ray (ace)
         ],
         defeatedDialogue: [
           '...',

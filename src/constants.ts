@@ -113,3 +113,45 @@ export const BATTLE_UI = {
 export const FRAME_DURATION = 1000 / 60; // 60 FPS
 export const BATTLE_ANIMATION_SPEED = 200; // ms per animation frame
 export const HP_DRAIN_SPEED = 50; // ms per HP point when draining
+
+// Map color palettes (for GBC-style colored maps)
+export type MapPaletteId = 'default' | 'tropical' | 'deep' | 'night' | 'coral' | 'arctic';
+
+export interface MapPalette {
+  id: MapPaletteId;
+  name: string;
+  colors: [string, string, string, string]; // Black, Dark, Light, White
+}
+
+export const MAP_PALETTES: Record<MapPaletteId, MapPalette> = {
+  default: {
+    id: 'default',
+    name: 'Default',
+    colors: ['#0f0f0f', '#555555', '#aaaaaa', '#f0f0f0']  // Original DMG
+  },
+  tropical: {
+    id: 'tropical',
+    name: 'Tropical',
+    colors: ['#0a3a2a', '#2a7a5a', '#6ababa', '#c0f0e0']  // Warm teals/greens
+  },
+  deep: {
+    id: 'deep',
+    name: 'Deep Ocean',
+    colors: ['#0a1a2a', '#1a3a5a', '#3a6a8a', '#6aaacc']  // Dark blues
+  },
+  night: {
+    id: 'night',
+    name: 'Night',
+    colors: ['#000010', '#1a1a3a', '#3a3a6a', '#6a6a9a']  // Very dark
+  },
+  coral: {
+    id: 'coral',
+    name: 'Coral Reef',
+    colors: ['#2a1a3a', '#6a3a6a', '#aa6a9a', '#eabacc']  // Pink/purple
+  },
+  arctic: {
+    id: 'arctic',
+    name: 'Arctic',
+    colors: ['#1a2a3a', '#4a6a8a', '#8aaacc', '#d0e8f8']  // Icy blues
+  }
+};

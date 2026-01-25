@@ -97,8 +97,8 @@ export const LA_JOLLA_TIDE_POOLS: MapData = {
       trainer: {
         name: 'Tide Pool Emma',
         team: [
-          { speciesId: 14, level: 4 },  // Atlantic Stingray
-          { speciesId: 13, level: 5 }   // Nurse Shark
+          { speciesId: 47, level: 4 },  // Round Stingray
+          { speciesId: 50, level: 5 }   // Horn Shark Egg
         ],
         defeatedDialogue: [
           'Wow, your shark is strong!',
@@ -122,12 +122,14 @@ export const LA_JOLLA_TIDE_POOLS: MapData = {
       ]
     }
   ],
-  // High encounter rate in tide pools - baby sharks and rays
+  // High encounter rate in tide pools - San Diego baby sharks and rays
   encounterTable: [
-    { speciesId: 14, minLevel: 2, maxLevel: 5, weight: 40 },  // Atlantic Stingray (Round Stingray placeholder)
-    { speciesId: 13, minLevel: 3, maxLevel: 5, weight: 25 },  // Nurse Shark (Horn Shark placeholder)
-    { speciesId: 10, minLevel: 3, maxLevel: 6, weight: 20 },  // Bonnethead
-    { speciesId: 12, minLevel: 4, maxLevel: 6, weight: 15 }   // Lemon Shark (Leopard Shark placeholder)
+    { speciesId: 47, minLevel: 2, maxLevel: 5, weight: 35 },  // Round Stingray (common)
+    { speciesId: 50, minLevel: 3, maxLevel: 5, weight: 20 },  // Horn Shark Egg
+    { speciesId: 52, minLevel: 3, maxLevel: 5, weight: 15 },  // Swell Shark Egg
+    { speciesId: 48, minLevel: 3, maxLevel: 6, weight: 15 },  // Smoothhound
+    { speciesId: 54, minLevel: 4, maxLevel: 6, weight: 10 },  // Guitarfish
+    { speciesId: 68, minLevel: 5, maxLevel: 7, weight: 5 }    // Scalloped Bonnethead (very rare)
   ],
   isOutdoor: true
 };

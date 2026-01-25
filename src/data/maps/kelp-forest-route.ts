@@ -6,6 +6,8 @@ const A = TILE.WATER;     // Shallow water (wading/snorkel)
 const K = TILE.KELP;      // Kelp beds (encounters, wading level)
 const R = TILE.REEF;      // Reef areas (requires openwater cert)
 const D = TILE.DEEP;      // Deep water (visual blocker)
+const C = TILE.CORAL;     // Coral formations
+const G = TILE.SEAGRASS;  // Seagrass beds
 
 // 20x18 tiles = 160x144 pixels
 // Kelp Forest Route - Main underwater route from La Jolla to San Diego Bay
@@ -13,21 +15,21 @@ const D = TILE.DEEP;      // Deep water (visual blocker)
 // Deep water areas are blocked until player gets SCUBA certification
 const tiles: number[][] = [
   [W,W,W,W,W,W,W,W,A,A,A,A,W,W,W,W,W,W,W,W],  // North entrance from La Jolla
-  [W,A,A,A,K,K,A,A,A,A,A,A,A,A,K,K,A,A,A,W],
-  [W,A,A,K,K,K,K,A,A,A,A,A,A,K,K,K,A,A,A,W],
+  [W,A,A,G,K,K,A,A,A,A,A,A,A,A,K,K,G,A,A,W],
+  [W,A,A,K,K,K,K,A,A,G,G,A,A,K,K,K,A,A,A,W],
   [W,A,A,K,K,K,K,A,A,A,A,A,A,K,K,K,K,A,A,W],
-  [W,A,A,A,K,K,A,A,A,A,A,A,A,A,K,K,A,A,A,W],
+  [W,A,G,A,K,K,A,A,A,A,A,A,A,A,K,K,A,G,A,W],
   [W,A,A,A,A,A,A,A,D,D,D,D,A,A,A,A,A,A,A,W],  // Deep water pocket (blocked)
-  [W,K,K,A,A,A,A,D,D,R,R,D,D,A,A,A,A,K,K,W],  // Reef in deep area (needs cert)
-  [W,K,K,K,A,A,A,D,R,R,R,R,D,A,A,A,K,K,K,W],
-  [W,K,K,A,A,A,A,D,R,R,R,R,D,A,A,A,A,K,K,W],
-  [W,A,A,A,A,A,A,D,D,R,R,D,D,A,A,A,A,A,A,W],
-  [W,A,A,A,A,A,A,A,D,D,D,D,A,A,A,A,A,A,A,W],
+  [W,K,K,A,A,A,A,D,D,C,C,D,D,A,A,A,A,K,K,W],  // Coral in deep area (needs cert)
+  [W,K,K,K,A,A,A,D,C,R,R,C,D,A,A,A,K,K,K,W],
+  [W,K,K,A,A,A,A,D,C,R,R,C,D,A,A,A,A,K,K,W],
+  [W,A,A,A,A,A,A,D,D,C,C,D,D,A,A,A,A,A,A,W],
+  [W,A,A,A,A,G,A,A,D,D,D,D,A,A,G,A,A,A,A,W],
   [W,A,A,K,K,K,A,A,A,A,A,A,A,A,K,K,K,A,A,W],
-  [W,A,K,K,K,K,K,A,A,A,A,A,A,K,K,K,K,K,A,W],
+  [W,A,K,K,K,K,K,A,A,G,G,A,A,K,K,K,K,K,A,W],
   [W,A,A,K,K,K,A,A,A,A,A,A,A,A,K,K,K,A,A,W],
   [W,A,A,A,K,A,A,A,A,A,A,A,A,A,A,K,A,A,A,W],
-  [W,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,W],
+  [W,A,A,A,A,A,G,A,A,A,A,A,A,G,A,A,A,A,A,W],
   [W,W,W,W,W,W,W,W,A,A,A,A,W,W,W,W,W,W,W,W],  // South exit to San Diego Bay
   [W,W,W,W,W,W,W,W,A,A,A,A,W,W,W,W,W,W,W,W],
 ];
@@ -106,6 +108,7 @@ export const KELP_FOREST_ROUTE: MapData = {
       y: 3,
       sprite: 0,
       facing: 'right',
+      spriteType: 'swimmer',
       dialogue: [
         'The kelp forest is amazing!',
         'Let\'s battle among the kelp!'
@@ -113,8 +116,8 @@ export const KELP_FOREST_ROUTE: MapData = {
       trainer: {
         name: 'Swimmer Jake',
         team: [
-          { speciesId: 12, level: 6 },  // Lemon Shark
-          { speciesId: 14, level: 6 }   // Atlantic Stingray
+          { speciesId: 48, level: 6 },  // Smoothhound
+          { speciesId: 57, level: 6 }   // Butterfly Ray
         ],
         defeatedDialogue: [
           'Nice swimming!',
@@ -130,6 +133,7 @@ export const KELP_FOREST_ROUTE: MapData = {
       y: 8,
       sprite: 0,
       facing: 'left',
+      spriteType: 'swimmer',
       dialogue: [
         'I\'ve been snorkeling here all day!',
         'My sharks are ready for battle!'
@@ -137,9 +141,9 @@ export const KELP_FOREST_ROUTE: MapData = {
       trainer: {
         name: 'Snorkeler Mia',
         team: [
-          { speciesId: 13, level: 7 },  // Nurse Shark
-          { speciesId: 10, level: 7 },  // Bonnethead
-          { speciesId: 12, level: 8 }   // Lemon Shark
+          { speciesId: 51, level: 7 },  // Horn Shark
+          { speciesId: 53, level: 7 },  // Swell Shark
+          { speciesId: 49, level: 8 }   // Leopard Shark
         ],
         defeatedDialogue: [
           'You\'re a strong trainer!',
@@ -155,6 +159,7 @@ export const KELP_FOREST_ROUTE: MapData = {
       y: 6,
       sprite: 0,
       facing: 'right',
+      spriteType: 'diver',
       dialogue: [
         'That deep water area has an amazing reef!',
         'But you need Open Water SCUBA certification to dive there.',
@@ -168,6 +173,7 @@ export const KELP_FOREST_ROUTE: MapData = {
       y: 13,
       sprite: 0,
       facing: 'right',
+      spriteType: 'swimmer',
       dialogue: [
         'San Diego Bay is just south of here.',
         'That\'s where Ray\'s Gym is!',
@@ -176,9 +182,9 @@ export const KELP_FOREST_ROUTE: MapData = {
       trainer: {
         name: 'Swimmer Carlos',
         team: [
-          { speciesId: 14, level: 8 },  // Atlantic Stingray
-          { speciesId: 14, level: 8 },  // Atlantic Stingray
-          { speciesId: 10, level: 9 }   // Bonnethead
+          { speciesId: 60, level: 8 },  // Bat Ray
+          { speciesId: 54, level: 8 },  // Guitarfish
+          { speciesId: 49, level: 9 }   // Leopard Shark
         ],
         defeatedDialogue: [
           'You\'ll definitely beat Ray!',
@@ -194,21 +200,26 @@ export const KELP_FOREST_ROUTE: MapData = {
       y: 12,
       sprite: 0,
       facing: 'down',
+      spriteType: 'diver',
       dialogue: [
         'I found this in the kelp. You can have it!',
         'Received a Potion!'
       ]
     }
   ],
-  // Kelp forest encounters - Leopard Sharks, Swell Sharks, etc.
+  // Kelp forest encounters - San Diego Leopard Sharks, Swell Sharks, etc.
   encounterTable: [
-    { speciesId: 12, minLevel: 5, maxLevel: 8, weight: 35 },   // Lemon Shark (Leopard Shark placeholder)
-    { speciesId: 16, minLevel: 5, maxLevel: 8, weight: 25 },   // Wobbegong (kelp dweller)
-    { speciesId: 14, minLevel: 5, maxLevel: 7, weight: 20 },   // Atlantic Stingray
-    { speciesId: 13, minLevel: 6, maxLevel: 8, weight: 15 },   // Nurse Shark
+    { speciesId: 49, minLevel: 5, maxLevel: 8, weight: 30 },   // Leopard Shark (kelp specialist)
+    { speciesId: 53, minLevel: 5, maxLevel: 8, weight: 20 },   // Swell Shark
+    { speciesId: 51, minLevel: 6, maxLevel: 8, weight: 15 },   // Horn Shark
+    { speciesId: 60, minLevel: 5, maxLevel: 7, weight: 15 },   // Bat Ray
+    { speciesId: 55, minLevel: 6, maxLevel: 8, weight: 10 },   // Giant Guitarfish
+    { speciesId: 67, minLevel: 8, maxLevel: 10, weight: 5 },  // Broadnose Sevengill (rare - spring only once seasonal system implemented)
     { speciesId: 10, minLevel: 7, maxLevel: 9, weight: 5 },    // Bonnethead (uncommon)
     // SCUBA-only encounters in reef area (requires openwater cert)
-    { speciesId: 18, minLevel: 8, maxLevel: 11, weight: 0, requiredCert: 'openwater' }  // Coral Catshark
+    { speciesId: 61, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' },  // Angelshark
+    { speciesId: 62, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' }   // Soupfin Shark
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'tropical'  // Green/teal kelp forest colors
 };

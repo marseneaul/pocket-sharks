@@ -107,6 +107,7 @@ export const LA_JOLLA_SHORES: MapData = {
       y: 2,
       sprite: 0,
       facing: 'down',
+      spriteType: 'shopkeeper',
       shopId: 'la-jolla-shop',
       dialogue: [
         'Welcome to La Jolla Surf Shop!',
@@ -120,6 +121,7 @@ export const LA_JOLLA_SHORES: MapData = {
       y: 5,
       sprite: 0,
       facing: 'down',
+      spriteType: 'swimmer',
       dialogue: [
         'The tide pools to the west are great for finding baby sharks!',
         'Horn shark eggs wash up there sometimes.'
@@ -132,6 +134,7 @@ export const LA_JOLLA_SHORES: MapData = {
       y: 7,
       sprite: 0,
       facing: 'left',
+      spriteType: 'fisher',
       dialogue: [
         'I\'ve been fishing off this pier for 30 years.',
         'Sometimes you can hook a Blue Shark or Mako!',
@@ -145,6 +148,7 @@ export const LA_JOLLA_SHORES: MapData = {
       y: 8,
       sprite: 0,
       facing: 'left',
+      spriteType: 'swimmer',
       dialogue: [
         'Have you noticed fewer sharks lately?',
         'The Leopard Sharks used to be everywhere...',
@@ -158,18 +162,40 @@ export const LA_JOLLA_SHORES: MapData = {
       y: 11,
       sprite: 0,
       facing: 'down',
+      spriteType: 'swimmer',
       dialogue: [
         'Dude, the kelp forest south of here is gnarly!',
         'Tons of sharks hang out in the kelp beds.',
         'Just watch out for the deep water - you\'ll need SCUBA for that.'
       ]
+    },
+    // Wandering kid on beach
+    {
+      id: 'beach-kid',
+      x: 10,
+      y: 6,
+      sprite: 0,
+      facing: 'down',
+      spriteType: 'kid',
+      wander: {
+        radius: 3,
+        speed: 1.0,
+        pauseMin: 800,
+        pauseMax: 2000
+      },
+      dialogue: [
+        'I found a cool shell over there!',
+        'Have you seen any baby sharks in the tide pools?'
+      ]
     }
   ],
-  // Tide pool encounters on the beach
+  // Tide pool encounters on the beach - San Diego species
   encounterTable: [
-    { speciesId: 14, minLevel: 2, maxLevel: 4, weight: 50 },  // Atlantic Stingray (placeholder for Round Stingray)
-    { speciesId: 13, minLevel: 3, maxLevel: 5, weight: 30 },  // Nurse Shark (placeholder)
-    { speciesId: 10, minLevel: 4, maxLevel: 6, weight: 20 }   // Bonnethead (uncommon)
+    { speciesId: 47, minLevel: 2, maxLevel: 4, weight: 40 },  // Round Stingray (common)
+    { speciesId: 57, minLevel: 2, maxLevel: 4, weight: 25 },  // Butterfly Ray
+    { speciesId: 48, minLevel: 3, maxLevel: 5, weight: 20 },  // Smoothhound
+    { speciesId: 50, minLevel: 3, maxLevel: 5, weight: 10 },  // Horn Shark Egg (uncommon)
+    { speciesId: 52, minLevel: 3, maxLevel: 5, weight: 5 }    // Swell Shark Egg (rare)
   ],
   isOutdoor: true
 };
