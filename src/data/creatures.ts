@@ -1032,6 +1032,959 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 55, moveId: 23 }
     ],
     description: 'The apex predator of the ocean. Its power and ferocity are legendary among all sharks.'
+  },
+
+  // === SAN DIEGO REGION CREATURES (Region 1) ===
+
+  // Round Stingray - Common tide pool encounter
+  47: {
+    id: 47,
+    name: 'Round Stingray',
+    types: ['ray', 'poison'],
+    baseStats: {
+      hp: 45,
+      attack: 35,
+      defense: 50,
+      spAttack: 40,
+      spDefense: 45,
+      speed: 40
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 150 }, // Poison Sting
+      { level: 6, moveId: 90 },  // Wing Attack
+      { level: 12, moveId: 80 }, // Sand Attack
+      { level: 18, moveId: 151 } // Toxic
+    ],
+    description: 'A small, disc-shaped stingray common in San Diego tide pools. Step carefully - its venomous barb causes painful stings!'
+  },
+
+  // Smoothhound → Leopard Shark evolution line
+  48: {
+    id: 48,
+    name: 'Smoothhound',
+    types: ['shark'],
+    baseStats: {
+      hp: 50,
+      attack: 45,
+      defense: 45,
+      spAttack: 40,
+      spDefense: 45,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 8, moveId: 2 },   // Bite
+      { level: 14, moveId: 11 }, // Aqua Jet
+      { level: 20, moveId: 80 }  // Sand Attack
+    ],
+    evolvesTo: { speciesId: 49, level: 22 },
+    description: 'A slender shark that hunts crabs and small fish in sandy shallows. Named for its flat teeth used to crush shells.'
+  },
+  49: {
+    id: 49,
+    name: 'Leopard Shark',
+    types: ['shark', 'algae'],
+    baseStats: {
+      hp: 70,
+      attack: 65,
+      defense: 60,
+      spAttack: 55,
+      spDefense: 60,
+      speed: 65
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 3 },
+      { level: 1, moveId: 2 },
+      { level: 1, moveId: 11 },
+      { level: 25, moveId: 100 }, // Vine Whip (kelp camouflage)
+      { level: 30, moveId: 31 },  // Crunch
+      { level: 36, moveId: 101 }  // Absorb
+    ],
+    description: 'The iconic San Diego shark, named for its spotted pattern. Aggregates in large groups in kelp forests and shallow bays.'
+  },
+
+  // Horn Shark Egg → Horn Shark (egg hatching mechanic)
+  50: {
+    id: 50,
+    name: 'Horn Shark Egg',
+    types: ['algae'],
+    baseStats: {
+      hp: 30,
+      attack: 10,
+      defense: 80,
+      spAttack: 10,
+      spDefense: 80,
+      speed: 5
+    },
+    learnableMoves: [
+      { level: 1, moveId: 3 }    // Tail Whip (minimal moves as an egg)
+    ],
+    evolvesTo: { speciesId: 51, level: 10 },
+    description: 'A spiral-shaped egg case called a "mermaid\'s purse". It wedges into rocky crevices to protect the developing shark inside.'
+  },
+  51: {
+    id: 51,
+    name: 'Horn Shark',
+    types: ['algae'],
+    baseStats: {
+      hp: 65,
+      attack: 70,
+      defense: 80,
+      spAttack: 45,
+      spDefense: 65,
+      speed: 30
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 100 }, // Vine Whip
+      { level: 12, moveId: 2 },  // Bite
+      { level: 18, moveId: 71 }, // Iron Head (horn attack)
+      { level: 24, moveId: 31 }, // Crunch
+      { level: 30, moveId: 101 } // Absorb
+    ],
+    description: 'A sluggish nocturnal shark with venomous dorsal spines. Uses its horn-like ridges to wedge into crevices and rest.'
+  },
+
+  // Swell Shark Egg → Swell Shark
+  52: {
+    id: 52,
+    name: 'Swell Shark Egg',
+    types: ['algae', 'fairy'],
+    baseStats: {
+      hp: 30,
+      attack: 10,
+      defense: 75,
+      spAttack: 15,
+      spDefense: 75,
+      speed: 5
+    },
+    learnableMoves: [
+      { level: 1, moveId: 120 }  // Fairy Wind
+    ],
+    evolvesTo: { speciesId: 53, level: 12 },
+    description: 'A translucent amber egg case. When held up to light, the developing baby shark is visible inside.'
+  },
+  53: {
+    id: 53,
+    name: 'Swell Shark',
+    types: ['algae', 'fairy'],
+    baseStats: {
+      hp: 70,
+      attack: 55,
+      defense: 70,
+      spAttack: 65,
+      spDefense: 70,
+      speed: 35
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 120 }, // Fairy Wind
+      { level: 14, moveId: 100 }, // Vine Whip
+      { level: 20, moveId: 2 },   // Bite
+      { level: 26, moveId: 121 }, // Dazzle
+      { level: 32, moveId: 101 }  // Absorb
+    ],
+    description: 'Can inflate itself with water to wedge into crevices. Its skin glows fluorescent green under UV light!'
+  },
+
+  // Guitarfish → Giant Guitarfish → Bowmouth Guitarfish
+  54: {
+    id: 54,
+    name: 'Guitarfish',
+    types: ['ray', 'ground'],
+    baseStats: {
+      hp: 55,
+      attack: 50,
+      defense: 55,
+      spAttack: 35,
+      spDefense: 50,
+      speed: 45
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 80 },  // Sand Attack
+      { level: 8, moveId: 90 },  // Wing Attack
+      { level: 15, moveId: 81 }, // Mud Shot
+      { level: 22, moveId: 2 }   // Bite
+    ],
+    evolvesTo: { speciesId: 55, level: 25 },
+    description: 'A ray-shark hybrid shaped like a guitar. Buries itself in sand with only its eyes exposed, waiting for prey.'
+  },
+  55: {
+    id: 55,
+    name: 'Giant Guitarfish',
+    types: ['ray', 'ground'],
+    baseStats: {
+      hp: 75,
+      attack: 70,
+      defense: 75,
+      spAttack: 45,
+      spDefense: 65,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 80 },
+      { level: 1, moveId: 90 },
+      { level: 1, moveId: 81 },
+      { level: 28, moveId: 71 },  // Iron Head
+      { level: 35, moveId: 31 }   // Crunch
+    ],
+    evolvesTo: { speciesId: 56, level: 40 },
+    description: 'A larger guitarfish that patrols sandy bottoms. Its powerful tail helps it excavate buried mollusks.'
+  },
+  56: {
+    id: 56,
+    name: 'Bowmouth Guitarfish',
+    types: ['ray', 'steel'],
+    baseStats: {
+      hp: 90,
+      attack: 95,
+      defense: 100,
+      spAttack: 55,
+      spDefense: 80,
+      speed: 60
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 80 },
+      { level: 1, moveId: 90 },
+      { level: 1, moveId: 71 },
+      { level: 1, moveId: 31 },
+      { level: 44, moveId: 73 },  // Iron Tail
+      { level: 50, moveId: 72 }   // Steel Wing
+    ],
+    description: 'The "shark ray" with thorn-like ridges and a bow-shaped head. Its armored body deflects most predator attacks.'
+  },
+
+  // Butterfly Ray → Smooth Butterfly Ray → Spiny Butterfly Ray
+  57: {
+    id: 57,
+    name: 'Butterfly Ray',
+    types: ['ray'],
+    baseStats: {
+      hp: 40,
+      attack: 30,
+      defense: 40,
+      spAttack: 45,
+      spDefense: 40,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Wing Attack
+      { level: 7, moveId: 3 },   // Tail Whip
+      { level: 12, moveId: 120 } // Fairy Wind
+    ],
+    evolvesTo: { speciesId: 58, level: 18 },
+    description: 'A small ray that flutters gracefully through the water. Its wing-like pectoral fins give it its name.'
+  },
+  58: {
+    id: 58,
+    name: 'Smooth Butterfly Ray',
+    types: ['ray'],
+    baseStats: {
+      hp: 55,
+      attack: 45,
+      defense: 55,
+      spAttack: 60,
+      spDefense: 55,
+      speed: 70
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 90 },
+      { level: 1, moveId: 3 },
+      { level: 1, moveId: 120 },
+      { level: 22, moveId: 91 },  // Aerial Ace
+      { level: 28, moveId: 10 }   // Water Gun
+    ],
+    evolvesTo: { speciesId: 59, level: 32 },
+    description: 'Its smooth skin helps it glide effortlessly. Can briefly leap from the water when startled.'
+  },
+  59: {
+    id: 59,
+    name: 'Spiny Butterfly Ray',
+    types: ['ray', 'poison'],
+    baseStats: {
+      hp: 70,
+      attack: 60,
+      defense: 70,
+      spAttack: 80,
+      spDefense: 75,
+      speed: 85
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 90 },
+      { level: 1, moveId: 91 },
+      { level: 1, moveId: 120 },
+      { level: 35, moveId: 150 }, // Poison Sting
+      { level: 40, moveId: 151 }, // Toxic
+      { level: 46, moveId: 42 }   // Psychic
+    ],
+    description: 'The largest butterfly ray with venomous tail spines. Its graceful movements belie its dangerous nature.'
+  },
+
+  // Bat Ray - Single stage
+  60: {
+    id: 60,
+    name: 'Bat Ray',
+    types: ['ray', 'ground'],
+    baseStats: {
+      hp: 75,
+      attack: 70,
+      defense: 65,
+      spAttack: 50,
+      spDefense: 60,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Wing Attack
+      { level: 8, moveId: 80 },  // Sand Attack
+      { level: 15, moveId: 81 }, // Mud Shot
+      { level: 22, moveId: 91 }, // Aerial Ace
+      { level: 29, moveId: 150 }, // Poison Sting
+      { level: 36, moveId: 31 }  // Crunch
+    ],
+    description: 'A large ray that "flies" over sandy bottoms, flapping its wing-like fins. Crushes clams and oysters with its flat teeth.'
+  },
+
+  // SCUBA Encounters
+  // Angelshark - ambush predator
+  61: {
+    id: 61,
+    name: 'Angelshark',
+    types: ['ground'],
+    baseStats: {
+      hp: 70,
+      attack: 85,
+      defense: 75,
+      spAttack: 45,
+      spDefense: 60,
+      speed: 40
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 80 },  // Sand Attack
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 81 }, // Mud Shot
+      { level: 26, moveId: 31 }, // Crunch
+      { level: 34, moveId: 140 } // Jaw Lock
+    ],
+    description: 'A flat, ray-like shark that buries itself in sand. Explodes upward to ambush passing fish with incredible speed.'
+  },
+
+  // Soupfin Shark
+  62: {
+    id: 62,
+    name: 'Soupfin Shark',
+    types: ['shark'],
+    baseStats: {
+      hp: 65,
+      attack: 75,
+      defense: 60,
+      spAttack: 50,
+      spDefense: 55,
+      speed: 70
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 11 }, // Aqua Jet
+      { level: 26, moveId: 20 }, // Ram
+      { level: 34, moveId: 31 }  // Crunch
+    ],
+    description: 'Once nearly fished to extinction for its fins. Now recovering in California waters. A resilient coastal predator.'
+  },
+
+  // Fishing Encounters
+  // Blue Shark
+  63: {
+    id: 63,
+    name: 'Blue Shark',
+    types: ['shark', 'fairy'],
+    baseStats: {
+      hp: 70,
+      attack: 65,
+      defense: 55,
+      spAttack: 75,
+      spDefense: 60,
+      speed: 85
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 120 }, // Fairy Wind
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 11 }, // Aqua Jet
+      { level: 26, moveId: 121 }, // Dazzle
+      { level: 34, moveId: 31 }, // Crunch
+      { level: 42, moveId: 42 }  // Psychic
+    ],
+    description: 'The most beautiful of sharks with brilliant blue coloring. A tireless ocean wanderer that travels vast distances.'
+  },
+
+  // Shortfin Mako → Longfin Mako
+  64: {
+    id: 64,
+    name: 'Shortfin Mako',
+    types: ['fire', 'breaching'],
+    baseStats: {
+      hp: 65,
+      attack: 85,
+      defense: 55,
+      spAttack: 70,
+      spDefense: 50,
+      speed: 105
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ember
+      { level: 12, moveId: 2 },  // Bite
+      { level: 18, moveId: 90 }, // Wing Attack
+      { level: 24, moveId: 61 }, // Fire Fang
+      { level: 30, moveId: 91 }, // Aerial Ace
+      { level: 36, moveId: 62 }  // Flame Burst
+    ],
+    evolvesTo: { speciesId: 65, level: 40 },
+    description: 'The fastest shark alive, reaching 45 mph. Its warm blood lets it hunt in cold waters where prey least expects it.'
+  },
+  65: {
+    id: 65,
+    name: 'Longfin Mako',
+    types: ['fire', 'breaching'],
+    baseStats: {
+      hp: 75,
+      attack: 95,
+      defense: 65,
+      spAttack: 85,
+      spDefense: 60,
+      speed: 110
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 60 },
+      { level: 1, moveId: 2 },
+      { level: 1, moveId: 90 },
+      { level: 1, moveId: 61 },
+      { level: 44, moveId: 63 },  // Flamethrower
+      { level: 50, moveId: 31 }   // Crunch
+    ],
+    description: 'A deep-water mako with long, elegant pectoral fins. Rarer and more powerful than its shortfin cousin.'
+  },
+
+  // Sharpnose Shark
+  66: {
+    id: 66,
+    name: 'Sharpnose Shark',
+    types: ['shark'],
+    baseStats: {
+      hp: 55,
+      attack: 60,
+      defense: 50,
+      spAttack: 45,
+      spDefense: 50,
+      speed: 65
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 11 }, // Aqua Jet
+      { level: 22, moveId: 20 }, // Ram
+      { level: 29, moveId: 30 }  // Pursuit
+    ],
+    description: 'A small, common coastal shark with a distinctive pointed snout. Often caught by accident when fishing for other species.'
+  },
+
+  // Rare Encounters
+  // Broadnose Sevengill - Spring seasonal
+  67: {
+    id: 67,
+    name: 'Broadnose Sevengill',
+    types: ['algae', 'fossil'],
+    baseStats: {
+      hp: 85,
+      attack: 90,
+      defense: 70,
+      spAttack: 55,
+      spDefense: 65,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 2 },   // Bite
+      { level: 15, moveId: 160 }, // Rock Throw
+      { level: 22, moveId: 100 }, // Vine Whip
+      { level: 29, moveId: 161 }, // Ancient Power
+      { level: 36, moveId: 31 },  // Crunch
+      { level: 43, moveId: 140 }  // Jaw Lock
+    ],
+    description: 'A primitive shark with seven gill slits instead of five. Aggregates in San Diego kelp forests each spring to mate.'
+  },
+
+  // Scalloped Bonnethead - very rare (already exists as Bonnethead ID 10, but this is specific variant)
+  68: {
+    id: 68,
+    name: 'Scalloped Bonnethead',
+    types: ['psychic', 'algae'],
+    baseStats: {
+      hp: 55,
+      attack: 60,
+      defense: 55,
+      spAttack: 70,
+      spDefense: 60,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 40 },  // Confusion
+      { level: 10, moveId: 100 }, // Vine Whip
+      { level: 18, moveId: 41 }, // Psybeam
+      { level: 26, moveId: 2 },  // Bite
+      { level: 34, moveId: 42 }  // Psychic
+    ],
+    description: 'The smallest hammerhead with a scalloped head shape. Extremely rare in San Diego - a lucky find for any trainer!'
+  },
+
+  // Prickly Shark - very rare deep water
+  69: {
+    id: 69,
+    name: 'Prickly Shark',
+    types: ['deepsea', 'steel'],
+    baseStats: {
+      hp: 80,
+      attack: 75,
+      defense: 95,
+      spAttack: 65,
+      spDefense: 85,
+      speed: 35
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 70 },  // Metal Claw
+      { level: 12, moveId: 2 },  // Bite
+      { level: 20, moveId: 30 }, // Pursuit
+      { level: 28, moveId: 71 }, // Iron Head
+      { level: 36, moveId: 31 }, // Crunch
+      { level: 44, moveId: 73 }  // Iron Tail
+    ],
+    description: 'A deep-water shark covered in thorn-like denticles. Rarely seen in shallow waters - encountering one is extremely unusual.'
+  },
+
+  // === CABO / BAJA REGION CREATURES (Region 3) ===
+
+  // Mexican Horn Shark - Regional variant
+  70: {
+    id: 70,
+    name: 'Mexican Horn Shark',
+    types: ['algae', 'ground'],
+    baseStats: {
+      hp: 68,
+      attack: 72,
+      defense: 82,
+      spAttack: 48,
+      spDefense: 68,
+      speed: 28
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 100 }, // Vine Whip
+      { level: 12, moveId: 2 },  // Bite
+      { level: 18, moveId: 80 }, // Sand Attack
+      { level: 24, moveId: 71 }, // Iron Head
+      { level: 30, moveId: 81 }, // Mud Shot
+      { level: 36, moveId: 31 }  // Crunch
+    ],
+    description: 'A regional variant adapted to Baja California\'s warmer waters. Its horn ridges are more pronounced than its San Diego cousin.'
+  },
+
+  // Cownose Ray
+  71: {
+    id: 71,
+    name: 'Cownose Ray',
+    types: ['ray', 'psychic'],
+    baseStats: {
+      hp: 70,
+      attack: 55,
+      defense: 65,
+      spAttack: 80,
+      spDefense: 70,
+      speed: 60
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Wing Attack
+      { level: 8, moveId: 40 },  // Confusion
+      { level: 15, moveId: 91 }, // Aerial Ace
+      { level: 22, moveId: 41 }, // Psybeam
+      { level: 29, moveId: 10 }, // Water Gun
+      { level: 36, moveId: 42 }  // Psychic
+    ],
+    description: 'Named for its cow-like snout. Migrates in massive schools that darken the water, communicating through subtle body movements.'
+  },
+
+  // Electric Ray (different from Torpedo Ray ID 26)
+  72: {
+    id: 72,
+    name: 'Pacific Electric Ray',
+    types: ['ray', 'electric'],
+    baseStats: {
+      hp: 60,
+      attack: 45,
+      defense: 65,
+      spAttack: 90,
+      spDefense: 70,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 51 },  // Thunder Shock
+      { level: 10, moveId: 90 }, // Wing Attack
+      { level: 18, moveId: 50 }, // Spark
+      { level: 26, moveId: 80 }, // Sand Attack
+      { level: 34, moveId: 52 }  // Thunderbolt
+    ],
+    description: 'Can generate up to 50 volts to stun prey. Buries itself in sandy bottoms near the Sea of Cortez.'
+  },
+
+  // Smooth Hammerhead
+  73: {
+    id: 73,
+    name: 'Smooth Hammerhead',
+    types: ['psychic'],
+    baseStats: {
+      hp: 80,
+      attack: 85,
+      defense: 70,
+      spAttack: 85,
+      spDefense: 70,
+      speed: 70
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 40 },  // Confusion
+      { level: 12, moveId: 2 },  // Bite
+      { level: 20, moveId: 41 }, // Psybeam
+      { level: 28, moveId: 20 }, // Ram
+      { level: 36, moveId: 42 }, // Psychic
+      { level: 44, moveId: 31 }  // Crunch
+    ],
+    description: 'The largest hammerhead in cooler waters. Its smooth, curved cephalofoil gives it unparalleled electromagnetic sensing.'
+  },
+
+  // Silky Shark
+  74: {
+    id: 74,
+    name: 'Silky Shark',
+    types: ['shark', 'fairy'],
+    baseStats: {
+      hp: 72,
+      attack: 78,
+      defense: 60,
+      spAttack: 65,
+      spDefense: 55,
+      speed: 80
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 120 }, // Fairy Wind
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 11 }, // Aqua Jet
+      { level: 26, moveId: 121 }, // Dazzle
+      { level: 34, moveId: 20 }, // Ram
+      { level: 42, moveId: 31 }  // Crunch
+    ],
+    description: 'Named for its silky-smooth skin. Abundant in the Sea of Cortez, often following tuna schools.'
+  },
+
+  // Pelagic Thresher
+  75: {
+    id: 75,
+    name: 'Pelagic Thresher',
+    types: ['breaching', 'fighting'],
+    baseStats: {
+      hp: 65,
+      attack: 90,
+      defense: 55,
+      spAttack: 50,
+      spDefense: 55,
+      speed: 85
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Wing Attack
+      { level: 12, moveId: 20 }, // Ram
+      { level: 20, moveId: 91 }, // Aerial Ace
+      { level: 28, moveId: 21 }, // Thrash
+      { level: 36, moveId: 2 },  // Bite
+      { level: 44, moveId: 22 }  // Brick Break
+    ],
+    evolvesTo: { speciesId: 76, level: 38 },
+    description: 'Uses its scythe-like tail to stun fish. Can leap completely out of the water when hunting.'
+  },
+
+  // Bigeye Thresher (evolution)
+  76: {
+    id: 76,
+    name: 'Bigeye Thresher',
+    types: ['breaching', 'fighting'],
+    baseStats: {
+      hp: 75,
+      attack: 100,
+      defense: 65,
+      spAttack: 60,
+      spDefense: 65,
+      speed: 95
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 90 },
+      { level: 1, moveId: 20 },
+      { level: 1, moveId: 91 },
+      { level: 40, moveId: 21 },
+      { level: 48, moveId: 23 }, // Close Combat
+      { level: 56, moveId: 31 }
+    ],
+    description: 'Its enormous eyes let it hunt in deep, dark waters. The tail can be as long as its entire body.'
+  },
+
+  // Great Hammerhead (for Dr. Martillo's ace)
+  77: {
+    id: 77,
+    name: 'Great Hammerhead',
+    types: ['psychic', 'electric'],
+    baseStats: {
+      hp: 90,
+      attack: 95,
+      defense: 75,
+      spAttack: 95,
+      spDefense: 75,
+      speed: 75
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },
+      { level: 1, moveId: 40 },
+      { level: 1, moveId: 2 },
+      { level: 15, moveId: 41 },
+      { level: 25, moveId: 51 }, // Thunder Shock
+      { level: 35, moveId: 42 }, // Psychic
+      { level: 45, moveId: 52 }, // Thunderbolt
+      { level: 55, moveId: 31 }
+    ],
+    description: 'The largest hammerhead species. Its massive cephalofoil can detect the faintest electrical signals from buried prey.'
+  },
+
+  // Nurse Shark (Cabo variant - common)
+  78: {
+    id: 78,
+    name: 'Tawny Nurse Shark',
+    types: ['ground'],
+    baseStats: {
+      hp: 75,
+      attack: 60,
+      defense: 70,
+      spAttack: 45,
+      spDefense: 65,
+      speed: 35
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 80 },  // Sand Attack
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 81 }, // Mud Shot
+      { level: 26, moveId: 3 },  // Tail Whip
+      { level: 34, moveId: 31 }  // Crunch
+    ],
+    description: 'A docile bottom-dweller common in Cabo\'s shallow reefs. Rests in groups during the day, hunting at night.'
+  },
+
+  // === CARIBBEAN / FLORIDA REGION CREATURES (Region 4) ===
+
+  // Blacknose Shark - Common shallow water shark
+  79: {
+    id: 79,
+    name: 'Blacknose Shark',
+    types: ['shark'],
+    baseStats: {
+      hp: 55,
+      attack: 58,
+      defense: 50,
+      spAttack: 45,
+      spDefense: 50,
+      speed: 62
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 8, moveId: 2 },   // Bite
+      { level: 14, moveId: 11 }, // Aqua Jet
+      { level: 20, moveId: 30 }, // Pursuit
+      { level: 26, moveId: 20 }, // Ram
+      { level: 32, moveId: 31 }  // Crunch
+    ],
+    description: 'A small coastal shark with a distinctive black smudge on its snout. Commonly found in Florida\'s shallow waters.'
+  },
+
+  // Yellow Stingray - Common tide pool encounter
+  80: {
+    id: 80,
+    name: 'Yellow Stingray',
+    types: ['ray', 'poison'],
+    baseStats: {
+      hp: 50,
+      attack: 40,
+      defense: 55,
+      spAttack: 50,
+      spDefense: 55,
+      speed: 45
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Wing Attack
+      { level: 7, moveId: 150 }, // Poison Sting
+      { level: 13, moveId: 80 }, // Sand Attack
+      { level: 19, moveId: 120 }, // Fairy Wind
+      { level: 25, moveId: 151 }, // Toxic
+      { level: 31, moveId: 42 }  // Psychic
+    ],
+    description: 'A small, brightly-colored stingray with yellow and brown patterns. Popular in Caribbean tide pools.'
+  },
+
+  // Caribbean Reef Shark - Classic reef shark
+  81: {
+    id: 81,
+    name: 'Caribbean Reef Shark',
+    types: ['shark'],
+    baseStats: {
+      hp: 75,
+      attack: 80,
+      defense: 70,
+      spAttack: 55,
+      spDefense: 65,
+      speed: 70
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 10, moveId: 2 },  // Bite
+      { level: 16, moveId: 11 }, // Aqua Jet
+      { level: 22, moveId: 20 }, // Ram
+      { level: 28, moveId: 21 }, // Thrash
+      { level: 34, moveId: 31 }, // Crunch
+      { level: 40, moveId: 140 } // Jaw Lock
+    ],
+    description: 'The iconic Caribbean reef predator. A powerful, territorial shark that patrols coral reefs throughout the region.'
+  },
+
+  // Tiger Shark - Rare apex predator
+  82: {
+    id: 82,
+    name: 'Tiger Shark',
+    types: ['leviathan'],
+    baseStats: {
+      hp: 95,
+      attack: 105,
+      defense: 80,
+      spAttack: 70,
+      spDefense: 75,
+      speed: 75
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 2 },   // Bite
+      { level: 15, moveId: 20 }, // Ram
+      { level: 23, moveId: 30 }, // Pursuit
+      { level: 31, moveId: 31 }, // Crunch
+      { level: 39, moveId: 140 }, // Jaw Lock
+      { level: 47, moveId: 170 }, // Leviathan Rage
+      { level: 55, moveId: 23 }  // Close Combat
+    ],
+    description: 'The "garbage can of the sea" - a fearsome apex predator with striped markings. Will eat almost anything.'
+  },
+
+  // Scoophead - Rare hammerhead variant
+  83: {
+    id: 83,
+    name: 'Scoophead',
+    types: ['psychic', 'algae'],
+    baseStats: {
+      hp: 65,
+      attack: 70,
+      defense: 60,
+      spAttack: 80,
+      spDefense: 65,
+      speed: 60
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 40 },  // Confusion
+      { level: 10, moveId: 100 }, // Vine Whip
+      { level: 17, moveId: 41 }, // Psybeam
+      { level: 24, moveId: 2 },  // Bite
+      { level: 31, moveId: 101 }, // Absorb
+      { level: 38, moveId: 42 }, // Psychic
+      { level: 45, moveId: 31 }  // Crunch
+    ],
+    description: 'A rare hammerhead with a distinctive scoop-shaped head. Uses its wide cephalofoil to detect prey hiding in seagrass.'
+  },
+
+  // Chain Catshark - Rare deep water species
+  84: {
+    id: 84,
+    name: 'Chain Catshark',
+    types: ['steel'],
+    baseStats: {
+      hp: 60,
+      attack: 55,
+      defense: 80,
+      spAttack: 70,
+      spDefense: 75,
+      speed: 45
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 70 },  // Metal Claw
+      { level: 9, moveId: 2 },   // Bite
+      { level: 16, moveId: 71 }, // Iron Head
+      { level: 23, moveId: 30 }, // Pursuit
+      { level: 30, moveId: 72 }, // Steel Wing
+      { level: 37, moveId: 73 }, // Iron Tail
+      { level: 44, moveId: 31 }  // Crunch
+    ],
+    description: 'A beautiful catshark with chain-link markings. Found in deep Caribbean waters, often near wrecks and rocky outcrops.'
+  },
+
+  // Golden Hammerhead - Very rare, shiny-like variant
+  85: {
+    id: 85,
+    name: 'Golden Hammerhead',
+    types: ['psychic'],
+    baseStats: {
+      hp: 85,
+      attack: 90,
+      defense: 75,
+      spAttack: 95,
+      spDefense: 80,
+      speed: 75
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 40 },  // Confusion
+      { level: 12, moveId: 2 },  // Bite
+      { level: 18, moveId: 120 }, // Fairy Wind
+      { level: 24, moveId: 41 }, // Psybeam
+      { level: 30, moveId: 121 }, // Dazzle
+      { level: 36, moveId: 42 }, // Psychic
+      { level: 42, moveId: 31 }, // Crunch
+      { level: 48, moveId: 52 }  // Thunderbolt
+    ],
+    description: 'An extremely rare hammerhead with golden coloring. Sightings are considered incredibly lucky - most divers never see one.'
   }
 };
 

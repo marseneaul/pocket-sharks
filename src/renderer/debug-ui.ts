@@ -16,10 +16,35 @@ interface DebugState {
 }
 
 const TABS: DebugTab[] = ['sprites', 'maps', 'battles', 'screens'];
-const MAX_CREATURE_ID = 30;
+const MAX_CREATURE_ID = 85;
 
 const MAPS = [
+  // San Diego Region (Region 1)
   'research-station',
+  'la-jolla-shores',
+  'la-jolla-tide-pools',
+  'kelp-forest-route',
+  'san-diego-bay',
+  'rays-gym',
+  // Hawaii Region (Region 2)
+  'hawaii-airport',
+  'waikiki-beach',
+  'dive-school',
+  'hawaii-reef',
+  // Cabo / Baja Region (Region 3)
+  'cabo-harbor',
+  'cabo-beach',
+  'cabo-reef',
+  'sea-of-cortez',
+  'cabo-town',
+  'martillo-gym',
+  // Caribbean / Florida Region (Region 4)
+  'florida-airport',
+  'florida-keys',
+  'key-west',
+  'caribbean-reef',
+  'coral-reef-gym',
+  // Legacy maps
   'route-1',
   'route-2',
   'route-3',
