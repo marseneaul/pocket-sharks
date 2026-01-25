@@ -1,8 +1,8 @@
 import { SCREEN_WIDTH, SCREEN_HEIGHT, BATTLE_UI } from '../constants.ts';
-import { clear, fillRect, drawBox } from './canvas.ts';
+import { clear, fillRect, drawBox, setPixel } from './canvas.ts';
 import { drawText, drawTextRightAligned, drawTypewriter, startTypewriter, isTypewriterComplete } from './text.ts';
 import { drawCreatureSprite } from './sprites.ts';
-import { getEntryAnimationOffsets, getAttackAnimationEffects } from '../engine/battle.ts';
+import { getEntryAnimationOffsets, getAttackAnimationEffects, getCageAnimationEffects } from '../engine/battle.ts';
 import type { BattleState, CreatureInstance } from '../types/index.ts';
 
 const MENU_ITEMS = ['FIGHT', 'BAG', 'SHARKS', 'RUN'];
@@ -16,14 +16,26 @@ export function renderBattle(state: BattleState): void {
   // Get animation offsets
   const entryOffsets = getEntryAnimationOffsets(state);
   const attackEffects = getAttackAnimationEffects(state);
+  const cageEffects = getCageAnimationEffects(state);
 
   // Combine offsets
   const enemyX = entryOffsets.enemyX + attackEffects.enemyOffsetX + attackEffects.enemyShake;
   const playerX = entryOffsets.playerX + attackEffects.playerOffsetX + attackEffects.playerShake;
 
   // Draw creatures with animation offsets
-  renderEnemyCreature(state.enemyCreature, enemyX);
+  // Enemy may be partially faded during cage animation
+  if (cageEffects.enemyOpacity > 0.5) {
+    renderEnemyCreature(state.enemyCreature, enemyX);
+  } else if (cageEffects.enemyOpacity > 0) {
+    // During cage animation, draw faded enemy (using darker color)
+    renderEnemyCreatureFaded(state.enemyCreature, enemyX);
+  }
   renderPlayerCreature(state.playerCreature, playerX);
+
+  // Draw cage animation
+  if (cageEffects.cageVisible) {
+    renderCage(cageEffects.cageX, cageEffects.cageY, cageEffects.cageRotation);
+  }
 
   // Draw screen flash for special attacks
   if (attackEffects.screenFlash > 0) {
@@ -72,6 +84,39 @@ function renderEnemyCreature(creature: CreatureInstance, offsetX: number = 0): v
     BATTLE_UI.ENEMY_SPRITE_Y,
     true // front view
   );
+}
+
+function renderEnemyCreatureFaded(_creature: CreatureInstance, _offsetX: number = 0): void {
+  // Draw enemy sprite faded (during cage capture) - simplified by skipping render
+  // In a full implementation this would use alpha blending
+  // For now we just don't draw anything when faded
+}
+
+// Cage sprite - 8x8 pixel art cage
+const CAGE_SPRITE = [
+  '..####..',
+  '.#....#.',
+  '#.####.#',
+  '#.#..#.#',
+  '#.#..#.#',
+  '#.####.#',
+  '.#....#.',
+  '..####..',
+];
+
+function renderCage(x: number, y: number, rotation: number): void {
+  // Apply rotation offset for shaking effect
+  const shakeX = Math.sin(rotation) * 2;
+
+  // Draw the cage sprite
+  for (let row = 0; row < CAGE_SPRITE.length; row++) {
+    for (let col = 0; col < CAGE_SPRITE[row].length; col++) {
+      if (CAGE_SPRITE[row][col] === '#') {
+        // Draw cage bars in dark color
+        setPixel(Math.floor(x + col + shakeX), Math.floor(y + row), 1);
+      }
+    }
+  }
 }
 
 function renderPlayerCreature(creature: CreatureInstance, offsetX: number = 0): void {

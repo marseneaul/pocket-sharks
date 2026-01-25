@@ -16,7 +16,7 @@ export const LA_JOLLA_SHOP: ShopInventory = {
   id: 'la-jolla-shop',
   name: 'LA JOLLA SURF',
   items: [
-    { itemId: 1 },   // Shark Ball
+    { itemId: 1 },   // Shark Cage
     { itemId: 10 },  // Potion
     { itemId: 20 },  // Antidote
   ]
@@ -27,8 +27,8 @@ export const SAN_DIEGO_SHOP: ShopInventory = {
   id: 'san-diego-shop',
   name: 'BAY MART',
   items: [
-    { itemId: 1 },   // Shark Ball
-    { itemId: 2 },   // Great Ball
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
     { itemId: 10 },  // Potion
     { itemId: 11 },  // Super Potion
     { itemId: 20 },  // Antidote
@@ -41,8 +41,8 @@ export const WAIKIKI_SHOP: ShopInventory = {
   id: 'waikiki-shop',
   name: 'WAIKIKI SURF',
   items: [
-    { itemId: 1 },   // Shark Ball
-    { itemId: 2 },   // Great Ball
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
     { itemId: 10 },  // Potion
     { itemId: 11 },  // Super Potion
     { itemId: 20 },  // Antidote
@@ -56,8 +56,8 @@ export const CABO_SHOP: ShopInventory = {
   id: 'cabo-shop',
   name: 'CABO SUPPLIES',
   items: [
-    { itemId: 1 },   // Shark Ball
-    { itemId: 2 },   // Great Ball
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
     { itemId: 10 },  // Potion
     { itemId: 11 },  // Super Potion
     { itemId: 20 },  // Antidote
@@ -71,9 +71,9 @@ export const CABO_TOWN_SHOP: ShopInventory = {
   id: 'cabo-town-shop',
   name: 'CABO MART',
   items: [
-    { itemId: 1 },   // Shark Ball
-    { itemId: 2 },   // Great Ball
-    { itemId: 3 },   // Ultra Ball
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
+    { itemId: 3 },   // Ultra Cage
     { itemId: 10 },  // Potion
     { itemId: 11 },  // Super Potion
     { itemId: 12 },  // Hyper Potion
@@ -89,8 +89,8 @@ export const CORAL_BAY_SHOP: ShopInventory = {
   id: 'coral-bay',
   name: 'CORAL MARKET',
   items: [
-    { itemId: 1 },   // Shark Ball
-    { itemId: 2 },   // Great Ball
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
     { itemId: 10 },  // Potion
     { itemId: 11 },  // Super Potion
     { itemId: 20 },  // Antidote
@@ -103,9 +103,9 @@ export const KELP_HARBOR_SHOP: ShopInventory = {
   id: 'kelp-harbor',
   name: 'HARBOR MART',
   items: [
-    { itemId: 1 },   // Shark Ball
-    { itemId: 2 },   // Great Ball
-    { itemId: 3 },   // Ultra Ball
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
+    { itemId: 3 },   // Ultra Cage
     { itemId: 10 },  // Potion
     { itemId: 11 },  // Super Potion
     { itemId: 12 },  // Hyper Potion

@@ -101,6 +101,7 @@ export type BattlePhase =
   | 'executing'
   | 'animating'
   | 'message'
+  | 'turn-end'       // After first attacker's messages, before second
   | 'victory'
   | 'defeat';
 
@@ -124,6 +125,26 @@ export interface AttackAnimation {
   attacker: 'player' | 'enemy';
   progress: number;  // 0-1
   hitSoundPlayed: boolean;  // Track if hit sound was played this animation
+}
+
+// Turn execution tracking
+export interface TurnState {
+  turnOrder: ('player' | 'enemy')[];  // Order of attackers this turn
+  currentTurnIndex: number;           // 0 = first attacker, 1 = second attacker
+  firstAttackDone: boolean;           // Has first attack finished (messages shown)
+}
+
+// Cage animation phases
+export type CageAnimationPhase = 'idle' | 'throwing' | 'shaking' | 'caught' | 'escaped';
+
+// Cage animation state
+export interface CageAnimation {
+  active: boolean;
+  phase: CageAnimationPhase;
+  progress: number;      // 0-1 normalized
+  shakeCount: number;    // 0-3 shakes completed
+  maxShakes: number;     // Target shakes before catch/escape
+  success: boolean;      // Whether catch succeeds
 }
 
 // Battle state
@@ -150,6 +171,10 @@ export interface BattleState {
   };
   // Attack animation state
   attackAnimation: AttackAnimation;
+  // Turn execution tracking
+  turnState: TurnState;
+  // Cage catching animation
+  cageAnimation: CageAnimation;
 }
 
 // Type effectiveness result

@@ -5,10 +5,18 @@ import { drawTile, drawPlayer } from './tileset.ts';
 import { drawNPC } from './npc-sprites.ts';
 import { getPlayer, getCurrentMap } from '../engine/game-state.ts';
 import { getNPCRenderPosition, getNPCWalkFrame } from '../engine/npc-movement.ts';
-import type { MapData, PlayerState } from '../types/overworld.ts';
+import type { MapData, PlayerState, NPC } from '../types/overworld.ts';
 
 const TILE_SIZE = 8;
 const PLAYER_SIZE = 16;
+
+// Sprite entity for sorting
+interface SpriteEntity {
+  type: 'player' | 'npc';
+  pixelY: number;
+  player?: PlayerState;
+  npc?: NPC;
+}
 
 export function renderOverworld(): void {
   clear();
@@ -32,14 +40,39 @@ export function renderOverworld(): void {
   // Draw tiles
   renderTiles(map, clampedCameraX, clampedCameraY);
 
-  // Draw NPCs
-  renderNPCs(map, clampedCameraX, clampedCameraY);
+  // Collect all sprites for Y-sorting (proper depth rendering)
+  const sprites: SpriteEntity[] = [];
 
-  // Draw player
-  renderPlayer(player, clampedCameraX, clampedCameraY);
+  // Add player
+  sprites.push({
+    type: 'player',
+    pixelY: player.pixelY,
+    player
+  });
+
+  // Add NPCs
+  for (const npc of map.npcs) {
+    const pos = getNPCRenderPosition(npc);
+    sprites.push({
+      type: 'npc',
+      pixelY: pos.y,
+      npc
+    });
+  }
+
+  // Sort by Y position (lower Y = further back, drawn first)
+  sprites.sort((a, b) => a.pixelY - b.pixelY);
+
+  // Draw all sprites in sorted order
+  for (const sprite of sprites) {
+    if (sprite.type === 'player' && sprite.player) {
+      renderPlayer(sprite.player, clampedCameraX, clampedCameraY);
+    } else if (sprite.type === 'npc' && sprite.npc) {
+      renderSingleNPC(sprite.npc, clampedCameraX, clampedCameraY);
+    }
+  }
 
   // Draw map name (briefly when entering)
-  // For now, always show it at top
   renderMapName(map.name);
 }
 
@@ -62,31 +95,29 @@ function renderTiles(map: MapData, cameraX: number, cameraY: number): void {
   }
 }
 
-function renderNPCs(map: MapData, cameraX: number, cameraY: number): void {
-  for (const npc of map.npcs) {
-    // Get smooth pixel position for wandering NPCs
-    const pos = getNPCRenderPosition(npc);
-    const screenX = pos.x - cameraX;
-    const screenY = pos.y - cameraY;
+function renderSingleNPC(npc: NPC, cameraX: number, cameraY: number): void {
+  // Get smooth pixel position for wandering NPCs
+  const pos = getNPCRenderPosition(npc);
+  const screenX = pos.x - cameraX;
+  const screenY = pos.y - cameraY;
 
-    // Only draw if on screen
-    if (screenX >= -PLAYER_SIZE && screenX < SCREEN_WIDTH &&
-        screenY >= -PLAYER_SIZE && screenY < SCREEN_HEIGHT) {
-      // Offset to center 16x16 sprite on 8x8 tile
-      const drawX = screenX - 4;
-      const drawY = screenY - 8;
+  // Only draw if on screen
+  if (screenX >= -PLAYER_SIZE && screenX < SCREEN_WIDTH &&
+      screenY >= -PLAYER_SIZE && screenY < SCREEN_HEIGHT) {
+    // Offset to center 16x16 sprite on 8x8 tile
+    const drawX = screenX - 4;
+    const drawY = screenY - 8;
 
-      // Get walk animation frame
-      const walkFrame = getNPCWalkFrame(npc);
+    // Get walk animation frame
+    const walkFrame = getNPCWalkFrame(npc);
 
-      // Try to draw NPC-specific sprite, fall back to player sprite
-      const spriteType = npc.spriteType || 'player';
-      const drawn = drawNPC(drawX, drawY, spriteType, npc.facing, walkFrame);
+    // Try to draw NPC-specific sprite, fall back to player sprite
+    const spriteType = npc.spriteType || 'player';
+    const drawn = drawNPC(drawX, drawY, spriteType, npc.facing, walkFrame);
 
-      if (!drawn) {
-        // Fall back to player sprite for 'player' type or unknown types
-        drawPlayer(drawX, drawY, npc.facing, walkFrame, false);
-      }
+    if (!drawn) {
+      // Fall back to player sprite for 'player' type or unknown types
+      drawPlayer(drawX, drawY, npc.facing, walkFrame, false);
     }
   }
 }

@@ -9,7 +9,6 @@ import {
   trainerHasMoreCreatures,
   sendOutNextTrainerCreature,
   getCurrentTrainer,
-  getInventory,
   removeItem,
   addToParty,
   canAddToParty,
@@ -17,6 +16,7 @@ import {
   setGameMode
 } from './game-state.ts';
 import { initPartyMenu } from '../renderer/party-ui.ts';
+import { initBagMenu } from '../renderer/bag-ui.ts';
 import { playHitSound } from './audio.ts';
 
 export function createCreatureInstance(species: CreatureSpecies, level: number): CreatureInstance {
@@ -78,6 +78,19 @@ export function createBattleState(
       attacker: 'player',
       progress: 0,
       hitSoundPlayed: false
+    },
+    turnState: {
+      turnOrder: [],
+      currentTurnIndex: 0,
+      firstAttackDone: false
+    },
+    cageAnimation: {
+      active: false,
+      phase: 'idle',
+      progress: 0,
+      shakeCount: 0,
+      maxShakes: 0,
+      success: false
     }
   };
 }
@@ -118,7 +131,39 @@ export function handleInput(state: BattleState, input: 'up' | 'down' | 'left' | 
             state.phase = 'defeat';
           } else if (state.enemyCreature.currentHp <= 0) {
             state.phase = 'victory';
+          } else if (state.turnState.firstAttackDone && !state.turnState.turnOrder[1]) {
+            // First attack done but no second attacker (defender fainted mid-turn)
+            state.phase = 'select-action';
+            const name = state.playerCreature.nickname || state.playerCreature.species.name;
+            setMessage(`What will ${name} do?`, true);
+          } else if (state.turnState.firstAttackDone) {
+            // First attack done, time for second attack
+            state.phase = 'turn-end';
+            executeSecondAttack(state);
           } else {
+            state.phase = 'select-action';
+            const name = state.playerCreature.nickname || state.playerCreature.species.name;
+            setMessage(`What will ${name} do?`, true);
+          }
+        }
+      }
+      break;
+
+    case 'turn-end':
+      // Waiting for second attack to process
+      if (input === 'a' || input === 'b') {
+        if (state.messageQueue.length > 0) {
+          advanceMessage(state);
+        } else {
+          // Second attack done, check battle state
+          if (state.playerCreature.currentHp <= 0) {
+            state.phase = 'defeat';
+          } else if (state.enemyCreature.currentHp <= 0) {
+            state.phase = 'victory';
+          } else {
+            // Turn complete, back to action selection
+            state.turnState.firstAttackDone = false;
+            state.turnState.currentTurnIndex = 0;
             state.phase = 'select-action';
             const name = state.playerCreature.nickname || state.playerCreature.species.name;
             setMessage(`What will ${name} do?`, true);
@@ -177,8 +222,9 @@ function selectAction(state: BattleState): void {
         state.phase = 'message';
         advanceMessage(state);
       } else {
-        // Try to use a Shark Ball
-        tryUseBall(state);
+        // Open bag menu
+        initBagMenu();
+        setGameMode('battle-bag');
       }
       break;
     case 2: // SHARK (switch)
@@ -209,79 +255,103 @@ function selectAction(state: BattleState): void {
   }
 }
 
-function tryUseBall(state: BattleState): void {
-  // Find first available ball in inventory
-  const inventory = getInventory();
-  const ballSlot = inventory.find(slot => {
-    const item = getItem(slot.itemId);
-    return item?.type === 'ball' && slot.quantity > 0;
-  });
-
-  if (!ballSlot) {
-    queueMessage(state, 'No Shark Balls!');
+// Use a specific item in battle (called from bag menu)
+export function useBattleItem(state: BattleState, itemId: number): void {
+  const item = getItem(itemId);
+  if (!item) {
+    queueMessage(state, 'Item not found!');
     state.phase = 'message';
     advanceMessage(state);
     return;
   }
 
-  const ball = getItem(ballSlot.itemId)!;
+  // Remove item from inventory
+  removeItem(itemId, 1);
 
-  // Use the ball
-  removeItem(ballSlot.itemId, 1);
-  queueMessage(state, `Used ${ball.name}!`);
+  if (item.type === 'cage') {
+    // Use cage to catch
+    queueMessage(state, `Used ${item.name}!`);
 
-  // Calculate catch attempt
-  const enemy = state.enemyCreature;
-  const speciesCatchRate = getSpeciesCatchRate(enemy.species.id);
-  const result = attemptCatch(
-    enemy.maxHp,
-    enemy.currentHp,
-    speciesCatchRate,
-    ball.catchRate || 1
-  );
+    // Calculate catch attempt
+    const enemy = state.enemyCreature;
+    const speciesCatchRate = getSpeciesCatchRate(enemy.species.id);
+    const result = attemptCatch(
+      enemy.maxHp,
+      enemy.currentHp,
+      speciesCatchRate,
+      item.catchRate || 1
+    );
 
-  // Show shake messages
-  if (result.shakes >= 1) queueMessage(state, 'The ball shook...');
-  if (result.shakes >= 2) queueMessage(state, 'The ball shook again...');
-  if (result.shakes >= 3) queueMessage(state, 'The ball shook once more...');
+    // Start the cage throwing animation
+    startCageAnimation(state, result.shakes, result.success);
 
-  if (result.success) {
-    queueMessage(state, `Gotcha! ${enemy.species.name} was caught!`);
+    // Show shake messages
+    if (result.shakes >= 1) queueMessage(state, 'The cage rattled...');
+    if (result.shakes >= 2) queueMessage(state, 'The cage rattled again...');
+    if (result.shakes >= 3) queueMessage(state, 'The cage rattled once more...');
 
-    // Try to add to party
-    if (canAddToParty()) {
-      // Create a fresh instance of the caught creature
-      const caughtCreature: CreatureInstance = {
-        species: enemy.species,
-        level: enemy.level,
-        currentHp: enemy.currentHp,
-        maxHp: enemy.maxHp,
-        stats: { ...enemy.stats },
-        moves: enemy.moves.map(m => ({ ...m })),
-        status: enemy.status,
-        exp: enemy.exp
-      };
-      addToParty(caughtCreature);
-      queueMessage(state, `${enemy.species.name} joined your team!`);
+    if (result.success) {
+      queueMessage(state, `Gotcha! ${enemy.species.name} was caught!`);
+
+      // Try to add to party
+      if (canAddToParty()) {
+        // Create a fresh instance of the caught creature
+        const caughtCreature: CreatureInstance = {
+          species: enemy.species,
+          level: enemy.level,
+          currentHp: enemy.currentHp,
+          maxHp: enemy.maxHp,
+          stats: { ...enemy.stats },
+          moves: enemy.moves.map(m => ({ ...m })),
+          status: enemy.status,
+          exp: enemy.exp
+        };
+        addToParty(caughtCreature);
+        queueMessage(state, `${enemy.species.name} joined your team!`);
+      } else {
+        queueMessage(state, 'Party is full!');
+        queueMessage(state, `${enemy.species.name} was sent to storage.`);
+      }
+
+      state.phase = 'victory';
     } else {
-      queueMessage(state, 'Party is full!');
-      queueMessage(state, `${enemy.species.name} was sent to storage.`);
-      // TODO: Implement PC storage
+      queueMessage(state, 'Oh no! It broke free!');
+
+      // Enemy gets a turn after failed catch
+      const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
+      state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
+      executeMove(state, 'enemy');
+
+      if (state.playerCreature.currentHp <= 0) {
+        const name = state.playerCreature.nickname || state.playerCreature.species.name;
+        queueMessage(state, `${name} fainted!`);
+      }
     }
+  } else if (item.type === 'potion') {
+    // Heal player creature
+    const healAmount = item.healAmount || 20;
+    const creature = state.playerCreature;
+    const oldHp = creature.currentHp;
+    creature.currentHp = Math.min(creature.currentHp + healAmount, creature.maxHp);
+    const healed = creature.currentHp - oldHp;
 
-    state.phase = 'victory';
-  } else {
-    queueMessage(state, 'Oh no! It broke free!');
+    const name = creature.nickname || creature.species.name;
+    queueMessage(state, `Used ${item.name}!`);
+    queueMessage(state, `${name} recovered ${healed} HP!`);
 
-    // Enemy gets a turn after failed catch
+    // Enemy gets a turn after using item
     const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
     state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
     executeMove(state, 'enemy');
 
     if (state.playerCreature.currentHp <= 0) {
-      const name = state.playerCreature.nickname || state.playerCreature.species.name;
-      queueMessage(state, `${name} fainted!`);
+      const pName = state.playerCreature.nickname || state.playerCreature.species.name;
+      queueMessage(state, `${pName} fainted!`);
     }
+  } else {
+    // Unknown item type
+    queueMessage(state, `Used ${item.name}!`);
+    queueMessage(state, 'But nothing happened...');
   }
 
   state.phase = 'message';
@@ -333,30 +403,77 @@ function selectMove(state: BattleState): void {
 function executeTurn(state: BattleState): void {
   state.phase = 'executing';
 
-  // Determine turn order based on speed
+  // Determine turn order based on speed (faster goes first, random tiebreaker)
   const playerSpeed = state.playerCreature.stats.speed;
   const enemySpeed = state.enemyCreature.stats.speed;
 
-  const playerFirst = playerSpeed >= enemySpeed ||
+  const playerFirst = playerSpeed > enemySpeed ||
     (playerSpeed === enemySpeed && Math.random() < 0.5);
 
-  if (playerFirst) {
-    executeMove(state, 'player');
-    if (state.enemyCreature.currentHp > 0) {
-      executeMove(state, 'enemy');
-    }
-  } else {
-    executeMove(state, 'enemy');
-    if (state.playerCreature.currentHp > 0) {
-      executeMove(state, 'player');
-    }
+  // Set turn order
+  state.turnState.turnOrder = playerFirst ? ['player', 'enemy'] : ['enemy', 'player'];
+  state.turnState.currentTurnIndex = 0;
+  state.turnState.firstAttackDone = false;
+
+  // Execute first attack only
+  const firstAttacker = state.turnState.turnOrder[0];
+  executeMove(state, firstAttacker);
+
+  // Check if defender fainted from first attack
+  const defenderFainted = firstAttacker === 'player'
+    ? state.enemyCreature.currentHp <= 0
+    : state.playerCreature.currentHp <= 0;
+
+  if (defenderFainted) {
+    handleBattleEndMessages(state, firstAttacker);
+    // No second attack needed
+    state.turnState.turnOrder = [firstAttacker]; // Remove second attacker
   }
 
-  // Check for battle end
-  if (state.playerCreature.currentHp <= 0) {
-    const name = state.playerCreature.nickname || state.playerCreature.species.name;
-    queueMessage(state, `${name} fainted!`);
-  } else if (state.enemyCreature.currentHp <= 0) {
+  // Mark first attack as done so we know to execute second attack after messages
+  state.turnState.firstAttackDone = true;
+
+  state.phase = 'message';
+  advanceMessage(state);
+}
+
+// Execute the second attacker's move
+function executeSecondAttack(state: BattleState): void {
+  const secondAttacker = state.turnState.turnOrder[1];
+  if (!secondAttacker) return;
+
+  // Check if attacker is still alive (could have been KO'd by recoil, etc.)
+  const attackerAlive = secondAttacker === 'player'
+    ? state.playerCreature.currentHp > 0
+    : state.enemyCreature.currentHp > 0;
+
+  if (!attackerAlive) {
+    state.phase = 'message';
+    return;
+  }
+
+  executeMove(state, secondAttacker);
+
+  // Check if defender fainted from second attack
+  const defenderFainted = secondAttacker === 'player'
+    ? state.enemyCreature.currentHp <= 0
+    : state.playerCreature.currentHp <= 0;
+
+  if (defenderFainted) {
+    handleBattleEndMessages(state, secondAttacker);
+  }
+
+  // Reset turn state for next turn
+  state.turnState.firstAttackDone = false;
+  state.turnState.currentTurnIndex = 0;
+
+  state.phase = 'message';
+  advanceMessage(state);
+}
+
+// Handle victory/defeat messages
+function handleBattleEndMessages(state: BattleState, attacker: 'player' | 'enemy'): void {
+  if (attacker === 'player' && state.enemyCreature.currentHp <= 0) {
     queueMessage(state, `Enemy ${state.enemyCreature.species.name} fainted!`);
 
     // Calculate and apply experience
@@ -369,7 +486,7 @@ function executeTurn(state: BattleState): void {
       queueMessage(state, msg);
     }
 
-    // Check for evolution after battle (only queue message, actual evolution at end)
+    // Check for evolution after battle
     const evolvedForm = checkEvolution(state.playerCreature);
     if (evolvedForm) {
       const oldName = state.playerCreature.species.name;
@@ -398,10 +515,10 @@ function executeTurn(state: BattleState): void {
         }
       }
     }
+  } else if (attacker === 'enemy' && state.playerCreature.currentHp <= 0) {
+    const name = state.playerCreature.nickname || state.playerCreature.species.name;
+    queueMessage(state, `${name} fainted!`);
   }
-
-  state.phase = 'message';
-  advanceMessage(state);
 }
 
 function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
@@ -776,6 +893,117 @@ export function getAttackAnimationEffects(state: BattleState): {
         result.playerShake = pulseAmount;
       }
     }
+  }
+
+  return result;
+}
+
+// Cage animation durations in ms
+const CAGE_THROW_DURATION = 500;
+const CAGE_SHAKE_DURATION = 400;
+
+// Start cage throwing animation
+export function startCageAnimation(
+  state: BattleState,
+  shakes: number,
+  success: boolean
+): void {
+  state.cageAnimation = {
+    active: true,
+    phase: 'throwing',
+    progress: 0,
+    shakeCount: 0,
+    maxShakes: shakes,
+    success
+  };
+}
+
+// Update cage animation each frame
+export function updateCageAnimation(state: BattleState, deltaTime: number): void {
+  if (!state.cageAnimation.active) return;
+
+  const anim = state.cageAnimation;
+
+  if (anim.phase === 'throwing') {
+    anim.progress += deltaTime / CAGE_THROW_DURATION;
+    if (anim.progress >= 1) {
+      anim.progress = 0;
+      if (anim.maxShakes > 0) {
+        anim.phase = 'shaking';
+      } else {
+        // No shakes - immediate escape
+        anim.phase = 'escaped';
+        anim.active = false;
+      }
+    }
+  } else if (anim.phase === 'shaking') {
+    anim.progress += deltaTime / CAGE_SHAKE_DURATION;
+    if (anim.progress >= 1) {
+      anim.shakeCount++;
+      anim.progress = 0;
+
+      if (anim.shakeCount >= anim.maxShakes) {
+        // Done shaking
+        if (anim.success) {
+          anim.phase = 'caught';
+        } else {
+          anim.phase = 'escaped';
+        }
+        anim.active = false;
+      }
+      // Otherwise continue shaking
+    }
+  }
+}
+
+// Get visual effects for cage animation
+export function getCageAnimationEffects(state: BattleState): {
+  cageX: number;
+  cageY: number;
+  cageRotation: number;
+  cageVisible: boolean;
+  enemyOpacity: number;
+} {
+  const result = {
+    cageX: 0,
+    cageY: 0,
+    cageRotation: 0,
+    cageVisible: false,
+    enemyOpacity: 1
+  };
+
+  if (!state.cageAnimation.active) return result;
+
+  const anim = state.cageAnimation;
+  result.cageVisible = true;
+
+  // Player position (where throw starts)
+  const startX = 32;
+  const startY = 72;
+  // Enemy position (where cage lands)
+  const endX = 120;
+  const endY = 32;
+
+  if (anim.phase === 'throwing') {
+    // Parabolic arc from player to enemy
+    const t = easeOutQuad(anim.progress);
+    result.cageX = startX + (endX - startX) * t;
+    // Arc up then down
+    const arcHeight = 30;
+    const arcT = anim.progress;
+    const arc = -4 * arcHeight * arcT * (arcT - 1);
+    result.cageY = startY + (endY - startY) * t - arc;
+    // Spin during throw
+    result.cageRotation = anim.progress * Math.PI * 4;
+    // Enemy fades out as cage approaches
+    result.enemyOpacity = 1 - anim.progress * 0.8;
+  } else if (anim.phase === 'shaking') {
+    // Cage at enemy position, shaking
+    result.cageX = endX;
+    result.cageY = endY;
+    // Oscillating rotation for shake effect
+    result.cageRotation = Math.sin(anim.progress * Math.PI * 6) * 0.3;
+    result.enemyOpacity = 0.2;
   }
 
   return result;

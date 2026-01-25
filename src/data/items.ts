@@ -1,5 +1,5 @@
 // Item types
-export type ItemType = 'ball' | 'potion' | 'status' | 'battle' | 'key' | 'tm';
+export type ItemType = 'cage' | 'potion' | 'status' | 'battle' | 'key' | 'tm';
 
 export interface Item {
   id: number;
@@ -7,7 +7,7 @@ export interface Item {
   type: ItemType;
   description: string;
   price: number;
-  // For balls: catch rate modifier (1.0 = standard)
+  // For cages: catch rate modifier (1.0 = standard)
   catchRate?: number;
   // For potions: HP restored
   healAmount?: number;
@@ -16,36 +16,36 @@ export interface Item {
 }
 
 export const ITEMS: Record<number, Item> = {
-  // Shark Balls (catching items)
+  // Shark Cages (catching items)
   1: {
     id: 1,
-    name: 'SHARK BALL',
-    type: 'ball',
-    description: 'A standard ball for catching wild sharks.',
+    name: 'SHARK CAGE',
+    type: 'cage',
+    description: 'A standard cage for catching wild sharks.',
     price: 200,
     catchRate: 1.0
   },
   2: {
     id: 2,
-    name: 'GREAT BALL',
-    type: 'ball',
-    description: 'A better ball with higher catch rate.',
+    name: 'GREAT CAGE',
+    type: 'cage',
+    description: 'A better cage with higher catch rate.',
     price: 600,
     catchRate: 1.5
   },
   3: {
     id: 3,
-    name: 'ULTRA BALL',
-    type: 'ball',
-    description: 'A high-performance catching ball.',
+    name: 'ULTRA CAGE',
+    type: 'cage',
+    description: 'A high-performance catching cage.',
     price: 1200,
     catchRate: 2.0
   },
   4: {
     id: 4,
-    name: 'MASTER BALL',
-    type: 'ball',
-    description: 'The ultimate ball. Never fails.',
+    name: 'MASTER CAGE',
+    type: 'cage',
+    description: 'The ultimate cage. Never fails.',
     price: 0, // Can't buy
     catchRate: 255 // Guaranteed catch
   },
@@ -224,12 +224,12 @@ export function calculateCatchRate(
   maxHp: number,
   currentHp: number,
   catchRate: number, // Species catch rate (0-255)
-  ballModifier: number // Ball's catch rate modifier
+  cageModifier: number // Cage's catch rate modifier
 ): number {
   // Simplified Pokemon catch formula
-  // catch = ((3 * maxHp - 2 * currentHp) * catchRate * ballModifier) / (3 * maxHp)
+  // catch = ((3 * maxHp - 2 * currentHp) * catchRate * cageModifier) / (3 * maxHp)
   const hpFactor = (3 * maxHp - 2 * currentHp) / (3 * maxHp);
-  const rate = hpFactor * catchRate * ballModifier;
+  const rate = hpFactor * catchRate * cageModifier;
 
   // Return probability 0-1
   return Math.min(rate / 255, 1);
@@ -240,16 +240,16 @@ export function attemptCatch(
   maxHp: number,
   currentHp: number,
   speciesCatchRate: number,
-  ballModifier: number
+  cageModifier: number
 ): { success: boolean; shakes: number } {
-  // Master Ball always catches
-  if (ballModifier >= 255) {
+  // Master Cage always catches
+  if (cageModifier >= 255) {
     return { success: true, shakes: 3 };
   }
 
-  const catchProbability = calculateCatchRate(maxHp, currentHp, speciesCatchRate, ballModifier);
+  const catchProbability = calculateCatchRate(maxHp, currentHp, speciesCatchRate, cageModifier);
 
-  // Simulate ball shaking (0-3 shakes before breaking out or catching)
+  // Simulate cage rattling (0-3 shakes before breaking out or catching)
   let shakes = 0;
   for (let i = 0; i < 4; i++) {
     if (Math.random() < catchProbability) {

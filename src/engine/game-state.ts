@@ -30,7 +30,7 @@ let currentTrainerNpc: NPC | null = null;  // Track current trainer for post-bat
 let trainerCreatureIndex: number = 0;      // Track which creature in trainer's team
 let playerMoney: number = 500;             // Player's starting money
 let playerInventory: InventorySlot[] = [   // Player's items
-  { itemId: 1, quantity: 5 },  // Start with 5 Shark Balls
+  { itemId: 1, quantity: 5 },  // Start with 5 Shark Cages
   { itemId: 10, quantity: 3 }  // Start with 3 Potions
 ];
 const MAX_PARTY_SIZE = 6;

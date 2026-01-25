@@ -209,11 +209,19 @@ export function tryMove(direction: Direction): boolean {
   }
 
   // Check for NPC collision (including moving NPCs)
+  const TILE_SIZE = 8;
   const npcAtTarget = map.npcs.find(npc => {
-    // Check current position
+    // Check current tile position (this is already the target if moving)
     if (npc.x === targetX && npc.y === targetY) return true;
-    // Check if NPC is moving to that position
-    if (npc.state?.isMoving && npc.state.targetX === targetX && npc.state.targetY === targetY) return true;
+
+    // If NPC is moving, also check their visual/pixel position
+    // (they might visually still be on a tile even though npc.x/y is the target)
+    if (npc.state?.isMoving) {
+      const visualTileX = Math.round(npc.state.pixelX / TILE_SIZE);
+      const visualTileY = Math.round(npc.state.pixelY / TILE_SIZE);
+      if (visualTileX === targetX && visualTileY === targetY) return true;
+    }
+
     return false;
   });
   if (npcAtTarget) return false;

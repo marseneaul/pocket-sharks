@@ -3,6 +3,7 @@ import { renderBattle } from './renderer/battle-ui.ts';
 import { renderOverworld } from './renderer/overworld-ui.ts';
 import { renderDialogue, startDialogue, advanceDialogue, advanceDialogueChar, isDialogueComplete, isCurrentLineComplete, clearDialogue } from './renderer/dialogue-ui.ts';
 import { renderPartyMenu, handlePartyInput, handleBattlePartyInput, initPartyMenu } from './renderer/party-ui.ts';
+import { renderBagMenu, handleBagInput } from './renderer/bag-ui.ts';
 import { renderStarterSelect, handleStarterInput, getSelectedStarterId, initStarterSelect } from './renderer/starter-ui.ts';
 import { renderPC, handlePCInput, initPCUI } from './renderer/pc-ui.ts';
 import { renderShop, handleShopInput, initShopUI } from './renderer/shop-ui.ts';
@@ -14,7 +15,7 @@ import { getItem } from './data/items.ts';
 import { getShop } from './data/shops.ts';
 import { advanceTypewriter, isTypewriterComplete } from './renderer/text.ts';
 import { initInput, updateInput, getJustPressed, getDirectionPressed } from './engine/input.ts';
-import { handleInput as handleBattleInput, updateHpAnimation, updateEntryAnimation, updateAttackAnimation } from './engine/battle.ts';
+import { handleInput as handleBattleInput, updateHpAnimation, updateEntryAnimation, updateAttackAnimation, updateCageAnimation, useBattleItem } from './engine/battle.ts';
 import { updateOverworld, handleOverworldInput } from './engine/overworld.ts';
 import { initStorage } from './engine/storage.ts';
 import { initAudio, tryStartMusic } from './engine/audio.ts';
@@ -203,6 +204,8 @@ function update(deltaTime: number): void {
     updatePartyMenuMode();
   } else if (mode === 'battle-party') {
     updateBattlePartyMode();
+  } else if (mode === 'battle-bag') {
+    updateBattleBagMode();
   } else if (mode === 'starter-select') {
     updateStarterSelectMode();
   } else if (mode === 'pc') {
@@ -436,6 +439,7 @@ function updateBattleMode(deltaTime: number): void {
   updateHpAnimation(battleState, deltaTime);
   updateEntryAnimation(battleState, deltaTime);
   updateAttackAnimation(battleState, deltaTime);
+  updateCageAnimation(battleState, deltaTime);
 
   // Handle input
   const pressed = getJustPressed();
@@ -547,6 +551,32 @@ function updateBattlePartyMode(): void {
   }
 }
 
+function updateBattleBagMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | null = null;
+  if (direction) input = direction;
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+
+  if (input) {
+    const result = handleBagInput(input);
+    if (result) {
+      if (result.action === 'close') {
+        setGameMode('battle');
+      } else if (result.action === 'use' && result.itemId !== undefined) {
+        // Use the selected item in battle
+        const battleState = getBattleState();
+        if (battleState) {
+          useBattleItem(battleState, result.itemId);
+        }
+        setGameMode('battle');
+      }
+    }
+  }
+}
+
 function updatePCMode(): void {
   const pressed = getJustPressed();
   const direction = getDirectionPressed();
@@ -620,6 +650,8 @@ function render(): void {
     renderPartyMenu(false);
   } else if (mode === 'battle-party') {
     renderPartyMenu(true);
+  } else if (mode === 'battle-bag') {
+    renderBagMenu();
   } else if (mode === 'starter-select') {
     renderStarterSelect();
   } else if (mode === 'pc') {
