@@ -65,6 +65,15 @@ const MAPS = [
   'cape-town-kelp',
   'seal-island',
   'safari-gym',
+  // Asia/Australia Region (Region 9)
+  'australia-airport',
+  'great-barrier-reef',
+  'outback-gym',
+  // Roatan Region (Region 10)
+  'roatan-harbor',
+  // Abyssal/Endgame Region (Region 11)
+  'abyssal-trench',
+  'deepsea-gym',
   // Legacy maps
   'route-1',
   'route-2',

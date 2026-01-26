@@ -86,6 +86,15 @@ import { CAPE_TOWN_COAST } from './data/maps/cape-town-coast.ts';
 import { CAPE_TOWN_KELP } from './data/maps/cape-town-kelp.ts';
 import { SEAL_ISLAND } from './data/maps/seal-island.ts';
 import { SAFARI_GYM } from './data/maps/safari-gym.ts';
+// Asia/Australia Region maps (Region 9)
+import { AUSTRALIA_AIRPORT } from './data/maps/australia-airport.ts';
+import { GREAT_BARRIER_REEF } from './data/maps/great-barrier-reef.ts';
+import { OUTBACK_GYM } from './data/maps/outback-gym.ts';
+// Roatan Region maps (Region 10)
+import { ROATAN_HARBOR } from './data/maps/roatan-harbor.ts';
+// Abyssal/Endgame Region maps (Region 11)
+import { ABYSSAL_TRENCH } from './data/maps/abyssal-trench.ts';
+import { DEEPSEA_GYM } from './data/maps/deepsea-gym.ts';
 // Legacy maps (will be reworked later)
 import { ROUTE_1 } from './data/maps/route-1.ts';
 import { ROUTE_2 } from './data/maps/route-2.ts';
@@ -159,6 +168,15 @@ function init(): void {
   registerMap(CAPE_TOWN_KELP);
   registerMap(SEAL_ISLAND);
   registerMap(SAFARI_GYM);
+  // Register Asia/Australia Region maps (Region 9)
+  registerMap(AUSTRALIA_AIRPORT);
+  registerMap(GREAT_BARRIER_REEF);
+  registerMap(OUTBACK_GYM);
+  // Register Roatan Region maps (Region 10)
+  registerMap(ROATAN_HARBOR);
+  // Register Abyssal/Endgame Region maps (Region 11)
+  registerMap(ABYSSAL_TRENCH);
+  registerMap(DEEPSEA_GYM);
   // Register legacy maps (for backwards compatibility during transition)
   registerMap(ROUTE_1);
   registerMap(ROUTE_2);
