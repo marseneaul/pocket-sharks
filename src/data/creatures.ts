@@ -2706,6 +2706,219 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 50, moveId: 170 }  // Leviathan Rage
     ],
     description: 'Despite its fearsome rows of teeth, the Sand Tiger is docile and rarely attacks humans. Often seen in aquariums worldwide.'
+  },
+
+  // ============================================
+  // LEGENDARY/APEX CREATURES (IDs 113-120)
+  // ============================================
+
+  // Great White Shark - The ultimate apex predator
+  113: {
+    id: 113,
+    name: 'Great White Shark',
+    types: ['fire', 'breaching'],
+    baseStats: {
+      hp: 100,
+      attack: 120,
+      defense: 85,
+      spAttack: 70,
+      spDefense: 75,
+      speed: 95
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 10 },  // Ember
+      { level: 10, moveId: 2 },  // Bite
+      { level: 20, moveId: 20 }, // Ram
+      { level: 30, moveId: 31 }, // Crunch
+      { level: 40, moveId: 11 }, // Flamethrower
+      { level: 50, moveId: 110 }, // Wing Attack
+      { level: 60, moveId: 170 }, // Leviathan Rage
+      { level: 70, moveId: 180 }  // Apex Strike
+    ],
+    description: 'The most feared predator in the ocean. Warm-blooded and capable of spectacular breaching attacks on prey from below.'
+  },
+
+  // Greenland Shark - Ancient arctic giant, Mew equivalent
+  114: {
+    id: 114,
+    name: 'Greenland Shark',
+    types: ['ice'],
+    baseStats: {
+      hp: 130,
+      attack: 75,
+      defense: 100,
+      spAttack: 85,
+      spDefense: 100,
+      speed: 20
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 15, moveId: 2 },  // Bite
+      { level: 25, moveId: 61 }, // Icy Wind
+      { level: 35, moveId: 31 }, // Crunch
+      { level: 45, moveId: 62 }, // Blizzard
+      { level: 55, moveId: 130 }, // Ancient Power
+      { level: 65, moveId: 181 }  // Eternal Cold
+    ],
+    description: 'Can live for over 400 years, making it the longest-lived vertebrate. Moves slowly in frigid arctic waters, patient and ancient.'
+  },
+
+  // Goblin Shark - Bizarre deep-sea species
+  115: {
+    id: 115,
+    name: 'Goblin Shark',
+    types: ['deepsea'],
+    baseStats: {
+      hp: 75,
+      attack: 95,
+      defense: 60,
+      spAttack: 80,
+      spDefense: 70,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Shadow Sneak
+      { level: 10, moveId: 2 },  // Bite
+      { level: 20, moveId: 91 }, // Dark Pulse
+      { level: 30, moveId: 182 }, // Jaw Thrust
+      { level: 40, moveId: 31 }, // Crunch
+      { level: 50, moveId: 92 }, // Phantom Force
+      { level: 60, moveId: 183 }  // Abyssal Strike
+    ],
+    description: 'A living fossil with an extendable jaw that shoots forward to catch prey. One of the most bizarre sharks in existence.'
+  },
+
+  // Cookiecutter Shark - Small but dangerous
+  116: {
+    id: 116,
+    name: 'Cookiecutter Shark',
+    types: ['deepsea', 'fairy'],
+    baseStats: {
+      hp: 50,
+      attack: 80,
+      defense: 50,
+      spAttack: 60,
+      spDefense: 55,
+      speed: 70
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 160 }, // Charm
+      { level: 8, moveId: 2 },   // Bite
+      { level: 16, moveId: 90 }, // Shadow Sneak
+      { level: 24, moveId: 184 }, // Cookie Cut
+      { level: 32, moveId: 31 }, // Crunch
+      { level: 40, moveId: 91 }, // Dark Pulse
+      { level: 48, moveId: 163 }  // Dazzling Gleam
+    ],
+    description: 'Takes circular bites from larger animals, leaving distinctive cookie-cutter shaped wounds. Even submarines have been attacked.'
+  },
+
+  // Elephant Fish - Chimaera with elephant-like snout
+  117: {
+    id: 117,
+    name: 'Elephant Fish',
+    types: ['ghost', 'psychic'],
+    baseStats: {
+      hp: 70,
+      attack: 55,
+      defense: 65,
+      spAttack: 90,
+      spDefense: 85,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 100 }, // Confusion
+      { level: 10, moveId: 90 }, // Shadow Sneak
+      { level: 20, moveId: 101 }, // Psybeam
+      { level: 30, moveId: 92 }, // Phantom Force
+      { level: 40, moveId: 102 }, // Psychic
+      { level: 50, moveId: 185 }, // Spirit Sense
+      { level: 60, moveId: 186 }  // Mind Read
+    ],
+    description: 'Uses its elongated snout to sense electrical fields of buried prey. A distant relative of sharks with cartilaginous skeleton.'
+  },
+
+  // Crocodile Shark - Small but fierce open ocean shark
+  118: {
+    id: 118,
+    name: 'Crocodile Shark',
+    types: ['deepsea'],
+    baseStats: {
+      hp: 55,
+      attack: 75,
+      defense: 55,
+      spAttack: 55,
+      spDefense: 50,
+      speed: 75
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Shadow Sneak
+      { level: 8, moveId: 2 },   // Bite
+      { level: 16, moveId: 40 }, // Fury Swipes
+      { level: 24, moveId: 30 }, // Pursuit
+      { level: 32, moveId: 31 }, // Crunch
+      { level: 40, moveId: 91 }, // Dark Pulse
+      { level: 48, moveId: 93 }  // Night Slash
+    ],
+    description: 'A small but aggressive shark with huge eyes and large teeth. Named for its crocodile-like appearance and ferocity.'
+  },
+
+  // Megamouth Shark - Rare filter-feeding giant
+  119: {
+    id: 119,
+    name: 'Megamouth Shark',
+    types: ['leviathan'],
+    baseStats: {
+      hp: 120,
+      attack: 55,
+      defense: 85,
+      spAttack: 75,
+      spDefense: 80,
+      speed: 35
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 12, moveId: 20 }, // Ram
+      { level: 24, moveId: 150 }, // Aqua Jet
+      { level: 36, moveId: 151 }, // Water Pulse
+      { level: 48, moveId: 41 }, // Body Slam
+      { level: 60, moveId: 170 }, // Leviathan Rage
+      { level: 72, moveId: 171 }  // Filter Feast
+    ],
+    description: 'One of the rarest sharks, with fewer than 100 sightings ever. Filter feeds on plankton with its massive luminescent mouth.'
+  },
+
+  // Frilled Shark - Living fossil from the deep
+  120: {
+    id: 120,
+    name: 'Frilled Shark',
+    types: ['fossil'],
+    baseStats: {
+      hp: 70,
+      attack: 85,
+      defense: 65,
+      spAttack: 70,
+      spDefense: 65,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 130 }, // Ancient Power
+      { level: 10, moveId: 2 },  // Bite
+      { level: 20, moveId: 90 }, // Shadow Sneak
+      { level: 30, moveId: 131 }, // Rock Slide
+      { level: 40, moveId: 31 }, // Crunch
+      { level: 50, moveId: 187 }, // Primordial Strike
+      { level: 60, moveId: 132 }  // Stone Edge
+    ],
+    description: 'An eel-like shark unchanged for 80 million years. Its frilled gills and 300 trident-shaped teeth give it an ancient appearance.'
   }
 };
 
