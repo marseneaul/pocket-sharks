@@ -209,5 +209,6 @@ export const EUROPEAN_COAST: MapData = {
     // Spiny Dogfish - less common here
     { speciesId: 88, minLevel: 22, maxLevel: 28, weight: 15 }   // Spiny Dogfish
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'arctic'  // Cold European waters
 };

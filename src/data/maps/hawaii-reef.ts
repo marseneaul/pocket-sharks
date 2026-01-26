@@ -171,5 +171,6 @@ export const HAWAII_REEF: MapData = {
     { speciesId: 1, minLevel: 10, maxLevel: 15, weight: 40 },   // Blacktip Reef Shark
     { speciesId: 57, minLevel: 8, maxLevel: 12, weight: 20 }    // Butterfly Ray
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'tropical'  // Warm Hawaiian reef colors
 };

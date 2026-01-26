@@ -207,5 +207,6 @@ export const PUGET_SOUND: MapData = {
     // Rare: Winter Skate
     { speciesId: 92, minLevel: 20, maxLevel: 26, weight: 10 }   // Winter Skate
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'arctic'  // Cold Pacific Northwest waters
 };

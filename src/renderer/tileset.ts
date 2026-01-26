@@ -365,10 +365,13 @@ export function getTileSprite(tileIndex: number): TileSprite {
   return tileCache.get(tileIndex)!;
 }
 
-export function drawTile(tileIndex: number, x: number, y: number): void {
+// Default colors for tiles (used when no palette specified)
+const DEFAULT_TILE_COLORS = [DMG_PALETTE.BLACK, DMG_PALETTE.DARK, DMG_PALETTE.LIGHT, DMG_PALETTE.WHITE];
+
+export function drawTile(tileIndex: number, x: number, y: number, paletteColors?: readonly [string, string, string, string]): void {
   const ctx = getContext();
   const sprite = getTileSprite(tileIndex);
-  const colors = [DMG_PALETTE.BLACK, DMG_PALETTE.DARK, DMG_PALETTE.LIGHT, DMG_PALETTE.WHITE];
+  const colors = paletteColors || DEFAULT_TILE_COLORS;
 
   for (let row = 0; row < TILE_SIZE; row++) {
     for (let col = 0; col < TILE_SIZE; col++) {

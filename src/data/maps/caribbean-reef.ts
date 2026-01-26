@@ -201,5 +201,6 @@ export const CARIBBEAN_REEF: MapData = {
     { speciesId: 85, minLevel: 25, maxLevel: 29, weight: 1 },   // Golden Hammerhead (new! very rare)
     { speciesId: 18, minLevel: 22, maxLevel: 26, weight: 1 }    // Coral Catshark (rare)
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'coral'  // Vibrant coral reef colors
 };

@@ -170,5 +170,6 @@ export const GREAT_BARRIER_REEF: MapData = {
     { speciesId: 9, minLevel: 42, maxLevel: 50, weight: 10 },   // Silvertip Shark
     { speciesId: 27, minLevel: 40, maxLevel: 48, weight: 15 }   // Manta Ray
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'coral'  // Vibrant Great Barrier Reef
 };

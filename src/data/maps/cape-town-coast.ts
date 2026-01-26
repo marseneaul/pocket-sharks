@@ -176,5 +176,6 @@ export const CAPE_TOWN_COAST: MapData = {
     { speciesId: 105, minLevel: 28, maxLevel: 35, weight: 15 },  // Dark Shyshark
     { speciesId: 106, minLevel: 28, maxLevel: 35, weight: 15 }   // Leopard Catshark
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'deep'  // Cold Atlantic current
 };

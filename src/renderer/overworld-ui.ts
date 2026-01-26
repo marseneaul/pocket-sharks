@@ -1,11 +1,11 @@
-import { SCREEN_WIDTH, SCREEN_HEIGHT, DMG_PALETTE } from '../constants.ts';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, DMG_PALETTE, MAP_PALETTES } from '../constants.ts';
 import { clear, getContext } from './canvas.ts';
 import { drawText } from './text.ts';
 import { drawTile, drawPlayer } from './tileset.ts';
 import { drawNPC } from './npc-sprites.ts';
 import { getPlayer, getCurrentMap } from '../engine/game-state.ts';
 import { getNPCRenderPosition, getNPCWalkFrame } from '../engine/npc-movement.ts';
-import type { MapData, PlayerState, NPC } from '../types/overworld.ts';
+import type { MapData, PlayerState, NPC, MapPaletteId } from '../types/overworld.ts';
 
 const TILE_SIZE = 8;
 const PLAYER_SIZE = 16;
@@ -37,8 +37,12 @@ export function renderOverworld(): void {
   const clampedCameraX = Math.max(0, Math.min(cameraX, maxCameraX));
   const clampedCameraY = Math.max(0, Math.min(cameraY, maxCameraY));
 
-  // Draw tiles
-  renderTiles(map, clampedCameraX, clampedCameraY);
+  // Get map palette colors for region-specific theming
+  const paletteId: MapPaletteId = map.palette || 'default';
+  const paletteColors = MAP_PALETTES[paletteId].colors;
+
+  // Draw tiles with region palette
+  renderTiles(map, clampedCameraX, clampedCameraY, paletteColors);
 
   // Collect all sprites for Y-sorting (proper depth rendering)
   const sprites: SpriteEntity[] = [];
@@ -76,7 +80,7 @@ export function renderOverworld(): void {
   renderMapName(map.name);
 }
 
-function renderTiles(map: MapData, cameraX: number, cameraY: number): void {
+function renderTiles(map: MapData, cameraX: number, cameraY: number, paletteColors: readonly [string, string, string, string]): void {
   // Calculate visible tile range
   const startTileX = Math.floor(cameraX / TILE_SIZE);
   const startTileY = Math.floor(cameraY / TILE_SIZE);
@@ -89,7 +93,7 @@ function renderTiles(map: MapData, cameraX: number, cameraY: number): void {
       if (tileIndex !== undefined) {
         const screenX = x * TILE_SIZE - cameraX;
         const screenY = y * TILE_SIZE - cameraY;
-        drawTile(tileIndex, screenX, screenY);
+        drawTile(tileIndex, screenX, screenY, paletteColors);
       }
     }
   }

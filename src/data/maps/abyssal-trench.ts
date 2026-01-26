@@ -180,5 +180,6 @@ export const ABYSSAL_TRENCH: MapData = {
     { speciesId: 114, minLevel: 55, maxLevel: 60, weight: 5 },   // Greenland Shark (very rare)
     { speciesId: 119, minLevel: 50, maxLevel: 58, weight: 5 }    // Megamouth Shark (rare)
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'deep'  // Dark abyssal depths
 };

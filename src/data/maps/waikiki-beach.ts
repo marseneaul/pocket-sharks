@@ -220,5 +220,6 @@ export const WAIKIKI_BEACH: MapData = {
   ],
   // No wild encounters on Waikiki Beach - it's a tourist area
   encounterTable: [],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'tropical'  // Hawaiian tropical beach
 };

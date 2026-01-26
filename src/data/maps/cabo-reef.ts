@@ -159,5 +159,6 @@ export const CABO_REEF: MapData = {
     { speciesId: 21, minLevel: 16, maxLevel: 19, weight: 10, requiredCert: 'openwater' },  // Bull Shark
     { speciesId: 10, minLevel: 15, maxLevel: 18, weight: 10 }   // Bonnethead (pre-hammerhead)
   ],
-  isOutdoor: true
+  isOutdoor: true,
+  palette: 'tropical'  // Warm Sea of Cortez waters
 };
