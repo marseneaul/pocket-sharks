@@ -21,7 +21,7 @@ export function initSettingsUI(fromMode: 'title' | 'party-menu'): void {
 
 function loadSettings(): void {
   try {
-    const saved = localStorage.getItem('shark-pokemon-settings');
+    const saved = localStorage.getItem('pocket-sharks-settings');
     if (saved) {
       const settings = JSON.parse(saved);
       if (settings.textSpeedIndex !== undefined) {
@@ -39,7 +39,7 @@ function saveSettings(): void {
       musicVolume: getMusicVolume(),
       textSpeedIndex: textSpeedIndex
     };
-    localStorage.setItem('shark-pokemon-settings', JSON.stringify(settings));
+    localStorage.setItem('pocket-sharks-settings', JSON.stringify(settings));
   } catch {
     // Silently fail
   }

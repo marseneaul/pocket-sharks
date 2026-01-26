@@ -1,4 +1,4 @@
-# Shark Pokemon Color Palette
+# Pocket Sharks Color Palette
 
 Game Boy DMG-style 4-color palette used for all sprites.
 
@@ -22,16 +22,16 @@ Sprites are 32x32 pixels using ASCII art encoding:
 
 ## Files
 
-- `shark-pokemon-dmg.gpl` - GIMP palette format
-- `shark-pokemon-dmg.pal` - JASC/Paint Shop Pro format (works in Aseprite)
-- `shark-pokemon-dmg.hex` - Simple hex color list
+- `pocket-sharks-dmg.gpl` - GIMP palette format
+- `pocket-sharks-dmg.pal` - JASC/Paint Shop Pro format (works in Aseprite)
+- `pocket-sharks-dmg.hex` - Simple hex color list
 
 ## How to Use in Aseprite
 
 1. Open Aseprite
 2. Go to **Sprite > Color Mode > Indexed**
 3. Go to **Palette > Load Palette**
-4. Select `shark-pokemon-dmg.pal`
+4. Select `pocket-sharks-dmg.pal`
 5. Draw your sprite using only these 4 colors
 
 ## How to Use in GIMP
@@ -39,7 +39,7 @@ Sprites are 32x32 pixels using ASCII art encoding:
 1. Open GIMP
 2. Go to **Windows > Dockable Dialogs > Palettes**
 3. Right-click > **Import Palette**
-4. Select `shark-pokemon-dmg.gpl`
+4. Select `pocket-sharks-dmg.gpl`
 5. Convert image: **Image > Mode > Indexed** > Use custom palette
 
 ## Conversion Workflow

@@ -15,7 +15,7 @@ export function initTitleScreen(): void {
 
 function checkSaveData(): boolean {
   try {
-    const saved = localStorage.getItem('shark-pokemon-save');
+    const saved = localStorage.getItem('pocket-sharks-save');
     return saved !== null;
   } catch {
     return false;
