@@ -65,6 +65,10 @@ import { FLORIDA_KEYS } from './data/maps/florida-keys.ts';
 import { KEY_WEST } from './data/maps/key-west.ts';
 import { CARIBBEAN_REEF } from './data/maps/caribbean-reef.ts';
 import { CORAL_REEF_GYM } from './data/maps/coral-reef-gym.ts';
+// Hawaii Return / French Polynesia Region maps (Region 5)
+import { MAUI_AIRPORT } from './data/maps/maui-airport.ts';
+import { OPEN_OCEAN } from './data/maps/open-ocean.ts';
+import { OCEAN_GYM } from './data/maps/ocean-gym.ts';
 // Pacific Northwest Region maps (Region 6)
 import { SEATTLE_AIRPORT } from './data/maps/seattle-airport.ts';
 import { PUGET_SOUND } from './data/maps/puget-sound.ts';
@@ -132,6 +136,10 @@ function init(): void {
   registerMap(KEY_WEST);
   registerMap(CARIBBEAN_REEF);
   registerMap(CORAL_REEF_GYM);
+  // Register Hawaii Return / French Polynesia Region maps (Region 5)
+  registerMap(MAUI_AIRPORT);
+  registerMap(OPEN_OCEAN);
+  registerMap(OCEAN_GYM);
   // Register Pacific Northwest Region maps (Region 6)
   registerMap(SEATTLE_AIRPORT);
   registerMap(PUGET_SOUND);

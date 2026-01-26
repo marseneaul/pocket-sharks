@@ -44,6 +44,10 @@ const MAPS = [
   'key-west',
   'caribbean-reef',
   'coral-reef-gym',
+  // Hawaii Return / French Polynesia Region (Region 5)
+  'maui-airport',
+  'open-ocean',
+  'ocean-gym',
   // Pacific Northwest Region (Region 6)
   'seattle-airport',
   'puget-sound',
