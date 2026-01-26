@@ -53,6 +53,7 @@ const MAPS = [
   'puget-sound',
   'pacific-kelp-forest',
   'cold-water-trench',
+  'cold-water-gym',
   // Europe Region (Region 7)
   'europe-ferry-terminal',
   'european-coast',

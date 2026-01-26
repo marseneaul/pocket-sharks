@@ -74,6 +74,7 @@ import { SEATTLE_AIRPORT } from './data/maps/seattle-airport.ts';
 import { PUGET_SOUND } from './data/maps/puget-sound.ts';
 import { PACIFIC_KELP_FOREST } from './data/maps/pacific-kelp-forest.ts';
 import { COLD_WATER_TRENCH } from './data/maps/cold-water-trench.ts';
+import { COLD_WATER_GYM } from './data/maps/cold-water-gym.ts';
 // Europe Region maps (Region 7)
 import { EUROPE_FERRY_TERMINAL } from './data/maps/europe-ferry-terminal.ts';
 import { EUROPEAN_COAST } from './data/maps/european-coast.ts';
@@ -146,6 +147,7 @@ function init(): void {
   registerMap(PUGET_SOUND);
   registerMap(PACIFIC_KELP_FOREST);
   registerMap(COLD_WATER_TRENCH);
+  registerMap(COLD_WATER_GYM);
   // Register Europe Region maps (Region 7)
   registerMap(EUROPE_FERRY_TERMINAL);
   registerMap(EUROPEAN_COAST);

@@ -13,10 +13,10 @@ const S = TILE.SAND;      // Beach sand
 const tiles: number[][] = [
   [W,W,W,W,W,W,W,W,G,G,G,G,W,W,W,W,W,W,W,W],  // North entrance from airport
   [W,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,G,W],
-  [W,G,G,G,G,G,S,S,S,S,S,S,S,S,G,G,G,G,G,W],
-  [W,G,G,G,S,S,S,S,S,S,S,S,S,S,S,S,G,G,G,W],  // Beach area
-  [W,G,G,S,S,S,A,A,A,A,A,A,A,A,S,S,S,G,G,W],
-  [W,G,S,S,A,A,A,A,A,A,A,A,A,A,A,A,S,S,G,W],
+  [W,G,G,G,G,G,S,S,S,S,S,S,S,S,W,W,W,G,G,W],  // Gym building NE
+  [W,G,G,G,S,S,S,S,S,S,S,S,S,S,W,G,G,G,G,W],  // Beach area + Gym
+  [W,G,G,S,S,S,A,A,A,A,A,A,A,A,W,G,G,G,G,W],  // Gym entrance
+  [W,G,S,S,A,A,A,A,A,A,A,A,A,A,W,W,W,S,G,W],
   [W,G,S,A,A,A,A,K,K,A,A,K,K,A,A,A,A,S,G,W],  // Shallow water with kelp
   [W,G,A,A,A,K,K,K,K,A,A,K,K,K,K,A,A,A,G,W],
   [W,A,A,A,K,K,K,A,A,A,A,A,A,K,K,K,A,A,A,W],
@@ -67,6 +67,21 @@ export const PUGET_SOUND: MapData = {
       targetX: 11,
       targetY: 16
     },
+    // Cold Water Gym entrance
+    {
+      x: 15,
+      y: 3,
+      targetMap: 'cold-water-gym',
+      targetX: 9,
+      targetY: 16
+    },
+    {
+      x: 16,
+      y: 3,
+      targetMap: 'cold-water-gym',
+      targetX: 10,
+      targetY: 16
+    },
     // South exit to Pacific Kelp Forest
     {
       x: 8,
@@ -98,6 +113,20 @@ export const PUGET_SOUND: MapData = {
     }
   ],
   npcs: [
+    // Gym greeter
+    {
+      id: 'gym-greeter-cold',
+      x: 16,
+      y: 4,
+      sprite: 0,
+      facing: 'up',
+      dialogue: [
+        'That building is the Cold Water Gym!',
+        'Gym Leader Marina specializes in Ice-type sharks.',
+        'Cold water sharks are tough as ice.',
+        'Better bring your warmest strategies!'
+      ]
+    },
     // Local fisherman on beach
     {
       id: 'beach-fisherman',
