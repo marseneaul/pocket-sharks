@@ -1,4 +1,4 @@
-import type { CreatureInstance } from './index.ts';
+import type { PartyMember } from './index.ts';
 
 // Diving certification levels (progression system)
 export type CertificationLevel =
@@ -118,6 +118,15 @@ export interface EncounterEntry {
   method?: 'wading' | 'snorkel' | 'scuba' | 'fishing' | 'night' | 'submarine';  // How this species is encountered
 }
 
+// Ground egg - collectible egg found in overworld
+export interface GroundEgg {
+  id: string;            // Unique ID for save/load tracking
+  x: number;             // Tile X position
+  y: number;             // Tile Y position
+  eggId: number;         // References egg data in eggs.ts
+  collected: boolean;    // Whether player has already collected this egg
+}
+
 // Map palette type (imported from constants)
 export type MapPaletteId = 'default' | 'tropical' | 'deep' | 'night' | 'coral' | 'arctic';
 
@@ -131,6 +140,7 @@ export interface MapData {
   warps: Warp[];
   npcs: NPC[];
   encounterTable: EncounterEntry[];
+  groundEggs?: GroundEgg[];    // Optional collectible eggs on the ground
   isOutdoor: boolean;          // Affects rendering style
   palette?: MapPaletteId;      // Color palette for this map (default: 'default')
 }
@@ -145,7 +155,8 @@ export interface PlayerState {
   isMoving: boolean;
   isSwimming: boolean;
   moveProgress: number;        // 0-1 for animation
-  party: CreatureInstance[];
+  party: PartyMember[];        // Can contain creatures or eggs
+  stepCount: number;           // Total steps walked (for egg hatching)
   certifications: CertificationLevel[];  // Diving certifications earned
 }
 

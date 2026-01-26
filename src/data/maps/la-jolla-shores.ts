@@ -191,11 +191,13 @@ export const LA_JOLLA_SHORES: MapData = {
   ],
   // Tide pool encounters on the beach - San Diego species
   encounterTable: [
-    { speciesId: 47, minLevel: 2, maxLevel: 4, weight: 40 },  // Round Stingray (common)
-    { speciesId: 57, minLevel: 2, maxLevel: 4, weight: 25 },  // Butterfly Ray
-    { speciesId: 48, minLevel: 3, maxLevel: 5, weight: 20 },  // Smoothhound
-    { speciesId: 50, minLevel: 3, maxLevel: 5, weight: 10 },  // Horn Shark Egg (uncommon)
-    { speciesId: 52, minLevel: 3, maxLevel: 5, weight: 5 }    // Swell Shark Egg (rare)
+    { speciesId: 47, minLevel: 2, maxLevel: 4, weight: 45 },  // Round Stingray (common)
+    { speciesId: 57, minLevel: 2, maxLevel: 4, weight: 30 },  // Butterfly Ray
+    { speciesId: 48, minLevel: 3, maxLevel: 5, weight: 25 }   // Smoothhound
+  ],
+  // Collectible eggs found on the ground
+  groundEggs: [
+    { id: 'shores-horn-egg-1', x: 8, y: 12, eggId: 1, collected: false }  // Horn Shark Egg near water
   ],
   isOutdoor: true
 };

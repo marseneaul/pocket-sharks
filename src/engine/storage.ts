@@ -1,4 +1,5 @@
 import type { CreatureInstance } from '../types/index.ts';
+import { isCreature } from '../types/index.ts';
 import type { PCStorage, StorageBox } from '../types/storage.ts';
 import { BOX_SLOTS, NUM_BOXES, DEFAULT_BOX_NAMES, MAX_PARTY_SIZE } from '../types/storage.ts';
 import { getParty } from './game-state.ts';
@@ -109,6 +110,12 @@ export function depositCreature(partyIndex: number): boolean {
     return false;
   }
 
+  // Can't deposit eggs - only creatures
+  const member = party[partyIndex];
+  if (!isCreature(member)) {
+    return false;
+  }
+
   // Find empty slot in current box
   const slotIndex = findEmptySlot(pcStorage.currentBox);
   if (slotIndex === -1) {
@@ -116,8 +123,7 @@ export function depositCreature(partyIndex: number): boolean {
   }
 
   // Move creature from party to box
-  const creature = party[partyIndex];
-  pcStorage.boxes[pcStorage.currentBox].creatures[slotIndex] = creature;
+  pcStorage.boxes[pcStorage.currentBox].creatures[slotIndex] = member;
   party.splice(partyIndex, 1);
 
   return true;
@@ -133,8 +139,13 @@ export function depositToSlot(partyIndex: number, boxIndex: number, slotIndex: n
   if (slotIndex < 0 || slotIndex >= BOX_SLOTS) return false;
   if (pcStorage.boxes[boxIndex].creatures[slotIndex] !== null) return false;
 
-  const creature = party[partyIndex];
-  pcStorage.boxes[boxIndex].creatures[slotIndex] = creature;
+  // Can't deposit eggs - only creatures
+  const member = party[partyIndex];
+  if (!isCreature(member)) {
+    return false;
+  }
+
+  pcStorage.boxes[boxIndex].creatures[slotIndex] = member;
   party.splice(partyIndex, 1);
 
   return true;
@@ -196,20 +207,25 @@ export function swapPartyWithBox(partyIndex: number, boxIndex: number, slotIndex
   if (boxIndex < 0 || boxIndex >= NUM_BOXES) return false;
   if (slotIndex < 0 || slotIndex >= BOX_SLOTS) return false;
 
-  const partyCreature = party[partyIndex];
+  // Can't store eggs in PC - only creatures
+  const partyMember = party[partyIndex];
+  if (!isCreature(partyMember)) {
+    return false;
+  }
+
   const boxCreature = pcStorage.boxes[boxIndex].creatures[slotIndex];
 
   // If box slot is empty, just deposit
   if (boxCreature === null) {
     if (party.length <= 1) return false;  // Can't leave party empty
-    pcStorage.boxes[boxIndex].creatures[slotIndex] = partyCreature;
+    pcStorage.boxes[boxIndex].creatures[slotIndex] = partyMember;
     party.splice(partyIndex, 1);
     return true;
   }
 
   // Swap
   party[partyIndex] = boxCreature;
-  pcStorage.boxes[boxIndex].creatures[slotIndex] = partyCreature;
+  pcStorage.boxes[boxIndex].creatures[slotIndex] = partyMember;
 
   return true;
 }

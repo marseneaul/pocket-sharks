@@ -14,6 +14,8 @@ import {
   moveCreature
 } from '../engine/storage.ts';
 import { getParty } from '../engine/game-state.ts';
+import { isEgg } from '../types/index.ts';
+import { getEgg } from '../data/eggs.ts';
 
 // UI state
 let uiState: PCUIState;
@@ -307,12 +309,20 @@ export function renderPC(): void {
     }
     ctx.fillRect(partyStartX, y, SCREEN_WIDTH - partyStartX - 4, partySlotHeight - 2);
 
-    // Draw creature info
+    // Draw creature/egg info
     if (creature) {
-      // Truncate name to fit
-      const name = creature.species.name.length > 6
-        ? creature.species.name.substring(0, 5) + '.'
-        : creature.species.name;
+      let name: string;
+      if (isEgg(creature)) {
+        // It's an egg
+        const eggData = getEgg(creature.eggItemId);
+        const eggName = eggData?.name || 'EGG';
+        name = eggName.length > 6 ? eggName.substring(0, 5) + '.' : eggName;
+      } else {
+        // It's a creature
+        name = creature.species.name.length > 6
+          ? creature.species.name.substring(0, 5) + '.'
+          : creature.species.name;
+      }
       drawText(name, partyStartX + 2, y + 5, 0);
     } else if (i < party.length) {
       drawText('---', partyStartX + 2, y + 5, 2);

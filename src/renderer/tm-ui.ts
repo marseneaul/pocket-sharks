@@ -1,7 +1,7 @@
 import { SCREEN_WIDTH, SCREEN_HEIGHT, DMG_PALETTE } from '../constants.ts';
 import { getContext } from './canvas.ts';
 import { drawText, drawTextCentered } from './text.ts';
-import { getParty, removeItem } from '../engine/game-state.ts';
+import { removeItem, getPartyCreatures } from '../engine/game-state.ts';
 import { getItem } from '../data/items.ts';
 import { getMove } from '../data/moves.ts';
 import { canLearnTM, getTMMoveId, alreadyKnowsMove, teachTMMove } from '../data/tms.ts';
@@ -29,15 +29,18 @@ export function getTMPhase(): string {
 export function handleTMInput(
   input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b'
 ): 'close' | 'used' | null {
-  const party = getParty();
+  // Only creatures can learn TMs, not eggs
+  const creatures = getPartyCreatures();
 
   if (phase === 'select-creature') {
     if (input === 'up') {
       if (menuIndex > 0) menuIndex--;
     } else if (input === 'down') {
-      if (menuIndex < party.length - 1) menuIndex++;
+      if (menuIndex < creatures.length - 1) menuIndex++;
     } else if (input === 'a') {
-      const creature = party[menuIndex];
+      const creature = creatures[menuIndex];
+      if (!creature) return null;
+
       const moveId = getTMMoveId(currentTmItemId);
 
       // Check if can learn
@@ -73,7 +76,7 @@ export function handleTMInput(
       return 'close';
     }
   } else if (phase === 'select-move') {
-    const creature = party[menuIndex];
+    const creature = creatures[menuIndex];
 
     if (input === 'up') {
       if (moveIndex > 0) moveIndex--;
@@ -89,12 +92,14 @@ export function handleTMInput(
   } else if (phase === 'confirm') {
     if (input === 'a') {
       // Teach the move, replacing selected move
-      const creature = party[menuIndex];
-      const result = teachTMMove(creature, currentTmItemId, moveIndex);
-      resultMessage = result.message;
-      phase = 'result';
-      if (result.success) {
-        removeItem(currentTmItemId, 1);
+      const creature = creatures[menuIndex];
+      if (creature) {
+        const result = teachTMMove(creature, currentTmItemId, moveIndex);
+        resultMessage = result.message;
+        phase = 'result';
+        if (result.success) {
+          removeItem(currentTmItemId, 1);
+        }
       }
     } else if (input === 'b') {
       // Go back to move selection
@@ -115,7 +120,8 @@ export function handleTMInput(
 
 export function renderTMUI(): void {
   const ctx = getContext();
-  const party = getParty();
+  // Only creatures can learn TMs, not eggs
+  const creatures = getPartyCreatures();
   const item = getItem(currentTmItemId);
   const moveId = getTMMoveId(currentTmItemId);
   const move = moveId ? getMove(moveId) : null;
@@ -134,11 +140,13 @@ export function renderTMUI(): void {
   drawText(move?.type?.toUpperCase().substring(0, 8) || '', 4, 11, 2);
 
   if (phase === 'select-creature') {
-    renderCreatureSelect(party, moveId);
+    renderCreatureSelect(creatures, moveId);
   } else if (phase === 'select-move') {
-    renderMoveSelect(party[menuIndex]);
+    const creature = creatures[menuIndex];
+    if (creature) renderMoveSelect(creature);
   } else if (phase === 'confirm') {
-    renderConfirm(party[menuIndex]);
+    const creature = creatures[menuIndex];
+    if (creature) renderConfirm(creature);
   } else if (phase === 'result') {
     renderResult();
   }

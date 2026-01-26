@@ -1106,25 +1106,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     description: 'The iconic San Diego shark, named for its spotted pattern. Aggregates in large groups in kelp forests and shallow bays.'
   },
 
-  // Horn Shark Egg → Horn Shark (egg hatching mechanic)
-  50: {
-    id: 50,
-    name: 'Horn Shark Egg',
-    types: ['algae'],
-    baseStats: {
-      hp: 30,
-      attack: 10,
-      defense: 80,
-      spAttack: 10,
-      spDefense: 80,
-      speed: 5
-    },
-    learnableMoves: [
-      { level: 1, moveId: 3 }    // Tail Whip (minimal moves as an egg)
-    ],
-    evolvesTo: { speciesId: 51, level: 10 },
-    description: 'A spiral-shaped egg case called a "mermaid\'s purse". It wedges into rocky crevices to protect the developing shark inside.'
-  },
+  // Horn Shark (hatches from Horn Shark Egg item)
   51: {
     id: 51,
     name: 'Horn Shark',
@@ -1148,25 +1130,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     description: 'A sluggish nocturnal shark with venomous dorsal spines. Uses its horn-like ridges to wedge into crevices and rest.'
   },
 
-  // Swell Shark Egg → Swell Shark
-  52: {
-    id: 52,
-    name: 'Swell Shark Egg',
-    types: ['algae', 'fairy'],
-    baseStats: {
-      hp: 30,
-      attack: 10,
-      defense: 75,
-      spAttack: 15,
-      spDefense: 75,
-      speed: 5
-    },
-    learnableMoves: [
-      { level: 1, moveId: 120 }  // Fairy Wind
-    ],
-    evolvesTo: { speciesId: 53, level: 12 },
-    description: 'A translucent amber egg case. When held up to light, the developing baby shark is visible inside.'
-  },
+  // Swell Shark (hatches from Swell Shark Egg item)
   53: {
     id: 53,
     name: 'Swell Shark',

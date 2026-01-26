@@ -93,6 +93,27 @@ export interface CreatureInstance {
   exp: number;
 }
 
+// Egg instance (egg in party, not a creature)
+export interface EggInstance {
+  isEgg: true;            // Type discriminator
+  eggItemId: number;      // References egg data in eggs.ts
+  stepsRemaining: number; // Steps until hatch
+  nickname?: string;      // Optional nickname for the egg
+}
+
+// Party member can be either a creature or an egg
+export type PartyMember = CreatureInstance | EggInstance;
+
+// Type guard to check if a party member is an egg
+export function isEgg(member: PartyMember): member is EggInstance {
+  return 'isEgg' in member && member.isEgg === true;
+}
+
+// Type guard to check if a party member is a creature
+export function isCreature(member: PartyMember): member is CreatureInstance {
+  return !isEgg(member);
+}
+
 // Battle phases
 export type BattlePhase =
   | 'intro'

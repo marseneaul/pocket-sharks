@@ -1,8 +1,9 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification } from './game-state.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty } from './game-state.ts';
 import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
 import { initNPCStates, updateNPCs } from './npc-movement.ts';
+import { getEgg } from '../data/eggs.ts';
 
 // Message to display when movement is blocked (certification required)
 let blockedMessage: string | null = null;
@@ -80,10 +81,39 @@ export function updateOverworld(deltaTime: number): void {
   }
 }
 
+// Track pending egg collection message
+let pendingEggMessage: string | null = null;
+
+export function getPendingEggMessage(): string | null {
+  return pendingEggMessage;
+}
+
+export function clearPendingEggMessage(): void {
+  pendingEggMessage = null;
+}
+
 function onTileLand(player: PlayerState): void {
   const map = getCurrentMap();
   const tile = map.tiles[player.y]?.[player.x];
   const tileDef = getTileDef(tile);
+
+  // Increment step counter (for egg hatching)
+  incrementStepCount();
+
+  // Check for ground egg at this location
+  const groundEgg = getGroundEggAt(player.x, player.y);
+  if (groundEgg) {
+    const eggData = getEgg(groundEgg.eggId);
+    if (eggData) {
+      if (canAddToParty()) {
+        if (collectGroundEgg(groundEgg)) {
+          pendingEggMessage = `Found a ${eggData.name}!`;
+        }
+      } else {
+        pendingEggMessage = `Found a ${eggData.name}, but party is full!`;
+      }
+    }
+  }
 
   // Check for healing tile
   if (tileDef.heal) {
@@ -104,8 +134,8 @@ function onTileLand(player: PlayerState): void {
     return;
   }
 
-  // Check for wild encounter
-  if (tileDef.encounter && tileDef.encounterRate > 0) {
+  // Check for wild encounter (only if player has a creature that can battle)
+  if (tileDef.encounter && tileDef.encounterRate > 0 && hasBattleableCreature()) {
     const wildCreature = tryEncounter(map, tileDef.encounterRate, getPlayerCertifications());
     if (wildCreature) {
       startWildBattle(wildCreature);

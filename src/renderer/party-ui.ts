@@ -3,6 +3,8 @@ import { getContext } from './canvas.ts';
 import { drawText, drawTextCentered, drawTextRightAligned } from './text.ts';
 import { getParty } from '../engine/game-state.ts';
 import type { CreatureInstance } from '../types/index.ts';
+import { isEgg } from '../types/index.ts';
+import { getEgg } from '../data/eggs.ts';
 
 // Party menu state
 let menuIndex = 0;
@@ -62,7 +64,12 @@ export function handleBattlePartyInput(input: 'up' | 'down' | 'left' | 'right' |
   } else if (input === 'down') {
     if (menuIndex < party.length - 1) menuIndex++;
   } else if (input === 'a') {
-    if (party[menuIndex].currentHp <= 0) return null;
+    const member = party[menuIndex];
+    // Can't switch to an egg
+    if (isEgg(member)) return null;
+    // Can't switch to fainted creature
+    if (member.currentHp <= 0) return null;
+    // Can't switch to already active creature
     if (menuIndex === 0) return null;
     return { action: 'switch', index: menuIndex };
   } else if (input === 'b') {
@@ -101,7 +108,7 @@ export function renderPartyMenu(inBattle: boolean = false): void {
   const startY = 16;
 
   for (let i = 0; i < party.length; i++) {
-    const creature = party[i];
+    const member = party[i];
     const y = startY + i * slotHeight;
 
     // Slot background
@@ -127,30 +134,56 @@ export function renderPartyMenu(inBattle: boolean = false): void {
       drawText('>', 6, y + 2, 0);
     }
 
-    // Creature name (truncated to fit)
-    const name = (creature.nickname || creature.species.name).substring(0, 8);
-    drawText(name, 16, y + 2, 0);
+    if (isEgg(member)) {
+      // Render egg slot
+      const eggData = getEgg(member.eggItemId);
+      const name = (member.nickname || eggData?.name || 'EGG').substring(0, 8);
+      drawText(name, 16, y + 2, 0);
 
-    // Level (compact)
-    drawText(`L${creature.level}`, 82, y + 2, 0);
+      // Show hatch progress instead of level
+      const totalSteps = eggData?.hatchSteps || 2560;
+      const progress = Math.max(0, totalSteps - member.stepsRemaining);
+      const percent = Math.floor((progress / totalSteps) * 100);
 
-    // HP Bar
-    drawHpBar(16, y + 11, 48, creature);
+      // Progress bar
+      drawEggProgressBar(16, y + 11, 48, progress, totalSteps);
 
-    // HP text (compact)
-    const hpText = `${creature.currentHp}`;
-    drawText(hpText, 68, y + 10, 1);
+      // Progress text
+      drawText(`${percent}%`, 68, y + 10, 1);
 
-    // Status indicator on right
-    if (creature.currentHp <= 0) {
+      // EGG indicator
       ctx.fillStyle = DMG_PALETTE.DARK;
       ctx.fillRect(120, y + 2, 28, 8);
-      drawText('FNT', 124, y + 3, 3);
-    } else if (i === 0) {
-      // Active indicator for first slot
-      ctx.fillStyle = DMG_PALETTE.BLACK;
-      ctx.fillRect(112, y + 2, 36, 8);
-      drawText('LEAD', 116, y + 3, 3);
+      drawText('EGG', 124, y + 3, 3);
+    } else {
+      // Render creature slot
+      const creature = member;
+
+      // Creature name (truncated to fit)
+      const name = (creature.nickname || creature.species.name).substring(0, 8);
+      drawText(name, 16, y + 2, 0);
+
+      // Level (compact)
+      drawText(`L${creature.level}`, 82, y + 2, 0);
+
+      // HP Bar
+      drawHpBar(16, y + 11, 48, creature);
+
+      // HP text (compact)
+      const hpText = `${creature.currentHp}`;
+      drawText(hpText, 68, y + 10, 1);
+
+      // Status indicator on right
+      if (creature.currentHp <= 0) {
+        ctx.fillStyle = DMG_PALETTE.DARK;
+        ctx.fillRect(120, y + 2, 28, 8);
+        drawText('FNT', 124, y + 3, 3);
+      } else if (i === 0) {
+        // Active indicator for first slot
+        ctx.fillStyle = DMG_PALETTE.BLACK;
+        ctx.fillRect(112, y + 2, 36, 8);
+        drawText('LEAD', 116, y + 3, 3);
+      }
     }
   }
 
@@ -195,6 +228,28 @@ function drawHpBar(x: number, y: number, width: number, creature: CreatureInstan
   } else {
     ctx.fillStyle = DMG_PALETTE.DARK;
   }
+
+  if (filledWidth > 0) {
+    ctx.fillRect(x, y, filledWidth, 3);
+  }
+
+  // Border
+  ctx.strokeStyle = DMG_PALETTE.BLACK;
+  ctx.strokeRect(x - 0.5, y - 0.5, width + 1, 4);
+}
+
+// Draw egg hatch progress bar
+function drawEggProgressBar(x: number, y: number, width: number, progress: number, total: number): void {
+  const ctx = getContext();
+  const percent = total > 0 ? progress / total : 0;
+  const filledWidth = Math.max(0, Math.floor(width * percent));
+
+  // Background
+  ctx.fillStyle = DMG_PALETTE.DARK;
+  ctx.fillRect(x, y, width, 3);
+
+  // Progress fill (use light color for egg progress)
+  ctx.fillStyle = DMG_PALETTE.LIGHT;
 
   if (filledWidth > 0) {
     ctx.fillRect(x, y, filledWidth, 3);

@@ -1,9 +1,11 @@
-import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel } from '../types/overworld.ts';
+import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel, GroundEgg } from '../types/overworld.ts';
 import { CERT_HIERARCHY } from '../types/overworld.ts';
-import type { BattleState, CreatureInstance } from '../types/index.ts';
+import type { BattleState, CreatureInstance, PartyMember, EggInstance } from '../types/index.ts';
+import { isEgg, isCreature } from '../types/index.ts';
 import type { InventorySlot } from '../data/items.ts';
 import { createCreatureInstance, createBattleState, initBattle } from './battle.ts';
 import { getCreature } from '../data/creatures.ts';
+import { getEgg } from '../data/eggs.ts';
 import { playBattleMusic, playOverworldMusic } from './audio.ts';
 
 // Screen transition state
@@ -47,6 +49,7 @@ export function initGameState(): void {
     isSwimming: false,
     moveProgress: 0,
     party: [],  // Empty until starter is chosen
+    stepCount: 0,  // For egg hatching
     certifications: ['wading']  // Start with basic wading/snorkeling
   };
 
@@ -156,8 +159,8 @@ export function getBattleState(): BattleState | null {
 
 // Internal battle start (called after transition)
 function _startWildBattleInternal(enemyCreature: CreatureInstance): void {
-  const playerCreature = gameState.overworld.player.party[0];
-  if (!playerCreature) throw new Error('No creature in party');
+  const playerCreature = getFirstBattleableCreature();
+  if (!playerCreature) throw new Error('No battleable creature in party');
 
   currentTrainerNpc = null;
   trainerCreatureIndex = 0;
@@ -173,8 +176,8 @@ function _startWildBattleInternal(enemyCreature: CreatureInstance): void {
 function _startTrainerBattleInternal(npc: NPC): void {
   if (!npc.trainer || npc.defeated) return;
 
-  const playerCreature = gameState.overworld.player.party[0];
-  if (!playerCreature) throw new Error('No creature in party');
+  const playerCreature = getFirstBattleableCreature();
+  if (!playerCreature) throw new Error('No battleable creature in party');
 
   currentTrainerNpc = npc;
   trainerCreatureIndex = 0;
@@ -250,7 +253,11 @@ export function sendOutNextTrainerCreature(): CreatureInstance | null {
 function _endBattleInternal(): void {
   // Sync all creature data from battle back to party
   if (battleState) {
-    const partyCreature = gameState.overworld.player.party[0];
+    // Find the first creature (not egg) in party - this is what was in battle
+    const partyCreatureIndex = gameState.overworld.player.party.findIndex(m => isCreature(m));
+    if (partyCreatureIndex === -1) return;
+
+    const partyCreature = gameState.overworld.player.party[partyCreatureIndex] as CreatureInstance;
     const battleCreature = battleState.playerCreature;
 
     // Sync HP, PP, moves
@@ -300,10 +307,13 @@ export function endBattle(): void {
 
 // Heal party at healing pool
 export function healParty(): void {
-  for (const creature of gameState.overworld.player.party) {
-    creature.currentHp = creature.maxHp;
-    for (const move of creature.moves) {
-      move.currentPp = move.move.pp;
+  for (const member of gameState.overworld.player.party) {
+    // Only heal creatures, not eggs
+    if (isCreature(member)) {
+      member.currentHp = member.maxHp;
+      for (const move of member.moves) {
+        move.currentPp = move.move.pp;
+      }
     }
   }
 }
@@ -344,9 +354,9 @@ export function canAddToParty(): boolean {
   return gameState.overworld.player.party.length < MAX_PARTY_SIZE;
 }
 
-export function addToParty(creature: CreatureInstance): boolean {
+export function addToParty(member: PartyMember): boolean {
   if (!canAddToParty()) return false;
-  gameState.overworld.player.party.push(creature);
+  gameState.overworld.player.party.push(member);
   return true;
 }
 
@@ -354,8 +364,28 @@ export function getPartySize(): number {
   return gameState.overworld.player.party.length;
 }
 
-export function getParty(): CreatureInstance[] {
+export function getParty(): PartyMember[] {
   return gameState.overworld.player.party;
+}
+
+// Get only creatures (not eggs) from party
+export function getPartyCreatures(): CreatureInstance[] {
+  return gameState.overworld.player.party.filter(isCreature) as CreatureInstance[];
+}
+
+// Get first creature that can battle (not an egg, HP > 0)
+export function getFirstBattleableCreature(): CreatureInstance | null {
+  for (const member of gameState.overworld.player.party) {
+    if (isCreature(member) && member.currentHp > 0) {
+      return member;
+    }
+  }
+  return null;
+}
+
+// Check if player has any creature that can battle
+export function hasBattleableCreature(): boolean {
+  return getFirstBattleableCreature() !== null;
 }
 
 export function setStarterCreature(speciesId: number): void {
@@ -408,3 +438,114 @@ export const CERT_NAMES: Record<CertificationLevel, string> = {
   'openocean': 'Open Ocean Swimming',
   'submarine': 'Submarine Operation'
 };
+
+// ============================================
+// Egg Collection & Hatching System
+// ============================================
+
+// Pending hatch notification (set when egg hatches, cleared when shown)
+let pendingHatch: { eggName: string; creatureName: string } | null = null;
+
+export function getPendingHatch(): { eggName: string; creatureName: string } | null {
+  return pendingHatch;
+}
+
+export function clearPendingHatch(): void {
+  pendingHatch = null;
+}
+
+// Create an egg instance from egg item data
+export function createEggInstance(eggItemId: number): EggInstance | null {
+  const eggData = getEgg(eggItemId);
+  if (!eggData) return null;
+
+  return {
+    isEgg: true,
+    eggItemId: eggItemId,
+    stepsRemaining: eggData.hatchSteps
+  };
+}
+
+// Increment step counter and check for egg hatching
+export function incrementStepCount(): void {
+  const player = gameState.overworld.player;
+  player.stepCount++;
+
+  // Decrement steps for all eggs in party
+  for (let i = 0; i < player.party.length; i++) {
+    const member = player.party[i];
+    if (isEgg(member)) {
+      member.stepsRemaining--;
+      if (member.stepsRemaining <= 0) {
+        // Egg is ready to hatch!
+        hatchEgg(i);
+        break; // Only hatch one egg per step
+      }
+    }
+  }
+}
+
+// Get player's total step count
+export function getStepCount(): number {
+  return gameState.overworld.player.stepCount;
+}
+
+// Hatch an egg at the given party index
+export function hatchEgg(partyIndex: number): boolean {
+  const player = gameState.overworld.player;
+  const member = player.party[partyIndex];
+
+  if (!member || !isEgg(member)) return false;
+
+  const eggData = getEgg(member.eggItemId);
+  if (!eggData) return false;
+
+  const species = getCreature(eggData.hatchSpeciesId);
+  if (!species) return false;
+
+  // Create the hatched creature
+  const creature = createCreatureInstance(species, eggData.hatchLevel);
+
+  // Preserve nickname if egg had one
+  if (member.nickname) {
+    creature.nickname = member.nickname;
+  }
+
+  // Replace egg with creature in party
+  player.party[partyIndex] = creature;
+
+  // Set pending hatch notification
+  pendingHatch = {
+    eggName: eggData.name,
+    creatureName: creature.nickname || species.name
+  };
+
+  return true;
+}
+
+// Collect a ground egg from the current map
+export function collectGroundEgg(groundEgg: GroundEgg): boolean {
+  if (groundEgg.collected) return false;
+  if (!canAddToParty()) return false;
+
+  const eggInstance = createEggInstance(groundEgg.eggId);
+  if (!eggInstance) return false;
+
+  // Add egg to party
+  addToParty(eggInstance);
+
+  // Mark as collected
+  groundEgg.collected = true;
+
+  return true;
+}
+
+// Check if there's an uncollected ground egg at a position
+export function getGroundEggAt(x: number, y: number): GroundEgg | null {
+  const map = getCurrentMap();
+  if (!map.groundEggs) return null;
+
+  return map.groundEggs.find(
+    egg => egg.x === x && egg.y === y && !egg.collected
+  ) || null;
+}

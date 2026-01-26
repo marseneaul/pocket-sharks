@@ -229,8 +229,8 @@ function selectAction(state: BattleState): void {
       break;
     case 2: // SHARK (switch)
       const party = getParty();
-      // Check if we have other living creatures
-      const hasOtherAlive = party.slice(1).some(c => c.currentHp > 0);
+      // Check if we have other living creatures (not eggs)
+      const hasOtherAlive = party.slice(1).some(c => 'currentHp' in c && c.currentHp > 0);
       if (party.length <= 1 || !hasOtherAlive) {
         queueMessage(state, 'No other sharks!');
         state.phase = 'message';

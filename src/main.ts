@@ -14,7 +14,7 @@ import { renderDebug, handleDebugInput, initDebugUI } from './renderer/debug-ui.
 import { getItem } from './data/items.ts';
 import { getShop } from './data/shops.ts';
 import { advanceTypewriter, isTypewriterComplete } from './renderer/text.ts';
-import { initInput, updateInput, getJustPressed, getDirectionPressed } from './engine/input.ts';
+import { initInput, updateInput, getJustPressed, getDirectionPressed, getInputState } from './engine/input.ts';
 import { handleInput as handleBattleInput, updateHpAnimation, updateEntryAnimation, updateAttackAnimation, updateCageAnimation, useBattleItem } from './engine/battle.ts';
 import { updateOverworld, handleOverworldInput } from './engine/overworld.ts';
 import { initStorage } from './engine/storage.ts';
@@ -39,6 +39,7 @@ import {
   getCurrentMap
 } from './engine/game-state.ts';
 import { getCreature } from './data/creatures.ts';
+import { isCreature } from './types/index.ts';
 import { createCreatureInstance } from './engine/battle.ts';
 // San Diego Region maps (Region 1)
 import { SCRIPPS_LAB } from './data/maps/research-station.ts';
@@ -335,16 +336,43 @@ function updateSettingsMode(): void {
 
 let previousModeBeforeDebug: ReturnType<typeof getGameMode> = 'title';
 
+// Debug mode key repeat state
+let debugKeyRepeatTimer = 0;
+let debugKeyRepeatDirection: 'up' | 'down' | 'left' | 'right' | null = null;
+const DEBUG_KEY_REPEAT_INITIAL_DELAY = 300; // ms before repeat starts
+const DEBUG_KEY_REPEAT_RATE = 80; // ms between repeats
+
 function updateDebugMode(): void {
   const pressed = getJustPressed();
   const direction = getDirectionPressed();
+  const inputState = getInputState();
 
   let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'l' | 'r' | null = null;
-  if (direction) input = direction;
-  else if (pressed.a) input = 'a';
-  else if (pressed.b) input = 'b';
-  else if (pressed.l) input = 'l';
-  else if (pressed.r) input = 'r';
+
+  // Check for new direction press
+  if (direction) {
+    input = direction;
+    debugKeyRepeatDirection = direction;
+    debugKeyRepeatTimer = Date.now() + DEBUG_KEY_REPEAT_INITIAL_DELAY;
+  }
+  // Check for held direction (key repeat)
+  else if (debugKeyRepeatDirection && inputState[debugKeyRepeatDirection]) {
+    if (Date.now() >= debugKeyRepeatTimer) {
+      input = debugKeyRepeatDirection;
+      debugKeyRepeatTimer = Date.now() + DEBUG_KEY_REPEAT_RATE;
+    }
+  } else {
+    // Direction key released
+    debugKeyRepeatDirection = null;
+  }
+
+  // Non-direction inputs (no repeat)
+  if (!input) {
+    if (pressed.a) input = 'a';
+    else if (pressed.b) input = 'b';
+    else if (pressed.l) input = 'l';
+    else if (pressed.r) input = 'r';
+  }
 
   if (input) {
     const result = handleDebugInput(input);
@@ -589,6 +617,14 @@ function updateBattlePartyMode(): void {
       } else if (result.action === 'switch' && result.index !== undefined) {
         // Switch the party member to front
         const party = getParty();
+        const newActive = party[result.index];
+
+        // Can only switch in creatures, not eggs
+        if (!isCreature(newActive)) {
+          setGameMode('battle');
+          return;
+        }
+
         const temp = party[0];
         party[0] = party[result.index];
         party[result.index] = temp;
@@ -596,10 +632,10 @@ function updateBattlePartyMode(): void {
         // Update battle state with new active creature
         const battleState = getBattleState();
         if (battleState) {
-          battleState.playerCreature = party[0];
-          battleState.animatingHp.player = party[0].currentHp;
+          battleState.playerCreature = newActive;
+          battleState.animatingHp.player = newActive.currentHp;
           // Queue message about switch
-          battleState.messageQueue.push(`Go! ${party[0].species.name}!`);
+          battleState.messageQueue.push(`Go! ${newActive.species.name}!`);
           battleState.phase = 'message';
           if (battleState.messageQueue.length > 0) {
             battleState.message = battleState.messageQueue.shift()!;

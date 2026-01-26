@@ -98,7 +98,7 @@ export const LA_JOLLA_TIDE_POOLS: MapData = {
         name: 'Tide Pool Emma',
         team: [
           { speciesId: 47, level: 4 },  // Round Stingray
-          { speciesId: 50, level: 5 }   // Horn Shark Egg
+          { speciesId: 51, level: 5 }   // Horn Shark
         ],
         defeatedDialogue: [
           'Wow, your shark is strong!',
@@ -124,12 +124,16 @@ export const LA_JOLLA_TIDE_POOLS: MapData = {
   ],
   // High encounter rate in tide pools - San Diego baby sharks and rays
   encounterTable: [
-    { speciesId: 47, minLevel: 2, maxLevel: 5, weight: 35 },  // Round Stingray (common)
-    { speciesId: 50, minLevel: 3, maxLevel: 5, weight: 20 },  // Horn Shark Egg
-    { speciesId: 52, minLevel: 3, maxLevel: 5, weight: 15 },  // Swell Shark Egg
-    { speciesId: 48, minLevel: 3, maxLevel: 6, weight: 15 },  // Smoothhound
-    { speciesId: 54, minLevel: 4, maxLevel: 6, weight: 10 },  // Guitarfish
+    { speciesId: 47, minLevel: 2, maxLevel: 5, weight: 40 },  // Round Stingray (common)
+    { speciesId: 48, minLevel: 3, maxLevel: 6, weight: 25 },  // Smoothhound
+    { speciesId: 54, minLevel: 4, maxLevel: 6, weight: 20 },  // Guitarfish
+    { speciesId: 51, minLevel: 4, maxLevel: 6, weight: 10 },  // Horn Shark (uncommon)
     { speciesId: 68, minLevel: 5, maxLevel: 7, weight: 5 }    // Scalloped Bonnethead (very rare)
+  ],
+  // Collectible eggs found on the ground
+  groundEggs: [
+    { id: 'tide-pool-horn-egg-1', x: 4, y: 3, eggId: 1, collected: false },   // Horn Shark Egg
+    { id: 'tide-pool-swell-egg-1', x: 14, y: 8, eggId: 2, collected: false }  // Swell Shark Egg
   ],
   isOutdoor: true
 };
