@@ -1985,6 +1985,220 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 48, moveId: 52 }  // Thunderbolt
     ],
     description: 'An extremely rare hammerhead with golden coloring. Sightings are considered incredibly lucky - most divers never see one.'
+  },
+
+  // ============================================
+  // PACIFIC NORTHWEST REGION (Region 6)
+  // ============================================
+
+  // Porbeagle - Cold water lamnid shark, base of salmon shark line
+  86: {
+    id: 86,
+    name: 'Porbeagle',
+    types: ['fire', 'ice'],
+    baseStats: {
+      hp: 70,
+      attack: 75,
+      defense: 60,
+      spAttack: 55,
+      spDefense: 55,
+      speed: 80
+    },
+    evolvesTo: { speciesId: 87, level: 32 },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 10 }, // Ember
+      { level: 22, moveId: 61 }, // Icy Wind
+      { level: 29, moveId: 20 }, // Ram
+      { level: 36, moveId: 11 }  // Fire Fang
+    ],
+    description: 'A powerful cold-water mackerel shark. Its warm-blooded metabolism lets it thrive in frigid northern seas.'
+  },
+
+  // Salmon Shark - Apex predator of Pacific Northwest, warm-blooded
+  87: {
+    id: 87,
+    name: 'Salmon Shark',
+    types: ['fire', 'ice'],
+    baseStats: {
+      hp: 85,
+      attack: 95,
+      defense: 70,
+      spAttack: 65,
+      spDefense: 65,
+      speed: 100
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 1, moveId: 2 },   // Bite
+      { level: 15, moveId: 10 }, // Ember
+      { level: 22, moveId: 61 }, // Icy Wind
+      { level: 29, moveId: 20 }, // Ram
+      { level: 36, moveId: 11 }, // Fire Fang
+      { level: 43, moveId: 62 }, // Blizzard
+      { level: 50, moveId: 12 }  // Flamethrower
+    ],
+    description: 'The "warm shark of the cold sea" - can raise its body temperature 20°F above the surrounding water. Hunts salmon with devastating speed.'
+  },
+
+  // Spiny Dogfish - Common Pacific Northwest shark (Zubat equivalent)
+  88: {
+    id: 88,
+    name: 'Spiny Dogfish',
+    types: ['poison'],
+    baseStats: {
+      hp: 50,
+      attack: 45,
+      defense: 55,
+      spAttack: 40,
+      spDefense: 50,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 80 },  // Poison Sting
+      { level: 7, moveId: 2 },   // Bite
+      { level: 13, moveId: 81 }, // Acid
+      { level: 19, moveId: 30 }, // Pursuit
+      { level: 25, moveId: 82 }, // Toxic
+      { level: 31, moveId: 83 }, // Venoshock
+      { level: 37, moveId: 31 }  // Crunch
+    ],
+    description: 'An extremely common small shark with venomous spines. Massive schools patrol the Pacific Northwest coast.'
+  },
+
+  // Little Sleeper Shark - Deep cold water shark
+  89: {
+    id: 89,
+    name: 'Little Sleeper Shark',
+    types: ['ice', 'deepsea'],
+    baseStats: {
+      hp: 65,
+      attack: 55,
+      defense: 70,
+      spAttack: 45,
+      spDefense: 65,
+      speed: 30
+    },
+    evolvesTo: { speciesId: 90, level: 40 },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 90 }, // Shadow Sneak
+      { level: 26, moveId: 61 }, // Icy Wind
+      { level: 34, moveId: 91 }, // Dark Pulse
+      { level: 42, moveId: 62 }  // Blizzard
+    ],
+    description: 'A slow-moving deep-sea shark that conserves energy in the frigid depths. Can survive in near-freezing water.'
+  },
+
+  // Pacific Sleeper Shark - Massive deep cold water apex predator
+  90: {
+    id: 90,
+    name: 'Pacific Sleeper Shark',
+    types: ['ice', 'deepsea'],
+    baseStats: {
+      hp: 110,
+      attack: 85,
+      defense: 95,
+      spAttack: 60,
+      spDefense: 90,
+      speed: 25
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 1, moveId: 2 },   // Bite
+      { level: 18, moveId: 90 }, // Shadow Sneak
+      { level: 26, moveId: 61 }, // Icy Wind
+      { level: 34, moveId: 91 }, // Dark Pulse
+      { level: 42, moveId: 62 }, // Blizzard
+      { level: 50, moveId: 31 }, // Crunch
+      { level: 58, moveId: 170 } // Leviathan Rage
+    ],
+    description: 'A massive deep-sea predator reaching 20+ feet. Hunts giant Pacific octopus and even attacks sleeping seals on the bottom.'
+  },
+
+  // Big Skate - Large Pacific skate
+  91: {
+    id: 91,
+    name: 'Big Skate',
+    types: ['ray'],
+    baseStats: {
+      hp: 75,
+      attack: 60,
+      defense: 80,
+      spAttack: 50,
+      spDefense: 70,
+      speed: 45
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 8, moveId: 20 },  // Ram
+      { level: 15, moveId: 110 }, // Wing Attack
+      { level: 22, moveId: 30 }, // Pursuit
+      { level: 29, moveId: 111 }, // Sand Attack
+      { level: 36, moveId: 112 }, // Mud Shot
+      { level: 43, moveId: 113 }  // Earthquake
+    ],
+    description: 'The largest skate in North American waters, reaching 8 feet across. Buries itself in sand to ambush prey.'
+  },
+
+  // Winter Skate - Cold water skate with beautiful markings
+  92: {
+    id: 92,
+    name: 'Winter Skate',
+    types: ['ray', 'ice'],
+    baseStats: {
+      hp: 65,
+      attack: 55,
+      defense: 75,
+      spAttack: 60,
+      spDefense: 80,
+      speed: 40
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 9, moveId: 20 },  // Ram
+      { level: 17, moveId: 61 }, // Icy Wind
+      { level: 25, moveId: 110 }, // Wing Attack
+      { level: 33, moveId: 114 }, // Aurora Beam
+      { level: 41, moveId: 62 }, // Blizzard
+      { level: 49, moveId: 115 }  // Sheer Cold
+    ],
+    description: 'A beautiful skate adapted to freezing northern waters. Its eyespots resemble frost patterns on a winter window.'
+  },
+
+  // Iceland Catshark - Cold water catshark variant
+  93: {
+    id: 93,
+    name: 'Iceland Catshark',
+    types: ['ice'],
+    baseStats: {
+      hp: 55,
+      attack: 50,
+      defense: 60,
+      spAttack: 65,
+      spDefense: 70,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 60 },  // Ice Shard
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 61 }, // Icy Wind
+      { level: 22, moveId: 30 }, // Pursuit
+      { level: 29, moveId: 114 }, // Aurora Beam
+      { level: 36, moveId: 31 }, // Crunch
+      { level: 43, moveId: 62 }  // Blizzard
+    ],
+    description: 'A small catshark found in frigid North Atlantic and Arctic waters. Its pale coloring provides camouflage against icy seafloors.'
   }
 };
 
