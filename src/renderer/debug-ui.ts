@@ -49,6 +49,10 @@ const MAPS = [
   'puget-sound',
   'pacific-kelp-forest',
   'cold-water-trench',
+  // Europe Region (Region 7)
+  'europe-ferry-terminal',
+  'european-coast',
+  'north-sea',
   // Legacy maps
   'route-1',
   'route-2',
