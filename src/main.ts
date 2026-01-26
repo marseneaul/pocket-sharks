@@ -65,6 +65,11 @@ import { FLORIDA_KEYS } from './data/maps/florida-keys.ts';
 import { KEY_WEST } from './data/maps/key-west.ts';
 import { CARIBBEAN_REEF } from './data/maps/caribbean-reef.ts';
 import { CORAL_REEF_GYM } from './data/maps/coral-reef-gym.ts';
+// Pacific Northwest Region maps (Region 6)
+import { SEATTLE_AIRPORT } from './data/maps/seattle-airport.ts';
+import { PUGET_SOUND } from './data/maps/puget-sound.ts';
+import { PACIFIC_KELP_FOREST } from './data/maps/pacific-kelp-forest.ts';
+import { COLD_WATER_TRENCH } from './data/maps/cold-water-trench.ts';
 // Legacy maps (will be reworked later)
 import { ROUTE_1 } from './data/maps/route-1.ts';
 import { ROUTE_2 } from './data/maps/route-2.ts';
@@ -117,6 +122,11 @@ function init(): void {
   registerMap(KEY_WEST);
   registerMap(CARIBBEAN_REEF);
   registerMap(CORAL_REEF_GYM);
+  // Register Pacific Northwest Region maps (Region 6)
+  registerMap(SEATTLE_AIRPORT);
+  registerMap(PUGET_SOUND);
+  registerMap(PACIFIC_KELP_FOREST);
+  registerMap(COLD_WATER_TRENCH);
   // Register legacy maps (for backwards compatibility during transition)
   registerMap(ROUTE_1);
   registerMap(ROUTE_2);

@@ -44,6 +44,11 @@ const MAPS = [
   'key-west',
   'caribbean-reef',
   'coral-reef-gym',
+  // Pacific Northwest Region (Region 6)
+  'seattle-airport',
+  'puget-sound',
+  'pacific-kelp-forest',
+  'cold-water-trench',
   // Legacy maps
   'route-1',
   'route-2',
