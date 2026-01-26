@@ -15,9 +15,9 @@ const tiles: number[][] = [
   [W,W,W,W,W,W,W,W,F,F,F,F,W,W,W,W,W,W,W,W],  // North entrance from ferry
   [W,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,W],
   [W,F,F,F,F,F,S,S,S,S,S,S,S,S,F,F,F,F,F,W],
-  [W,F,F,F,S,S,S,S,S,S,S,S,S,S,S,S,F,F,F,W],  // Beach area
-  [W,F,F,S,S,S,A,A,A,A,A,A,A,A,S,S,S,F,F,W],
-  [W,F,S,S,A,A,A,A,A,A,A,A,A,A,A,A,S,S,F,W],
+  [W,F,F,W,W,W,S,S,S,S,S,S,S,S,S,S,F,F,F,W],  // Beach area + Gym building
+  [W,F,F,W,F,F,F,A,A,A,A,A,A,A,S,S,S,F,F,W],  // Gym entrance at x:4-5, y:4
+  [W,F,S,W,W,W,A,A,A,A,A,A,A,A,A,A,S,S,F,W],
   [W,F,S,A,A,A,A,K,K,A,A,K,K,A,A,A,A,S,F,W],  // Shallow water with kelp
   [W,F,A,A,A,K,K,K,K,A,A,K,K,K,K,A,A,A,F,W],
   [W,A,A,A,K,K,K,A,A,A,A,A,A,K,K,K,A,A,A,W],
@@ -68,6 +68,21 @@ export const EUROPEAN_COAST: MapData = {
       targetX: 11,
       targetY: 16
     },
+    // Survivor Gym entrance
+    {
+      x: 4,
+      y: 4,
+      targetMap: 'survivor-gym',
+      targetX: 9,
+      targetY: 16
+    },
+    {
+      x: 5,
+      y: 4,
+      targetMap: 'survivor-gym',
+      targetX: 10,
+      targetY: 16
+    },
     // South exit to North Sea
     {
       x: 8,
@@ -99,10 +114,24 @@ export const EUROPEAN_COAST: MapData = {
     }
   ],
   npcs: [
+    // Gym greeter
+    {
+      id: 'gym-greeter-survivor',
+      x: 4,
+      y: 5,
+      sprite: 0,
+      facing: 'up',
+      dialogue: [
+        'That building is the Survivor Gym.',
+        'Gym Leader Henrik specializes in poison-type dogfish.',
+        'European sharks are survivors.',
+        'They endure even as their waters are emptied.'
+      ]
+    },
     // Beach fisherman
     {
       id: 'beach-fisherman',
-      x: 6,
+      x: 8,
       y: 4,
       sprite: 0,
       facing: 'down',

@@ -78,6 +78,7 @@ import { COLD_WATER_TRENCH } from './data/maps/cold-water-trench.ts';
 import { EUROPE_FERRY_TERMINAL } from './data/maps/europe-ferry-terminal.ts';
 import { EUROPEAN_COAST } from './data/maps/european-coast.ts';
 import { NORTH_SEA } from './data/maps/north-sea.ts';
+import { SURVIVOR_GYM } from './data/maps/survivor-gym.ts';
 // Cape Town Region maps (Region 8)
 import { CAPE_TOWN_HARBOR } from './data/maps/cape-town-harbor.ts';
 import { CAPE_TOWN_COAST } from './data/maps/cape-town-coast.ts';
@@ -149,6 +150,7 @@ function init(): void {
   registerMap(EUROPE_FERRY_TERMINAL);
   registerMap(EUROPEAN_COAST);
   registerMap(NORTH_SEA);
+  registerMap(SURVIVOR_GYM);
   // Register Cape Town Region maps (Region 8)
   registerMap(CAPE_TOWN_HARBOR);
   registerMap(CAPE_TOWN_COAST);

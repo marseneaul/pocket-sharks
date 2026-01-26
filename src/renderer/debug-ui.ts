@@ -57,6 +57,7 @@ const MAPS = [
   'europe-ferry-terminal',
   'european-coast',
   'north-sea',
+  'survivor-gym',
   // Cape Town Region (Region 8)
   'cape-town-harbor',
   'cape-town-coast',
