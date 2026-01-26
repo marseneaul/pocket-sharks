@@ -105,10 +105,10 @@ function drawTitleLogo(): void {
   drawBox(boxX, boxY, boxWidth, boxHeight);
 
   // Game title - centered in screen
-  // "SHARK" = 5 chars = 40px, "POKEMON" = 7 chars = 56px
+  // "POCKET" = 6 chars = 48px, "SHARKS" = 6 chars = 48px
   const lineHeight = 14;  // 8px char + 6px spacing for title
-  drawTextCentered('SHARK', 0, SCREEN_WIDTH, boxY + 10);
-  drawTextCentered('POKEMON', 0, SCREEN_WIDTH, boxY + 10 + lineHeight);
+  drawTextCentered('POCKET', 0, SCREEN_WIDTH, boxY + 10);
+  drawTextCentered('SHARKS', 0, SCREEN_WIDTH, boxY + 10 + lineHeight);
 
   // Subtitle - smaller spacing
   // "OCEAN EDITION" = 13 chars = 104px (fits in 136px box width)
