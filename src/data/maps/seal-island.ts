@@ -150,12 +150,12 @@ export const SEAL_ISLAND: MapData = {
   ],
   encounterTable: [
     // Regular deep water sharks
-    { speciesId: 110, minLevel: 35, maxLevel: 42, weight: 25 },  // Copper Shark
-    { speciesId: 111, minLevel: 35, maxLevel: 42, weight: 25 },  // Dusky Shark
-    { speciesId: 109, minLevel: 35, maxLevel: 42, weight: 20 },  // Broadnose Sevengill
-    { speciesId: 112, minLevel: 35, maxLevel: 42, weight: 15 },  // Sand Tiger Shark
+    { speciesId: 105, minLevel: 35, maxLevel: 42, weight: 25 },  // Copper Shark
+    { speciesId: 106, minLevel: 35, maxLevel: 42, weight: 25 },  // Dusky Shark
+    { speciesId: 104, minLevel: 35, maxLevel: 42, weight: 20 },  // Broadnose Sevengill
+    { speciesId: 107, minLevel: 35, maxLevel: 42, weight: 15 },  // Sand Tiger Shark
     // Very rare - the legendary last Great White
-    { speciesId: 113, minLevel: 50, maxLevel: 55, weight: 5 }    // Great White Shark (RARE!)
+    { speciesId: 108, minLevel: 50, maxLevel: 55, weight: 5 }    // Great White Shark (RARE!)
   ],
   isOutdoor: true
 };

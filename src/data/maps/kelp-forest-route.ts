@@ -116,8 +116,8 @@ export const KELP_FOREST_ROUTE: MapData = {
       trainer: {
         name: 'Swimmer Jake',
         team: [
-          { speciesId: 48, level: 6 },  // Smoothhound
-          { speciesId: 57, level: 6 }   // Butterfly Ray
+          { speciesId: 45, level: 6 },  // Smoothhound
+          { speciesId: 52, level: 6 }   // Butterfly Ray
         ],
         defeatedDialogue: [
           'Nice swimming!',
@@ -141,9 +141,9 @@ export const KELP_FOREST_ROUTE: MapData = {
       trainer: {
         name: 'Snorkeler Mia',
         team: [
-          { speciesId: 51, level: 7 },  // Horn Shark
-          { speciesId: 53, level: 7 },  // Swell Shark
-          { speciesId: 49, level: 8 }   // Leopard Shark
+          { speciesId: 47, level: 7 },  // Horn Shark
+          { speciesId: 48, level: 7 },  // Swell Shark
+          { speciesId: 46, level: 8 }   // Leopard Shark
         ],
         defeatedDialogue: [
           'You\'re a strong trainer!',
@@ -182,9 +182,9 @@ export const KELP_FOREST_ROUTE: MapData = {
       trainer: {
         name: 'Swimmer Carlos',
         team: [
-          { speciesId: 60, level: 8 },  // Bat Ray
-          { speciesId: 54, level: 8 },  // Guitarfish
-          { speciesId: 49, level: 9 }   // Leopard Shark
+          { speciesId: 55, level: 8 },  // Bat Ray
+          { speciesId: 49, level: 8 },  // Guitarfish
+          { speciesId: 46, level: 9 }   // Leopard Shark
         ],
         defeatedDialogue: [
           'You\'ll definitely beat Ray!',
@@ -209,16 +209,16 @@ export const KELP_FOREST_ROUTE: MapData = {
   ],
   // Kelp forest encounters - San Diego Leopard Sharks, Swell Sharks, etc.
   encounterTable: [
-    { speciesId: 49, minLevel: 5, maxLevel: 8, weight: 30 },   // Leopard Shark (kelp specialist)
-    { speciesId: 53, minLevel: 5, maxLevel: 8, weight: 20 },   // Swell Shark
-    { speciesId: 51, minLevel: 6, maxLevel: 8, weight: 15 },   // Horn Shark
-    { speciesId: 60, minLevel: 5, maxLevel: 7, weight: 15 },   // Bat Ray
-    { speciesId: 55, minLevel: 6, maxLevel: 8, weight: 10 },   // Giant Guitarfish
-    { speciesId: 67, minLevel: 8, maxLevel: 10, weight: 5 },  // Broadnose Sevengill (rare - spring only once seasonal system implemented)
+    { speciesId: 46, minLevel: 5, maxLevel: 8, weight: 30 },   // Leopard Shark (kelp specialist)
+    { speciesId: 48, minLevel: 5, maxLevel: 8, weight: 20 },   // Swell Shark
+    { speciesId: 47, minLevel: 6, maxLevel: 8, weight: 15 },   // Horn Shark
+    { speciesId: 55, minLevel: 5, maxLevel: 7, weight: 15 },   // Bat Ray
+    { speciesId: 50, minLevel: 6, maxLevel: 8, weight: 10 },   // Giant Guitarfish
+    { speciesId: 62, minLevel: 8, maxLevel: 10, weight: 5 },  // Broadnose Sevengill (rare - spring only once seasonal system implemented)
     { speciesId: 10, minLevel: 7, maxLevel: 9, weight: 5 },    // Bonnethead (uncommon)
     // SCUBA-only encounters in reef area (requires openwater cert)
-    { speciesId: 61, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' },  // Angelshark
-    { speciesId: 62, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' }   // Soupfin Shark
+    { speciesId: 56, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' },  // Angelshark
+    { speciesId: 57, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' }   // Soupfin Shark
   ],
   isOutdoor: true,
   palette: 'tropical'  // Green/teal kelp forest colors

@@ -201,13 +201,13 @@ export const EUROPEAN_COAST: MapData = {
   ],
   encounterTable: [
     // Small-spotted Catshark - most common
-    { speciesId: 96, minLevel: 20, maxLevel: 26, weight: 40 },  // Small-spotted Catshark
+    { speciesId: 91, minLevel: 20, maxLevel: 26, weight: 40 },  // Small-spotted Catshark
     // Shortnose Spurdog - uncommon starter
-    { speciesId: 94, minLevel: 18, maxLevel: 24, weight: 25 },  // Shortnose Spurdog
+    { speciesId: 89, minLevel: 18, maxLevel: 24, weight: 25 },  // Shortnose Spurdog
     // Blonde Skate - sandy areas
-    { speciesId: 98, minLevel: 22, maxLevel: 28, weight: 20 },  // Blonde Skate
+    { speciesId: 93, minLevel: 22, maxLevel: 28, weight: 20 },  // Blonde Skate
     // Spiny Dogfish - less common here
-    { speciesId: 88, minLevel: 22, maxLevel: 28, weight: 15 }   // Spiny Dogfish
+    { speciesId: 83, minLevel: 22, maxLevel: 28, weight: 15 }   // Spiny Dogfish
   ],
   isOutdoor: true,
   palette: 'arctic'  // Cold European waters

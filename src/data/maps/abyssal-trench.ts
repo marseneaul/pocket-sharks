@@ -171,14 +171,14 @@ export const ABYSSAL_TRENCH: MapData = {
   ],
   encounterTable: [
     // Deep sea sharks
-    { speciesId: 115, minLevel: 45, maxLevel: 55, weight: 20 },  // Goblin Shark
-    { speciesId: 120, minLevel: 48, maxLevel: 58, weight: 10 },  // Frilled Shark
-    { speciesId: 116, minLevel: 42, maxLevel: 52, weight: 20 },  // Cookiecutter Shark
-    { speciesId: 117, minLevel: 45, maxLevel: 55, weight: 15 },  // Elephant Fish
-    { speciesId: 118, minLevel: 45, maxLevel: 55, weight: 15 },  // Crocodile Shark
-    { speciesId: 90, minLevel: 50, maxLevel: 58, weight: 10 },   // Pacific Sleeper Shark
-    { speciesId: 114, minLevel: 55, maxLevel: 60, weight: 5 },   // Greenland Shark (very rare)
-    { speciesId: 119, minLevel: 50, maxLevel: 58, weight: 5 }    // Megamouth Shark (rare)
+    { speciesId: 110, minLevel: 45, maxLevel: 55, weight: 20 },  // Goblin Shark
+    { speciesId: 115, minLevel: 48, maxLevel: 58, weight: 10 },  // Frilled Shark
+    { speciesId: 111, minLevel: 42, maxLevel: 52, weight: 20 },  // Cookiecutter Shark
+    { speciesId: 112, minLevel: 45, maxLevel: 55, weight: 15 },  // Elephant Fish
+    { speciesId: 113, minLevel: 45, maxLevel: 55, weight: 15 },  // Crocodile Shark
+    { speciesId: 85, minLevel: 50, maxLevel: 58, weight: 10 },   // Pacific Sleeper Shark
+    { speciesId: 109, minLevel: 55, maxLevel: 60, weight: 5 },   // Greenland Shark (very rare)
+    { speciesId: 114, minLevel: 50, maxLevel: 58, weight: 5 }    // Megamouth Shark (rare)
   ],
   isOutdoor: true,
   palette: 'deep'  // Dark abyssal depths

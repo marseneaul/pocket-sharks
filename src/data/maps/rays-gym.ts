@@ -84,8 +84,8 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Aquarist Tom',
         team: [
-          { speciesId: 47, level: 9 },   // Round Stingray
-          { speciesId: 57, level: 10 }   // Butterfly Ray
+          { speciesId: 44, level: 9 },   // Round Stingray
+          { speciesId: 52, level: 10 }   // Butterfly Ray
         ],
         defeatedDialogue: [
           'Your sharks outswam my rays!',
@@ -109,9 +109,9 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Researcher Lisa',
         team: [
-          { speciesId: 47, level: 10 },  // Round Stingray
-          { speciesId: 54, level: 10 },  // Guitarfish
-          { speciesId: 58, level: 11 }   // Smooth Butterfly Ray
+          { speciesId: 44, level: 10 },  // Round Stingray
+          { speciesId: 49, level: 10 },  // Guitarfish
+          { speciesId: 53, level: 11 }   // Smooth Butterfly Ray
         ],
         defeatedDialogue: [
           'Remarkable battle tactics!',
@@ -135,8 +135,8 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Swimmer Derek',
         team: [
-          { speciesId: 55, level: 11 },  // Giant Guitarfish
-          { speciesId: 47, level: 11 }   // Round Stingray
+          { speciesId: 50, level: 11 },  // Giant Guitarfish
+          { speciesId: 44, level: 11 }   // Round Stingray
         ],
         defeatedDialogue: [
           'Okay, you might have a chance.',
@@ -163,10 +163,10 @@ export const RAYS_GYM: MapData = {
       trainer: {
         name: 'Leader Ray',
         team: [
-          { speciesId: 47, level: 12 },  // Round Stingray
-          { speciesId: 58, level: 12 },  // Smooth Butterfly Ray
-          { speciesId: 55, level: 13 },  // Giant Guitarfish
-          { speciesId: 60, level: 14 }   // Bat Ray (ace)
+          { speciesId: 44, level: 12 },  // Round Stingray
+          { speciesId: 53, level: 12 },  // Smooth Butterfly Ray
+          { speciesId: 50, level: 13 },  // Giant Guitarfish
+          { speciesId: 55, level: 14 }   // Bat Ray (ace)
         ],
         defeatedDialogue: [
           '...',

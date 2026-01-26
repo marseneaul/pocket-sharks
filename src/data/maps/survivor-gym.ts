@@ -76,10 +76,10 @@ export const SURVIVOR_GYM: MapData = {
       trainer: {
         name: 'Gym Leader Henrik',
         team: [
-          { speciesId: 94, level: 35 },  // Shortnose Spurdog
-          { speciesId: 88, level: 37 },  // Spiny Dogfish
-          { speciesId: 97, level: 38 },  // Nursehound
-          { speciesId: 95, level: 40 }   // Longnose Spurdog (ace)
+          { speciesId: 89, level: 35 },  // Shortnose Spurdog
+          { speciesId: 83, level: 37 },  // Spiny Dogfish
+          { speciesId: 92, level: 38 },  // Nursehound
+          { speciesId: 90, level: 40 }   // Longnose Spurdog (ace)
         ],
         defeatedDialogue: [
           'You have survived the poison...',
@@ -109,8 +109,8 @@ export const SURVIVOR_GYM: MapData = {
       trainer: {
         name: 'Fisherman Erik',
         team: [
-          { speciesId: 88, level: 33 },  // Spiny Dogfish
-          { speciesId: 88, level: 34 }   // Spiny Dogfish
+          { speciesId: 83, level: 33 },  // Spiny Dogfish
+          { speciesId: 83, level: 34 }   // Spiny Dogfish
         ],
         defeatedDialogue: [
           'The dogfish fell...',
@@ -134,8 +134,8 @@ export const SURVIVOR_GYM: MapData = {
       trainer: {
         name: 'Researcher Ingrid',
         team: [
-          { speciesId: 96, level: 34 },  // Small-spotted Catshark
-          { speciesId: 97, level: 35 }   // Nursehound
+          { speciesId: 91, level: 34 },  // Small-spotted Catshark
+          { speciesId: 92, level: 35 }   // Nursehound
         ],
         defeatedDialogue: [
           'My catshark family lost...',
@@ -159,8 +159,8 @@ export const SURVIVOR_GYM: MapData = {
       trainer: {
         name: 'Diver Magnus',
         team: [
-          { speciesId: 94, level: 34 },  // Shortnose Spurdog
-          { speciesId: 95, level: 36 }   // Longnose Spurdog
+          { speciesId: 89, level: 34 },  // Shortnose Spurdog
+          { speciesId: 90, level: 36 }   // Longnose Spurdog
         ],
         defeatedDialogue: [
           'Age and experience weren\'t enough...',

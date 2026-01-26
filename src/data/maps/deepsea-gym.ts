@@ -105,11 +105,11 @@ export const DEEPSEA_GYM: MapData = {
       trainer: {
         name: 'Dr. Vance',
         team: [
-          { speciesId: 116, level: 48 },  // Cookiecutter Shark
-          { speciesId: 90, level: 50 },   // Pacific Sleeper Shark
-          { speciesId: 115, level: 52 },  // Goblin Shark
-          { speciesId: 120, level: 54 },  // Frilled Shark
-          { speciesId: 114, level: 56 }   // Greenland Shark (ace)
+          { speciesId: 111, level: 48 },  // Cookiecutter Shark
+          { speciesId: 85, level: 50 },   // Pacific Sleeper Shark
+          { speciesId: 110, level: 52 },  // Goblin Shark
+          { speciesId: 115, level: 54 },  // Frilled Shark
+          { speciesId: 109, level: 56 }   // Greenland Shark (ace)
         ],
         defeatedDialogue: [
           'Extraordinary... You have conquered the deep.',
@@ -141,8 +141,8 @@ export const DEEPSEA_GYM: MapData = {
       trainer: {
         name: 'Researcher Nina',
         team: [
-          { speciesId: 115, level: 46 },  // Goblin Shark
-          { speciesId: 115, level: 47 }   // Goblin Shark
+          { speciesId: 110, level: 46 },  // Goblin Shark
+          { speciesId: 110, level: 47 }   // Goblin Shark
         ],
         defeatedDialogue: [
           'Even the goblin\'s surprise attack failed...',
@@ -166,8 +166,8 @@ export const DEEPSEA_GYM: MapData = {
       trainer: {
         name: 'Scientist Yuri',
         team: [
-          { speciesId: 89, level: 46 },   // Little Sleeper Shark
-          { speciesId: 90, level: 48 }    // Pacific Sleeper Shark
+          { speciesId: 84, level: 46 },   // Little Sleeper Shark
+          { speciesId: 85, level: 48 }    // Pacific Sleeper Shark
         ],
         defeatedDialogue: [
           'My sleepers have awakened... to defeat.',
@@ -191,7 +191,7 @@ export const DEEPSEA_GYM: MapData = {
       trainer: {
         name: 'Diver Helga',
         team: [
-          { speciesId: 120, level: 49 }   // Frilled Shark
+          { speciesId: 115, level: 49 }   // Frilled Shark
         ],
         defeatedDialogue: [
           '80 million years... defeated in minutes.',

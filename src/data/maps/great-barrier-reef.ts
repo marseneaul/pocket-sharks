@@ -163,10 +163,10 @@ export const GREAT_BARRIER_REEF: MapData = {
     { speciesId: 4, minLevel: 38, maxLevel: 45, weight: 15 },   // Whitetip Reef Shark
     { speciesId: 7, minLevel: 40, maxLevel: 48, weight: 10 },   // Grey Reef Shark
     // Carpet sharks (Ground types)
-    { speciesId: 78, minLevel: 38, maxLevel: 45, weight: 20 },  // Tawny Nurse Shark
+    { speciesId: 73, minLevel: 38, maxLevel: 45, weight: 20 },  // Tawny Nurse Shark
     // Rare
-    { speciesId: 45, minLevel: 45, maxLevel: 55, weight: 5 },   // Whale Shark
-    { speciesId: 82, minLevel: 42, maxLevel: 50, weight: 10 },  // Tiger Shark
+    { speciesId: 42, minLevel: 45, maxLevel: 55, weight: 5 },   // Whale Shark
+    { speciesId: 77, minLevel: 42, maxLevel: 50, weight: 10 },  // Tiger Shark
     { speciesId: 9, minLevel: 42, maxLevel: 50, weight: 10 },   // Silvertip Shark
     { speciesId: 27, minLevel: 40, maxLevel: 48, weight: 15 }   // Manta Ray
   ],

@@ -163,7 +163,7 @@ export const ROATAN_HARBOR: MapData = {
     // Reef sharks in shallows
     { speciesId: 1, minLevel: 40, maxLevel: 48, weight: 30 },
     { speciesId: 4, minLevel: 40, maxLevel: 48, weight: 30 },
-    { speciesId: 82, minLevel: 45, maxLevel: 52, weight: 20 },
+    { speciesId: 77, minLevel: 45, maxLevel: 52, weight: 20 },
     { speciesId: 5, minLevel: 45, maxLevel: 52, weight: 20 }
   ],
   isOutdoor: true

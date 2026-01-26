@@ -104,10 +104,10 @@ export const OUTBACK_GYM: MapData = {
       trainer: {
         name: 'Gym Leader Jack',
         team: [
-          { speciesId: 78, level: 40 },  // Tawny Nurse Shark
-          { speciesId: 78, level: 42 },  // Tawny Nurse Shark
+          { speciesId: 73, level: 40 },  // Tawny Nurse Shark
+          { speciesId: 73, level: 42 },  // Tawny Nurse Shark
           { speciesId: 7, level: 43 },   // Grey Reef Shark
-          { speciesId: 82, level: 45 }   // Tiger Shark (ace)
+          { speciesId: 77, level: 45 }   // Tiger Shark (ace)
         ],
         defeatedDialogue: [
           'Crikey! You saw right through my ambush!',
@@ -138,8 +138,8 @@ export const OUTBACK_GYM: MapData = {
       trainer: {
         name: 'Diver Sheila',
         team: [
-          { speciesId: 78, level: 38 },  // Tawny Nurse Shark
-          { speciesId: 78, level: 39 }   // Tawny Nurse Shark
+          { speciesId: 73, level: 38 },  // Tawny Nurse Shark
+          { speciesId: 73, level: 39 }   // Tawny Nurse Shark
         ],
         defeatedDialogue: [
           'You spotted them! Good eyes, mate!'
@@ -161,7 +161,7 @@ export const OUTBACK_GYM: MapData = {
       trainer: {
         name: 'Swimmer Bruce',
         team: [
-          { speciesId: 78, level: 39 },  // Tawny Nurse Shark
+          { speciesId: 73, level: 39 },  // Tawny Nurse Shark
           { speciesId: 7, level: 40 }    // Grey Reef Shark
         ],
         defeatedDialogue: [
@@ -185,7 +185,7 @@ export const OUTBACK_GYM: MapData = {
       trainer: {
         name: 'Fisherman Mick',
         team: [
-          { speciesId: 82, level: 41 }   // Tiger Shark
+          { speciesId: 77, level: 41 }   // Tiger Shark
         ],
         defeatedDialogue: [
           'Strewth! The tiger got tamed!'

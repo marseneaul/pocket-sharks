@@ -83,8 +83,8 @@ export const CABO_REEF: MapData = {
       trainer: {
         name: 'Diver Carlos',
         team: [
-          { speciesId: 74, level: 16 },  // Silky Shark
-          { speciesId: 71, level: 16 },  // Cownose Ray
+          { speciesId: 69, level: 16 },  // Silky Shark
+          { speciesId: 66, level: 16 },  // Cownose Ray
           { speciesId: 4, level: 17 }    // Whitetip Reef Shark
         ],
         defeatedDialogue: [
@@ -109,8 +109,8 @@ export const CABO_REEF: MapData = {
         name: 'Diver Maria',
         team: [
           { speciesId: 21, level: 17 },  // Bull Shark
-          { speciesId: 72, level: 16 },  // Pacific Electric Ray
-          { speciesId: 74, level: 17 }   // Silky Shark
+          { speciesId: 67, level: 16 },  // Pacific Electric Ray
+          { speciesId: 69, level: 17 }   // Silky Shark
         ],
         defeatedDialogue: [
           'Your skills are impressive!',
@@ -152,10 +152,10 @@ export const CABO_REEF: MapData = {
   ],
   // Cabo reef encounters - deeper water species
   encounterTable: [
-    { speciesId: 74, minLevel: 14, maxLevel: 17, weight: 25 },  // Silky Shark
+    { speciesId: 69, minLevel: 14, maxLevel: 17, weight: 25 },  // Silky Shark
     { speciesId: 4, minLevel: 14, maxLevel: 17, weight: 20 },   // Whitetip Reef Shark
     { speciesId: 1, minLevel: 14, maxLevel: 17, weight: 20 },   // Blacktip Reef Shark
-    { speciesId: 71, minLevel: 15, maxLevel: 18, weight: 15 },  // Cownose Ray
+    { speciesId: 66, minLevel: 15, maxLevel: 18, weight: 15 },  // Cownose Ray
     { speciesId: 21, minLevel: 16, maxLevel: 19, weight: 10, requiredCert: 'openwater' },  // Bull Shark
     { speciesId: 10, minLevel: 15, maxLevel: 18, weight: 10 }   // Bonnethead (pre-hammerhead)
   ],

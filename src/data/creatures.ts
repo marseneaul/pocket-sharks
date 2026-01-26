@@ -336,7 +336,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 9, moveId: 50 },  // Spark
       { level: 16, moveId: 2 }
     ],
-    evolvesTo: { speciesId: 32, level: 20 },
+    evolvesTo: { speciesId: 31, level: 20 },
     description: 'A tiny deep-sea shark with bioluminescent photophores. Glows to camouflage against dim light above.'
   },
   16: {
@@ -551,7 +551,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 22, moveId: 72 },
       { level: 30, moveId: 73 }
     ],
-    evolvesTo: { speciesId: 41, level: 35 },
+    evolvesTo: { speciesId: 40, level: 35 },
     description: 'Its blade-like snout is lined with teeth. Slashes sideways through schools of fish.'
   },
   26: {
@@ -573,7 +573,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 18, moveId: 90 },
       { level: 26, moveId: 52 }  // Thunderbolt
     ],
-    evolvesTo: { speciesId: 34, level: 30 },
+    evolvesTo: { speciesId: 33, level: 30 },
     description: 'Can generate powerful electric shocks to stun prey. Buries itself in sand to ambush victims.'
   },
   27: {
@@ -643,26 +643,6 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
   30: {
     id: 30,
-    name: 'Cladoselache',
-    types: ['fossil'],
-    baseStats: {
-      hp: 60,
-      attack: 70,
-      defense: 70,
-      spAttack: 50,
-      spDefense: 60,
-      speed: 45
-    },
-    learnableMoves: [
-      { level: 1, moveId: 1 },
-      { level: 1, moveId: 160 },
-      { level: 12, moveId: 2 },
-      { level: 20, moveId: 161 }
-    ],
-    description: 'One of the first true sharks from 370 million years ago. Adapting to the modern ocean.'
-  },
-  31: {
-    id: 31,
     name: 'Megalodon',
     types: ['fossil', 'leviathan'],
     baseStats: {
@@ -687,8 +667,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // === PHASE 4 NEW CREATURES ===
 
   // Electric Evolutions
-  32: {
-    id: 32,
+  31: {
+    id: 31,
     name: 'Velvet Lanternshark',
     types: ['electric'],
     baseStats: {
@@ -707,11 +687,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 24, moveId: 52 },  // Thunderbolt
       { level: 32, moveId: 31 }
     ],
-    evolvesTo: { speciesId: 33, level: 36 },
+    evolvesTo: { speciesId: 32, level: 36 },
     description: 'Its velvet-black skin is dotted with brilliant photophores. Hunts in the twilight zone.'
   },
-  33: {
-    id: 33,
+  32: {
+    id: 32,
     name: 'Giant Lanternshark',
     types: ['electric', 'leviathan'],
     baseStats: {
@@ -732,8 +712,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'A massive deep-sea predator that lights up the abyss. Its glow can be seen from miles away.'
   },
-  34: {
-    id: 34,
+  33: {
+    id: 33,
     name: 'Marbled Electric Ray',
     types: ['electric', 'ray'],
     baseStats: {
@@ -757,8 +737,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Route 3-4 Commons
-  35: {
-    id: 35,
+  34: {
+    id: 34,
     name: 'Tasselled Wobbegong',
     types: ['algae', 'freshwater'],
     baseStats: {
@@ -779,8 +759,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'Elaborate tassels make it invisible among seaweed. Ambushes prey that swim too close.'
   },
-  36: {
-    id: 36,
+  35: {
+    id: 35,
     name: 'Bluntnose Sixgill',
     types: ['deepsea'],
     baseStats: {
@@ -801,8 +781,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'An ancient shark with six gill slits instead of five. Drifts up from the deep at night.'
   },
-  37: {
-    id: 37,
+  36: {
+    id: 36,
     name: 'Sandbar Shark',
     types: ['fighting', 'freshwater'],
     baseStats: {
@@ -823,8 +803,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'A powerful coastal shark with a tall dorsal fin. Patrols sandbars hunting for prey.'
   },
-  38: {
-    id: 38,
+  37: {
+    id: 37,
     name: 'Pyjama Shark',
     types: ['fairy', 'algae'],
     baseStats: {
@@ -847,8 +827,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Finner HQ Specials
-  39: {
-    id: 39,
+  38: {
+    id: 38,
     name: 'Kitefin Shark',
     types: ['steel', 'ghost'],
     baseStats: {
@@ -869,8 +849,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'A bioluminescent deep-sea predator. Its entire body glows an eerie blue-green.'
   },
-  40: {
-    id: 40,
+  39: {
+    id: 39,
     name: 'Gulper Shark',
     types: ['deepsea', 'ghost'],
     baseStats: {
@@ -892,8 +872,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'Its massive jaws can swallow prey larger than itself. Haunts the deepest trenches.'
   },
-  41: {
-    id: 41,
+  40: {
+    id: 40,
     name: 'Largetooth Sawfish',
     types: ['steel', 'fighting'],
     baseStats: {
@@ -917,55 +897,10 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Additional Fossils
-  42: {
-    id: 42,
-    name: 'Ptychodus',
-    types: ['fossil', 'ray'],
-    baseStats: {
-      hp: 80,
-      attack: 65,
-      defense: 95,
-      spAttack: 70,
-      spDefense: 90,
-      speed: 40
-    },
-    learnableMoves: [
-      { level: 1, moveId: 1 },
-      { level: 1, moveId: 160 },
-      { level: 12, moveId: 90 },
-      { level: 20, moveId: 161 },
-      { level: 28, moveId: 71 },
-      { level: 36, moveId: 31 }
-    ],
-    description: 'A prehistoric shell-crusher with flat teeth. Revived from Cretaceous ocean fossils.'
-  },
-  43: {
-    id: 43,
-    name: 'Edestus',
-    types: ['fossil', 'steel'],
-    baseStats: {
-      hp: 75,
-      attack: 100,
-      defense: 85,
-      spAttack: 60,
-      spDefense: 70,
-      speed: 55
-    },
-    learnableMoves: [
-      { level: 1, moveId: 1 },
-      { level: 1, moveId: 160 },
-      { level: 1, moveId: 70 },
-      { level: 15, moveId: 2 },
-      { level: 25, moveId: 161 },
-      { level: 35, moveId: 73 },
-      { level: 45, moveId: 31 }
-    ],
-    description: 'The scissor-toothed shark from 300 million years ago. Its teeth form a deadly vertical blade.'
-  },
 
   // Legendary Teasers
-  44: {
-    id: 44,
+  41: {
+    id: 41,
     name: 'Frilled Shark',
     types: ['deepsea', 'leviathan'],
     baseStats: {
@@ -987,8 +922,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'A living fossil from the deep trenches. Its eel-like body and primitive features are unchanged for millennia.'
   },
-  45: {
-    id: 45,
+  42: {
+    id: 42,
     name: 'Whale Shark',
     types: ['fairy', 'algae'],
     baseStats: {
@@ -1010,8 +945,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
     ],
     description: 'The gentle giant of the ocean. Despite its massive size, it feeds only on tiny plankton.'
   },
-  46: {
-    id: 46,
+  43: {
+    id: 43,
     name: 'Great White Shark',
     types: ['leviathan'],
     baseStats: {
@@ -1037,8 +972,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // === SAN DIEGO REGION CREATURES (Region 1) ===
 
   // Round Stingray - Common tide pool encounter
-  47: {
-    id: 47,
+  44: {
+    id: 44,
     name: 'Round Stingray',
     types: ['ray', 'poison'],
     baseStats: {
@@ -1060,8 +995,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Smoothhound → Leopard Shark evolution line
-  48: {
-    id: 48,
+  45: {
+    id: 45,
     name: 'Smoothhound',
     types: ['shark'],
     baseStats: {
@@ -1079,11 +1014,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 14, moveId: 11 }, // Aqua Jet
       { level: 20, moveId: 80 }  // Sand Attack
     ],
-    evolvesTo: { speciesId: 49, level: 22 },
+    evolvesTo: { speciesId: 46, level: 22 },
     description: 'A slender shark that hunts crabs and small fish in sandy shallows. Named for its flat teeth used to crush shells.'
   },
-  49: {
-    id: 49,
+  46: {
+    id: 46,
     name: 'Leopard Shark',
     types: ['shark', 'algae'],
     baseStats: {
@@ -1107,8 +1042,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Horn Shark (hatches from Horn Shark Egg item)
-  51: {
-    id: 51,
+  47: {
+    id: 47,
     name: 'Horn Shark',
     types: ['algae'],
     baseStats: {
@@ -1131,8 +1066,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Swell Shark (hatches from Swell Shark Egg item)
-  53: {
-    id: 53,
+  48: {
+    id: 48,
     name: 'Swell Shark',
     types: ['algae', 'fairy'],
     baseStats: {
@@ -1155,8 +1090,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Guitarfish → Giant Guitarfish → Bowmouth Guitarfish
-  54: {
-    id: 54,
+  49: {
+    id: 49,
     name: 'Guitarfish',
     types: ['ray', 'ground'],
     baseStats: {
@@ -1174,11 +1109,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 15, moveId: 81 }, // Mud Shot
       { level: 22, moveId: 2 }   // Bite
     ],
-    evolvesTo: { speciesId: 55, level: 25 },
+    evolvesTo: { speciesId: 50, level: 25 },
     description: 'A ray-shark hybrid shaped like a guitar. Buries itself in sand with only its eyes exposed, waiting for prey.'
   },
-  55: {
-    id: 55,
+  50: {
+    id: 50,
     name: 'Giant Guitarfish',
     types: ['ray', 'ground'],
     baseStats: {
@@ -1197,11 +1132,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 28, moveId: 71 },  // Iron Head
       { level: 35, moveId: 31 }   // Crunch
     ],
-    evolvesTo: { speciesId: 56, level: 40 },
+    evolvesTo: { speciesId: 51, level: 40 },
     description: 'A larger guitarfish that patrols sandy bottoms. Its powerful tail helps it excavate buried mollusks.'
   },
-  56: {
-    id: 56,
+  51: {
+    id: 51,
     name: 'Bowmouth Guitarfish',
     types: ['ray', 'steel'],
     baseStats: {
@@ -1225,8 +1160,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Butterfly Ray → Smooth Butterfly Ray → Spiny Butterfly Ray
-  57: {
-    id: 57,
+  52: {
+    id: 52,
     name: 'Butterfly Ray',
     types: ['ray'],
     baseStats: {
@@ -1243,11 +1178,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 7, moveId: 3 },   // Tail Whip
       { level: 12, moveId: 120 } // Fairy Wind
     ],
-    evolvesTo: { speciesId: 58, level: 18 },
+    evolvesTo: { speciesId: 53, level: 18 },
     description: 'A small ray that flutters gracefully through the water. Its wing-like pectoral fins give it its name.'
   },
-  58: {
-    id: 58,
+  53: {
+    id: 53,
     name: 'Smooth Butterfly Ray',
     types: ['ray'],
     baseStats: {
@@ -1266,11 +1201,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 22, moveId: 91 },  // Aerial Ace
       { level: 28, moveId: 10 }   // Water Gun
     ],
-    evolvesTo: { speciesId: 59, level: 32 },
+    evolvesTo: { speciesId: 54, level: 32 },
     description: 'Its smooth skin helps it glide effortlessly. Can briefly leap from the water when startled.'
   },
-  59: {
-    id: 59,
+  54: {
+    id: 54,
     name: 'Spiny Butterfly Ray',
     types: ['ray', 'poison'],
     baseStats: {
@@ -1294,8 +1229,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Bat Ray - Single stage
-  60: {
-    id: 60,
+  55: {
+    id: 55,
     name: 'Bat Ray',
     types: ['ray', 'ground'],
     baseStats: {
@@ -1320,8 +1255,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
 
   // SCUBA Encounters
   // Angelshark - ambush predator
-  61: {
-    id: 61,
+  56: {
+    id: 56,
     name: 'Angelshark',
     types: ['ground'],
     baseStats: {
@@ -1344,8 +1279,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Soupfin Shark
-  62: {
-    id: 62,
+  57: {
+    id: 57,
     name: 'Soupfin Shark',
     types: ['shark'],
     baseStats: {
@@ -1369,8 +1304,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
 
   // Fishing Encounters
   // Blue Shark
-  63: {
-    id: 63,
+  58: {
+    id: 58,
     name: 'Blue Shark',
     types: ['shark', 'fairy'],
     baseStats: {
@@ -1394,8 +1329,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Shortfin Mako → Longfin Mako
-  64: {
-    id: 64,
+  59: {
+    id: 59,
     name: 'Shortfin Mako',
     types: ['fire', 'breaching'],
     baseStats: {
@@ -1415,11 +1350,11 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 30, moveId: 91 }, // Aerial Ace
       { level: 36, moveId: 62 }  // Flame Burst
     ],
-    evolvesTo: { speciesId: 65, level: 40 },
+    evolvesTo: { speciesId: 60, level: 40 },
     description: 'The fastest shark alive, reaching 45 mph. Its warm blood lets it hunt in cold waters where prey least expects it.'
   },
-  65: {
-    id: 65,
+  60: {
+    id: 60,
     name: 'Longfin Mako',
     types: ['fire', 'breaching'],
     baseStats: {
@@ -1443,8 +1378,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Sharpnose Shark
-  66: {
-    id: 66,
+  61: {
+    id: 61,
     name: 'Sharpnose Shark',
     types: ['shark'],
     baseStats: {
@@ -1468,8 +1403,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
 
   // Rare Encounters
   // Broadnose Sevengill - Spring seasonal
-  67: {
-    id: 67,
+  62: {
+    id: 62,
     name: 'Broadnose Sevengill',
     types: ['algae', 'fossil'],
     baseStats: {
@@ -1493,8 +1428,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Scalloped Bonnethead - very rare (already exists as Bonnethead ID 10, but this is specific variant)
-  68: {
-    id: 68,
+  63: {
+    id: 63,
     name: 'Scalloped Bonnethead',
     types: ['psychic', 'algae'],
     baseStats: {
@@ -1517,8 +1452,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Prickly Shark - very rare deep water
-  69: {
-    id: 69,
+  64: {
+    id: 64,
     name: 'Prickly Shark',
     types: ['deepsea', 'steel'],
     baseStats: {
@@ -1544,8 +1479,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // === CABO / BAJA REGION CREATURES (Region 3) ===
 
   // Mexican Horn Shark - Regional variant
-  70: {
-    id: 70,
+  65: {
+    id: 65,
     name: 'Mexican Horn Shark',
     types: ['algae', 'ground'],
     baseStats: {
@@ -1569,8 +1504,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Cownose Ray
-  71: {
-    id: 71,
+  66: {
+    id: 66,
     name: 'Cownose Ray',
     types: ['ray', 'psychic'],
     baseStats: {
@@ -1594,8 +1529,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Electric Ray (different from Torpedo Ray ID 26)
-  72: {
-    id: 72,
+  67: {
+    id: 67,
     name: 'Pacific Electric Ray',
     types: ['ray', 'electric'],
     baseStats: {
@@ -1618,8 +1553,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Smooth Hammerhead
-  73: {
-    id: 73,
+  68: {
+    id: 68,
     name: 'Smooth Hammerhead',
     types: ['psychic'],
     baseStats: {
@@ -1643,8 +1578,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Silky Shark
-  74: {
-    id: 74,
+  69: {
+    id: 69,
     name: 'Silky Shark',
     types: ['shark', 'fairy'],
     baseStats: {
@@ -1668,8 +1603,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Pelagic Thresher
-  75: {
-    id: 75,
+  70: {
+    id: 70,
     name: 'Pelagic Thresher',
     types: ['breaching', 'fighting'],
     baseStats: {
@@ -1689,13 +1624,13 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 36, moveId: 2 },  // Bite
       { level: 44, moveId: 22 }  // Brick Break
     ],
-    evolvesTo: { speciesId: 76, level: 38 },
+    evolvesTo: { speciesId: 71, level: 38 },
     description: 'Uses its scythe-like tail to stun fish. Can leap completely out of the water when hunting.'
   },
 
   // Bigeye Thresher (evolution)
-  76: {
-    id: 76,
+  71: {
+    id: 71,
     name: 'Bigeye Thresher',
     types: ['breaching', 'fighting'],
     baseStats: {
@@ -1719,8 +1654,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Great Hammerhead (for Dr. Martillo's ace)
-  77: {
-    id: 77,
+  72: {
+    id: 72,
     name: 'Great Hammerhead',
     types: ['psychic', 'electric'],
     baseStats: {
@@ -1745,8 +1680,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Nurse Shark (Cabo variant - common)
-  78: {
-    id: 78,
+  73: {
+    id: 73,
     name: 'Tawny Nurse Shark',
     types: ['ground'],
     baseStats: {
@@ -1771,8 +1706,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // === CARIBBEAN / FLORIDA REGION CREATURES (Region 4) ===
 
   // Blacknose Shark - Common shallow water shark
-  79: {
-    id: 79,
+  74: {
+    id: 74,
     name: 'Blacknose Shark',
     types: ['shark'],
     baseStats: {
@@ -1796,8 +1731,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Yellow Stingray - Common tide pool encounter
-  80: {
-    id: 80,
+  75: {
+    id: 75,
     name: 'Yellow Stingray',
     types: ['ray', 'poison'],
     baseStats: {
@@ -1821,8 +1756,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Caribbean Reef Shark - Classic reef shark
-  81: {
-    id: 81,
+  76: {
+    id: 76,
     name: 'Caribbean Reef Shark',
     types: ['shark'],
     baseStats: {
@@ -1847,8 +1782,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Tiger Shark - Rare apex predator
-  82: {
-    id: 82,
+  77: {
+    id: 77,
     name: 'Tiger Shark',
     types: ['leviathan'],
     baseStats: {
@@ -1873,8 +1808,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Scoophead - Rare hammerhead variant
-  83: {
-    id: 83,
+  78: {
+    id: 78,
     name: 'Scoophead',
     types: ['psychic', 'algae'],
     baseStats: {
@@ -1899,8 +1834,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Chain Catshark - Rare deep water species
-  84: {
-    id: 84,
+  79: {
+    id: 79,
     name: 'Chain Catshark',
     types: ['steel'],
     baseStats: {
@@ -1925,8 +1860,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Golden Hammerhead - Very rare, shiny-like variant
-  85: {
-    id: 85,
+  80: {
+    id: 80,
     name: 'Golden Hammerhead',
     types: ['psychic'],
     baseStats: {
@@ -1956,8 +1891,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // ============================================
 
   // Porbeagle - Cold water lamnid shark, base of salmon shark line
-  86: {
-    id: 86,
+  81: {
+    id: 81,
     name: 'Porbeagle',
     types: ['fire', 'ice'],
     baseStats: {
@@ -1968,7 +1903,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 55,
       speed: 80
     },
-    evolvesTo: { speciesId: 87, level: 32 },
+    evolvesTo: { speciesId: 82, level: 32 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 60 },  // Ice Shard
@@ -1982,8 +1917,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Salmon Shark - Apex predator of Pacific Northwest, warm-blooded
-  87: {
-    id: 87,
+  82: {
+    id: 82,
     name: 'Salmon Shark',
     types: ['fire', 'ice'],
     baseStats: {
@@ -2009,8 +1944,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Spiny Dogfish - Common Pacific Northwest shark (Zubat equivalent)
-  88: {
-    id: 88,
+  83: {
+    id: 83,
     name: 'Spiny Dogfish',
     types: ['poison'],
     baseStats: {
@@ -2021,7 +1956,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 50,
       speed: 55
     },
-    evolvesTo: { speciesId: 95, level: 36 },
+    evolvesTo: { speciesId: 90, level: 36 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 80 },  // Poison Sting
@@ -2036,8 +1971,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Little Sleeper Shark - Deep cold water shark
-  89: {
-    id: 89,
+  84: {
+    id: 84,
     name: 'Little Sleeper Shark',
     types: ['ice', 'deepsea'],
     baseStats: {
@@ -2048,7 +1983,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 65,
       speed: 30
     },
-    evolvesTo: { speciesId: 90, level: 40 },
+    evolvesTo: { speciesId: 85, level: 40 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 60 },  // Ice Shard
@@ -2062,8 +1997,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Pacific Sleeper Shark - Massive deep cold water apex predator
-  90: {
-    id: 90,
+  85: {
+    id: 85,
     name: 'Pacific Sleeper Shark',
     types: ['ice', 'deepsea'],
     baseStats: {
@@ -2089,8 +2024,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Big Skate - Large Pacific skate
-  91: {
-    id: 91,
+  86: {
+    id: 86,
     name: 'Big Skate',
     types: ['ray'],
     baseStats: {
@@ -2115,8 +2050,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Winter Skate - Cold water skate with beautiful markings
-  92: {
-    id: 92,
+  87: {
+    id: 87,
     name: 'Winter Skate',
     types: ['ray', 'ice'],
     baseStats: {
@@ -2141,8 +2076,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Iceland Catshark - Cold water catshark variant
-  93: {
-    id: 93,
+  88: {
+    id: 88,
     name: 'Iceland Catshark',
     types: ['ice'],
     baseStats: {
@@ -2171,8 +2106,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // ============================================
 
   // Shortnose Spurdog - Base form of dogfish line
-  94: {
-    id: 94,
+  89: {
+    id: 89,
     name: 'Shortnose Spurdog',
     types: ['poison'],
     baseStats: {
@@ -2183,7 +2118,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 40,
       speed: 45
     },
-    evolvesTo: { speciesId: 88, level: 20 },
+    evolvesTo: { speciesId: 83, level: 20 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 80 },  // Poison Sting
@@ -2196,8 +2131,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Longnose Spurdog - Final evolution of dogfish line
-  95: {
-    id: 95,
+  90: {
+    id: 90,
     name: 'Longnose Spurdog',
     types: ['poison'],
     baseStats: {
@@ -2223,8 +2158,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Small-spotted Catshark - Common European catshark, base form
-  96: {
-    id: 96,
+  91: {
+    id: 91,
     name: 'Small-spotted Catshark',
     types: ['shark'],
     baseStats: {
@@ -2235,7 +2170,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 45,
       speed: 40
     },
-    evolvesTo: { speciesId: 97, level: 28 },
+    evolvesTo: { speciesId: 92, level: 28 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 3 },   // Tail Whip
@@ -2248,8 +2183,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Nursehound - Evolved catshark, fighting type
-  97: {
-    id: 97,
+  92: {
+    id: 92,
     name: 'Nursehound',
     types: ['shark', 'fighting'],
     baseStats: {
@@ -2275,8 +2210,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Blonde Skate - European skate, evolves to Thornback
-  98: {
-    id: 98,
+  93: {
+    id: 93,
     name: 'Blonde Skate',
     types: ['ray', 'ground'],
     baseStats: {
@@ -2287,7 +2222,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 60,
       speed: 40
     },
-    evolvesTo: { speciesId: 99, level: 32 },
+    evolvesTo: { speciesId: 94, level: 32 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 3 },   // Tail Whip
@@ -2301,8 +2236,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Thornback Skate - Evolved European skate with defensive spines
-  99: {
-    id: 99,
+  94: {
+    id: 94,
     name: 'Thornback Skate',
     types: ['ray', 'ground'],
     baseStats: {
@@ -2328,8 +2263,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Roughshark - Deep-sea European shark
-  100: {
-    id: 100,
+  95: {
+    id: 95,
     name: 'Roughshark',
     types: ['deepsea'],
     baseStats: {
@@ -2354,8 +2289,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Velvet Belly Lanternshark - Bioluminescent European shark
-  101: {
-    id: 101,
+  96: {
+    id: 96,
     name: 'Velvet Belly Lanternshark',
     types: ['electric', 'deepsea'],
     baseStats: {
@@ -2381,8 +2316,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Basking Shark - Massive filter-feeding leviathan
-  102: {
-    id: 102,
+  97: {
+    id: 97,
     name: 'Basking Shark',
     types: ['leviathan'],
     baseStats: {
@@ -2412,8 +2347,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // ============================================
 
   // Pyjama Catshark - Distinctive striped catshark endemic to South Africa
-  103: {
-    id: 103,
+  98: {
+    id: 98,
     name: 'Pyjama Catshark',
     types: ['fairy'],
     baseStats: {
@@ -2438,8 +2373,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Puffader Shyshark - Shy catshark that curls up when threatened
-  104: {
-    id: 104,
+  99: {
+    id: 99,
     name: 'Puffader Shyshark',
     types: ['fairy'],
     baseStats: {
@@ -2464,8 +2399,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Dark Shyshark - Another shy endemic catshark
-  105: {
-    id: 105,
+  100: {
+    id: 100,
     name: 'Dark Shyshark',
     types: ['fairy', 'deepsea'],
     baseStats: {
@@ -2490,8 +2425,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Leopard Catshark - Spotted catshark
-  106: {
-    id: 106,
+  101: {
+    id: 101,
     name: 'Leopard Catshark',
     types: ['fairy', 'algae'],
     baseStats: {
@@ -2516,8 +2451,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Tiger Catshark - Striped catshark variant
-  107: {
-    id: 107,
+  102: {
+    id: 102,
     name: 'Tiger Catshark',
     types: ['fairy'],
     baseStats: {
@@ -2542,8 +2477,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Spotted Gully Shark - Kelp forest hunter
-  108: {
-    id: 108,
+  103: {
+    id: 103,
     name: 'Spotted Gully Shark',
     types: ['algae'],
     baseStats: {
@@ -2568,8 +2503,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Broadnose Sevengill - Ancient shark with seven gills
-  109: {
-    id: 109,
+  104: {
+    id: 104,
     name: 'Broadnose Sevengill',
     types: ['algae', 'fossil'],
     baseStats: {
@@ -2594,8 +2529,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Copper Shark - Bronze whaler, powerful coastal predator
-  110: {
-    id: 110,
+  105: {
+    id: 105,
     name: 'Copper Shark',
     types: ['steel'],
     baseStats: {
@@ -2620,8 +2555,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Dusky Shark - Large coastal requiem shark
-  111: {
-    id: 111,
+  106: {
+    id: 106,
     name: 'Dusky Shark',
     types: ['shark'],
     baseStats: {
@@ -2646,8 +2581,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Sand Tiger Shark - Fearsome-looking but docile shark
-  112: {
-    id: 112,
+  107: {
+    id: 107,
     name: 'Sand Tiger Shark',
     types: ['shark'],
     baseStats: {
@@ -2677,8 +2612,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   // ============================================
 
   // Great White Shark - The ultimate apex predator
-  113: {
-    id: 113,
+  108: {
+    id: 108,
     name: 'Great White Shark',
     types: ['fire', 'breaching'],
     baseStats: {
@@ -2704,8 +2639,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Greenland Shark - Ancient arctic giant, Mew equivalent
-  114: {
-    id: 114,
+  109: {
+    id: 109,
     name: 'Greenland Shark',
     types: ['ice'],
     baseStats: {
@@ -2730,8 +2665,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Goblin Shark - Bizarre deep-sea species
-  115: {
-    id: 115,
+  110: {
+    id: 110,
     name: 'Goblin Shark',
     types: ['deepsea'],
     baseStats: {
@@ -2756,8 +2691,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Cookiecutter Shark - Small but dangerous
-  116: {
-    id: 116,
+  111: {
+    id: 111,
     name: 'Cookiecutter Shark',
     types: ['deepsea', 'fairy'],
     baseStats: {
@@ -2782,8 +2717,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Elephant Fish - Chimaera with elephant-like snout
-  117: {
-    id: 117,
+  112: {
+    id: 112,
     name: 'Elephant Fish',
     types: ['ghost', 'psychic'],
     baseStats: {
@@ -2808,8 +2743,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Crocodile Shark - Small but fierce open ocean shark
-  118: {
-    id: 118,
+  113: {
+    id: 113,
     name: 'Crocodile Shark',
     types: ['deepsea'],
     baseStats: {
@@ -2834,8 +2769,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Megamouth Shark - Rare filter-feeding giant
-  119: {
-    id: 119,
+  114: {
+    id: 114,
     name: 'Megamouth Shark',
     types: ['leviathan'],
     baseStats: {
@@ -2860,8 +2795,8 @@ export const CREATURES: Record<number, CreatureSpecies> = {
   },
 
   // Frilled Shark - Living fossil from the deep
-  120: {
-    id: 120,
+  115: {
+    id: 115,
     name: 'Frilled Shark',
     types: ['fossil'],
     baseStats: {

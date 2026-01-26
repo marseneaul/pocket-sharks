@@ -200,12 +200,12 @@ export const PUGET_SOUND: MapData = {
   ],
   encounterTable: [
     // Common: Spiny Dogfish (the "Zubat" of the region)
-    { speciesId: 88, minLevel: 15, maxLevel: 22, weight: 50 },  // Spiny Dogfish
-    { speciesId: 88, minLevel: 18, maxLevel: 25, weight: 20 },  // Higher level Dogfish
+    { speciesId: 83, minLevel: 15, maxLevel: 22, weight: 50 },  // Spiny Dogfish
+    { speciesId: 83, minLevel: 18, maxLevel: 25, weight: 20 },  // Higher level Dogfish
     // Big Skate - uncommon
-    { speciesId: 91, minLevel: 18, maxLevel: 24, weight: 20 },  // Big Skate
+    { speciesId: 86, minLevel: 18, maxLevel: 24, weight: 20 },  // Big Skate
     // Rare: Winter Skate
-    { speciesId: 92, minLevel: 20, maxLevel: 26, weight: 10 }   // Winter Skate
+    { speciesId: 87, minLevel: 20, maxLevel: 26, weight: 10 }   // Winter Skate
   ],
   isOutdoor: true,
   palette: 'arctic'  // Cold Pacific Northwest waters

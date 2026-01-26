@@ -191,9 +191,9 @@ export const LA_JOLLA_SHORES: MapData = {
   ],
   // Tide pool encounters on the beach - San Diego species
   encounterTable: [
-    { speciesId: 47, minLevel: 2, maxLevel: 4, weight: 45 },  // Round Stingray (common)
-    { speciesId: 57, minLevel: 2, maxLevel: 4, weight: 30 },  // Butterfly Ray
-    { speciesId: 48, minLevel: 3, maxLevel: 5, weight: 25 }   // Smoothhound
+    { speciesId: 44, minLevel: 2, maxLevel: 4, weight: 45 },  // Round Stingray (common)
+    { speciesId: 52, minLevel: 2, maxLevel: 4, weight: 30 },  // Butterfly Ray
+    { speciesId: 45, minLevel: 3, maxLevel: 5, weight: 25 }   // Smoothhound
   ],
   // Collectible eggs found on the ground
   groundEggs: [

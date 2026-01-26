@@ -170,15 +170,15 @@ export const PACIFIC_KELP_FOREST: MapData = {
   ],
   encounterTable: [
     // Porbeagle - Lamnid shark, evolves to Salmon Shark
-    { speciesId: 86, minLevel: 22, maxLevel: 28, weight: 25 },  // Porbeagle
+    { speciesId: 81, minLevel: 22, maxLevel: 28, weight: 25 },  // Porbeagle
     // Salmon Shark - apex predator
-    { speciesId: 87, minLevel: 28, maxLevel: 35, weight: 15 },  // Salmon Shark
+    { speciesId: 82, minLevel: 28, maxLevel: 35, weight: 15 },  // Salmon Shark
     // Winter Skate - cold water specialist
-    { speciesId: 92, minLevel: 22, maxLevel: 28, weight: 20 },  // Winter Skate
+    { speciesId: 87, minLevel: 22, maxLevel: 28, weight: 20 },  // Winter Skate
     // Spiny Dogfish - still common
-    { speciesId: 88, minLevel: 20, maxLevel: 26, weight: 30 },  // Spiny Dogfish
+    { speciesId: 83, minLevel: 20, maxLevel: 26, weight: 30 },  // Spiny Dogfish
     // Iceland Catshark - rare
-    { speciesId: 93, minLevel: 24, maxLevel: 30, weight: 10 }   // Iceland Catshark
+    { speciesId: 88, minLevel: 24, maxLevel: 30, weight: 10 }   // Iceland Catshark
   ],
   isOutdoor: true
 };

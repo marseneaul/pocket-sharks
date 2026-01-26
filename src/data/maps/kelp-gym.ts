@@ -74,7 +74,7 @@ export const KELP_GYM: MapData = {
         team: [
           { speciesId: 15, level: 18 },  // Lanternshark
           { speciesId: 26, level: 19 },  // Torpedo Ray
-          { speciesId: 32, level: 21 }   // Velvet Lanternshark (ace)
+          { speciesId: 31, level: 21 }   // Velvet Lanternshark (ace)
         ],
         defeatedDialogue: [
           'Blimey! You\'ve got',

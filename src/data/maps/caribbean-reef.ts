@@ -147,7 +147,7 @@ export const CARIBBEAN_REEF: MapData = {
         name: 'Finn Diver',
         team: [
           { speciesId: 6, level: 22 },   // Bull Shark
-          { speciesId: 64, level: 22 },  // Shortfin Mako
+          { speciesId: 59, level: 22 },  // Shortfin Mako
           { speciesId: 2, level: 23 }    // Blacktip Shark
         ],
         defeatedDialogue: [
@@ -186,19 +186,19 @@ export const CARIBBEAN_REEF: MapData = {
   ],
   // Caribbean Reef encounters (SCUBA required)
   encounterTable: [
-    { speciesId: 81, minLevel: 19, maxLevel: 23, weight: 18 },  // Caribbean Reef Shark (new!)
+    { speciesId: 76, minLevel: 19, maxLevel: 23, weight: 18 },  // Caribbean Reef Shark (new!)
     { speciesId: 1, minLevel: 19, maxLevel: 23, weight: 14 },   // Blacktip Reef Shark
     { speciesId: 4, minLevel: 19, maxLevel: 23, weight: 12 },   // Whitetip Reef Shark
     { speciesId: 13, minLevel: 20, maxLevel: 24, weight: 12 },  // Nurse Shark
     { speciesId: 12, minLevel: 20, maxLevel: 24, weight: 10 },  // Lemon Shark
     { speciesId: 6, minLevel: 21, maxLevel: 25, weight: 8 },    // Bull Shark
     { speciesId: 19, minLevel: 20, maxLevel: 24, weight: 8 },   // Spinner Shark
-    { speciesId: 82, minLevel: 23, maxLevel: 27, weight: 4 },   // Tiger Shark (new! rare)
-    { speciesId: 77, minLevel: 24, maxLevel: 28, weight: 3 },   // Great Hammerhead (very rare)
-    { speciesId: 84, minLevel: 22, maxLevel: 26, weight: 3 },   // Chain Catshark (new! rare)
-    { speciesId: 83, minLevel: 22, maxLevel: 26, weight: 3 },   // Scoophead (new! rare)
+    { speciesId: 77, minLevel: 23, maxLevel: 27, weight: 4 },   // Tiger Shark (new! rare)
+    { speciesId: 72, minLevel: 24, maxLevel: 28, weight: 3 },   // Great Hammerhead (very rare)
+    { speciesId: 79, minLevel: 22, maxLevel: 26, weight: 3 },   // Chain Catshark (new! rare)
+    { speciesId: 78, minLevel: 22, maxLevel: 26, weight: 3 },   // Scoophead (new! rare)
     { speciesId: 5, minLevel: 22, maxLevel: 26, weight: 3 },    // Oceanic Whitetip (rare)
-    { speciesId: 85, minLevel: 25, maxLevel: 29, weight: 1 },   // Golden Hammerhead (new! very rare)
+    { speciesId: 80, minLevel: 25, maxLevel: 29, weight: 1 },   // Golden Hammerhead (new! very rare)
     { speciesId: 18, minLevel: 22, maxLevel: 26, weight: 1 }    // Coral Catshark (rare)
   ],
   isOutdoor: true,

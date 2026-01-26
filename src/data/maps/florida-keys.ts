@@ -143,7 +143,7 @@ export const FLORIDA_KEYS: MapData = {
         team: [
           { speciesId: 10, level: 18 },  // Bonnethead
           { speciesId: 27, level: 18 },  // Southern Stingray
-          { speciesId: 65, level: 19 }   // Sharpnose Shark
+          { speciesId: 60, level: 19 }   // Sharpnose Shark
         ],
         defeatedDialogue: [
           'Nice battle!',
@@ -222,10 +222,10 @@ export const FLORIDA_KEYS: MapData = {
   encounterTable: [
     { speciesId: 10, minLevel: 16, maxLevel: 19, weight: 20 },  // Bonnethead
     { speciesId: 13, minLevel: 17, maxLevel: 20, weight: 18 },  // Nurse Shark
-    { speciesId: 79, minLevel: 16, maxLevel: 19, weight: 18 },  // Blacknose Shark (new!)
-    { speciesId: 66, minLevel: 16, maxLevel: 19, weight: 15 },  // Sharpnose Shark
+    { speciesId: 74, minLevel: 16, maxLevel: 19, weight: 18 },  // Blacknose Shark (new!)
+    { speciesId: 61, minLevel: 16, maxLevel: 19, weight: 15 },  // Sharpnose Shark
     { speciesId: 28, minLevel: 17, maxLevel: 20, weight: 12 },  // Southern Stingray
-    { speciesId: 80, minLevel: 16, maxLevel: 19, weight: 12 },  // Yellow Stingray (new!)
+    { speciesId: 75, minLevel: 16, maxLevel: 19, weight: 12 },  // Yellow Stingray (new!)
     { speciesId: 14, minLevel: 16, maxLevel: 19, weight: 5 }    // Atlantic Stingray
   ],
   isOutdoor: true

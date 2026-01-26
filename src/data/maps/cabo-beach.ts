@@ -113,8 +113,8 @@ export const CABO_BEACH: MapData = {
       trainer: {
         name: 'Beachcomber Rosa',
         team: [
-          { speciesId: 70, level: 14 },  // Mexican Horn Shark
-          { speciesId: 71, level: 15 }   // Cownose Ray
+          { speciesId: 65, level: 14 },  // Mexican Horn Shark
+          { speciesId: 66, level: 15 }   // Cownose Ray
         ],
         defeatedDialogue: [
           'Your sharks are well trained!',
@@ -137,9 +137,9 @@ export const CABO_BEACH: MapData = {
       trainer: {
         name: 'Swimmer Miguel',
         team: [
-          { speciesId: 72, level: 14 },  // Pacific Electric Ray
-          { speciesId: 78, level: 15 },  // Tawny Nurse Shark
-          { speciesId: 71, level: 15 }   // Cownose Ray
+          { speciesId: 67, level: 14 },  // Pacific Electric Ray
+          { speciesId: 73, level: 15 },  // Tawny Nurse Shark
+          { speciesId: 66, level: 15 }   // Cownose Ray
         ],
         defeatedDialogue: [
           'Shocking defeat!',
@@ -178,10 +178,10 @@ export const CABO_BEACH: MapData = {
   ],
   // Cabo beach encounters
   encounterTable: [
-    { speciesId: 78, minLevel: 12, maxLevel: 15, weight: 30 },  // Tawny Nurse Shark
-    { speciesId: 70, minLevel: 12, maxLevel: 15, weight: 25 },  // Mexican Horn Shark
-    { speciesId: 71, minLevel: 13, maxLevel: 16, weight: 20 },  // Cownose Ray
-    { speciesId: 72, minLevel: 13, maxLevel: 16, weight: 15 },  // Pacific Electric Ray
+    { speciesId: 73, minLevel: 12, maxLevel: 15, weight: 30 },  // Tawny Nurse Shark
+    { speciesId: 65, minLevel: 12, maxLevel: 15, weight: 25 },  // Mexican Horn Shark
+    { speciesId: 66, minLevel: 13, maxLevel: 16, weight: 20 },  // Cownose Ray
+    { speciesId: 67, minLevel: 13, maxLevel: 16, weight: 15 },  // Pacific Electric Ray
     { speciesId: 1, minLevel: 14, maxLevel: 17, weight: 10 }    // Blacktip Reef Shark
   ],
   isOutdoor: true

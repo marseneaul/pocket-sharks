@@ -145,8 +145,8 @@ export const AUSTRALIA_AIRPORT: MapData = {
     // Shallow reef encounters near shore
     { speciesId: 1, minLevel: 35, maxLevel: 42, weight: 30 },   // Blacktip Reef Shark
     { speciesId: 4, minLevel: 35, maxLevel: 42, weight: 30 },   // Whitetip Reef Shark
-    { speciesId: 78, minLevel: 38, maxLevel: 45, weight: 25 },  // Tawny Nurse Shark
-    { speciesId: 45, minLevel: 40, maxLevel: 50, weight: 15 }   // Whale Shark
+    { speciesId: 73, minLevel: 38, maxLevel: 45, weight: 25 },  // Tawny Nurse Shark
+    { speciesId: 42, minLevel: 40, maxLevel: 50, weight: 15 }   // Whale Shark
   ],
   isOutdoor: true
 };

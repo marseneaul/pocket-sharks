@@ -132,16 +132,16 @@ export const CAPE_TOWN_KELP: MapData = {
   ],
   encounterTable: [
     // Kelp forest specialists
-    { speciesId: 106, minLevel: 28, maxLevel: 35, weight: 20 },  // Leopard Catshark
-    { speciesId: 108, minLevel: 30, maxLevel: 38, weight: 20 },  // Spotted Gully Shark
+    { speciesId: 101, minLevel: 28, maxLevel: 35, weight: 20 },  // Leopard Catshark
+    { speciesId: 103, minLevel: 30, maxLevel: 38, weight: 20 },  // Spotted Gully Shark
     // Catsharks
-    { speciesId: 103, minLevel: 28, maxLevel: 35, weight: 15 },  // Pyjama Catshark
-    { speciesId: 105, minLevel: 30, maxLevel: 36, weight: 10 },  // Dark Shyshark
+    { speciesId: 98, minLevel: 28, maxLevel: 35, weight: 15 },  // Pyjama Catshark
+    { speciesId: 100, minLevel: 30, maxLevel: 36, weight: 10 },  // Dark Shyshark
     // Larger sharks in deep areas
-    { speciesId: 109, minLevel: 32, maxLevel: 40, weight: 15 },  // Broadnose Sevengill
-    { speciesId: 110, minLevel: 35, maxLevel: 42, weight: 10 },  // Copper Shark
-    { speciesId: 111, minLevel: 35, maxLevel: 42, weight: 5 },   // Dusky Shark
-    { speciesId: 112, minLevel: 30, maxLevel: 38, weight: 5 }    // Sand Tiger Shark
+    { speciesId: 104, minLevel: 32, maxLevel: 40, weight: 15 },  // Broadnose Sevengill
+    { speciesId: 105, minLevel: 35, maxLevel: 42, weight: 10 },  // Copper Shark
+    { speciesId: 106, minLevel: 35, maxLevel: 42, weight: 5 },   // Dusky Shark
+    { speciesId: 107, minLevel: 30, maxLevel: 38, weight: 5 }    // Sand Tiger Shark
   ],
   isOutdoor: true
 };

@@ -97,8 +97,8 @@ export const LA_JOLLA_TIDE_POOLS: MapData = {
       trainer: {
         name: 'Tide Pool Emma',
         team: [
-          { speciesId: 47, level: 4 },  // Round Stingray
-          { speciesId: 51, level: 5 }   // Horn Shark
+          { speciesId: 44, level: 4 },  // Round Stingray
+          { speciesId: 47, level: 5 }   // Horn Shark
         ],
         defeatedDialogue: [
           'Wow, your shark is strong!',
@@ -124,11 +124,11 @@ export const LA_JOLLA_TIDE_POOLS: MapData = {
   ],
   // High encounter rate in tide pools - San Diego baby sharks and rays
   encounterTable: [
-    { speciesId: 47, minLevel: 2, maxLevel: 5, weight: 40 },  // Round Stingray (common)
-    { speciesId: 48, minLevel: 3, maxLevel: 6, weight: 25 },  // Smoothhound
-    { speciesId: 54, minLevel: 4, maxLevel: 6, weight: 20 },  // Guitarfish
-    { speciesId: 51, minLevel: 4, maxLevel: 6, weight: 10 },  // Horn Shark (uncommon)
-    { speciesId: 68, minLevel: 5, maxLevel: 7, weight: 5 }    // Scalloped Bonnethead (very rare)
+    { speciesId: 44, minLevel: 2, maxLevel: 5, weight: 40 },  // Round Stingray (common)
+    { speciesId: 45, minLevel: 3, maxLevel: 6, weight: 25 },  // Smoothhound
+    { speciesId: 49, minLevel: 4, maxLevel: 6, weight: 20 },  // Guitarfish
+    { speciesId: 47, minLevel: 4, maxLevel: 6, weight: 10 },  // Horn Shark (uncommon)
+    { speciesId: 63, minLevel: 5, maxLevel: 7, weight: 5 }    // Scalloped Bonnethead (very rare)
   ],
   // Collectible eggs found on the ground
   groundEggs: [

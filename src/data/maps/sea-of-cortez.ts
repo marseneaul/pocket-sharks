@@ -87,7 +87,7 @@ export const SEA_OF_CORTEZ: MapData = {
         team: [
           { speciesId: 10, level: 17 },  // Bonnethead
           { speciesId: 11, level: 18 },  // Scalloped Hammerhead
-          { speciesId: 73, level: 18 }   // Smooth Hammerhead
+          { speciesId: 68, level: 18 }   // Smooth Hammerhead
         ],
         defeatedDialogue: [
           'Your psychic resistance is strong!',
@@ -110,9 +110,9 @@ export const SEA_OF_CORTEZ: MapData = {
       trainer: {
         name: 'Fisher Ana',
         team: [
-          { speciesId: 75, level: 18 },  // Pelagic Thresher
-          { speciesId: 74, level: 17 },  // Silky Shark
-          { speciesId: 75, level: 19 }   // Pelagic Thresher
+          { speciesId: 70, level: 18 },  // Pelagic Thresher
+          { speciesId: 69, level: 17 },  // Silky Shark
+          { speciesId: 70, level: 19 }   // Pelagic Thresher
         ],
         defeatedDialogue: [
           'Whipped by your skills!',
@@ -137,7 +137,7 @@ export const SEA_OF_CORTEZ: MapData = {
         team: [
           { speciesId: 11, level: 19 },  // Scalloped Hammerhead
           { speciesId: 21, level: 18 },  // Bull Shark
-          { speciesId: 73, level: 19 },  // Smooth Hammerhead
+          { speciesId: 68, level: 19 },  // Smooth Hammerhead
           { speciesId: 11, level: 20 }   // Scalloped Hammerhead
         ],
         defeatedDialogue: [
@@ -197,12 +197,12 @@ export const SEA_OF_CORTEZ: MapData = {
   // Sea of Cortez encounters - hammerhead territory
   encounterTable: [
     { speciesId: 11, minLevel: 16, maxLevel: 20, weight: 25 },  // Scalloped Hammerhead
-    { speciesId: 73, minLevel: 16, maxLevel: 20, weight: 20 },  // Smooth Hammerhead
+    { speciesId: 68, minLevel: 16, maxLevel: 20, weight: 20 },  // Smooth Hammerhead
     { speciesId: 10, minLevel: 15, maxLevel: 18, weight: 15 },  // Bonnethead
-    { speciesId: 74, minLevel: 16, maxLevel: 19, weight: 15 },  // Silky Shark
-    { speciesId: 75, minLevel: 17, maxLevel: 20, weight: 10 },  // Pelagic Thresher
+    { speciesId: 69, minLevel: 16, maxLevel: 19, weight: 15 },  // Silky Shark
+    { speciesId: 70, minLevel: 17, maxLevel: 20, weight: 10 },  // Pelagic Thresher
     { speciesId: 21, minLevel: 18, maxLevel: 21, weight: 10, requiredCert: 'openwater' },  // Bull Shark
-    { speciesId: 77, minLevel: 20, maxLevel: 23, weight: 5, requiredCert: 'openwater' }   // Great Hammerhead (rare)
+    { speciesId: 72, minLevel: 20, maxLevel: 23, weight: 5, requiredCert: 'openwater' }   // Great Hammerhead (rare)
   ],
   isOutdoor: true
 };

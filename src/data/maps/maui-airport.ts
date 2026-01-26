@@ -163,7 +163,7 @@ export const MAUI_AIRPORT: MapData = {
     { speciesId: 1, minLevel: 22, maxLevel: 28, weight: 25 },   // Blacktip Reef Shark
     { speciesId: 4, minLevel: 22, maxLevel: 28, weight: 25 },   // Whitetip Reef Shark
     { speciesId: 7, minLevel: 24, maxLevel: 30, weight: 20 },   // Grey Reef Shark
-    { speciesId: 78, minLevel: 24, maxLevel: 30, weight: 20 },  // Tawny Nurse Shark
+    { speciesId: 73, minLevel: 24, maxLevel: 30, weight: 20 },  // Tawny Nurse Shark
     { speciesId: 27, minLevel: 28, maxLevel: 34, weight: 10 }   // Manta Ray
   ],
   isOutdoor: true

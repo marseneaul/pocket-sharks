@@ -173,7 +173,7 @@ export const ROUTE_4: MapData = {
     { speciesId: 26, minLevel: 13, maxLevel: 16, weight: 20 },  // Torpedo Ray (uncommon)
     { speciesId: 19, minLevel: 12, maxLevel: 15, weight: 20 },  // Spinner Shark (uncommon)
     { speciesId: 17, minLevel: 14, maxLevel: 16, weight: 15 },  // Greenland Shark (uncommon)
-    { speciesId: 32, minLevel: 15, maxLevel: 17, weight: 10 },  // Velvet Lanternshark (rare)
+    { speciesId: 31, minLevel: 15, maxLevel: 17, weight: 10 },  // Velvet Lanternshark (rare)
     { speciesId: 21, minLevel: 16, maxLevel: 18, weight: 5 }    // Bull Shark (rare)
   ],
   isOutdoor: true

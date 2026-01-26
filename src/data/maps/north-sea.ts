@@ -142,19 +142,19 @@ export const NORTH_SEA: MapData = {
   ],
   encounterTable: [
     // Nursehound - evolved catshark
-    { speciesId: 97, minLevel: 28, maxLevel: 35, weight: 20 },  // Nursehound
+    { speciesId: 92, minLevel: 28, maxLevel: 35, weight: 20 },  // Nursehound
     // Thornback Skate - spiny skate
-    { speciesId: 99, minLevel: 30, maxLevel: 38, weight: 15 },  // Thornback Skate
+    { speciesId: 94, minLevel: 30, maxLevel: 38, weight: 15 },  // Thornback Skate
     // Longnose Spurdog - final dogfish evolution
-    { speciesId: 95, minLevel: 35, maxLevel: 42, weight: 15 },  // Longnose Spurdog
+    { speciesId: 90, minLevel: 35, maxLevel: 42, weight: 15 },  // Longnose Spurdog
     // Roughshark - rare deep-sea
-    { speciesId: 100, minLevel: 32, maxLevel: 40, weight: 10 }, // Roughshark
+    { speciesId: 95, minLevel: 32, maxLevel: 40, weight: 10 }, // Roughshark
     // Velvet Belly Lanternshark - bioluminescent
-    { speciesId: 101, minLevel: 28, maxLevel: 36, weight: 15 }, // Velvet Belly Lanternshark
+    { speciesId: 96, minLevel: 28, maxLevel: 36, weight: 15 }, // Velvet Belly Lanternshark
     // Spiny Dogfish - still common
-    { speciesId: 88, minLevel: 28, maxLevel: 35, weight: 20 },  // Spiny Dogfish
+    { speciesId: 83, minLevel: 28, maxLevel: 35, weight: 20 },  // Spiny Dogfish
     // Basking Shark - very rare event
-    { speciesId: 102, minLevel: 40, maxLevel: 50, weight: 5 }   // Basking Shark
+    { speciesId: 97, minLevel: 40, maxLevel: 50, weight: 5 }   // Basking Shark
   ],
   isOutdoor: true
 };

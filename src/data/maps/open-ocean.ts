@@ -167,9 +167,9 @@ export const OPEN_OCEAN: MapData = {
     // Rays
     { speciesId: 27, minLevel: 30, maxLevel: 38, weight: 10 },  // Manta Ray
     // Rare encounters
-    { speciesId: 45, minLevel: 35, maxLevel: 45, weight: 5 },   // Whale Shark
-    { speciesId: 82, minLevel: 35, maxLevel: 42, weight: 10 },  // Tiger Shark
-    { speciesId: 116, minLevel: 30, maxLevel: 38, weight: 5 }   // Cookiecutter Shark
+    { speciesId: 42, minLevel: 35, maxLevel: 45, weight: 5 },   // Whale Shark
+    { speciesId: 77, minLevel: 35, maxLevel: 42, weight: 10 },  // Tiger Shark
+    { speciesId: 111, minLevel: 30, maxLevel: 38, weight: 5 }   // Cookiecutter Shark
   ],
   isOutdoor: true
 };

@@ -85,7 +85,7 @@ export const MARTILLO_GYM: MapData = {
         team: [
           { speciesId: 10, level: 18 },  // Bonnethead
           { speciesId: 10, level: 18 },  // Bonnethead
-          { speciesId: 68, level: 19 }   // Scalloped Bonnethead
+          { speciesId: 63, level: 19 }   // Scalloped Bonnethead
         ],
         defeatedDialogue: [
           'Your mental fortitude is impressive!',
@@ -109,7 +109,7 @@ export const MARTILLO_GYM: MapData = {
         name: 'Scientist Pablo',
         team: [
           { speciesId: 11, level: 19 },  // Scalloped Hammerhead
-          { speciesId: 71, level: 19 },  // Cownose Ray
+          { speciesId: 66, level: 19 },  // Cownose Ray
           { speciesId: 11, level: 20 }   // Scalloped Hammerhead
         ],
         defeatedDialogue: [
@@ -133,9 +133,9 @@ export const MARTILLO_GYM: MapData = {
       trainer: {
         name: 'Researcher Marco',
         team: [
-          { speciesId: 73, level: 19 },  // Smooth Hammerhead
+          { speciesId: 68, level: 19 },  // Smooth Hammerhead
           { speciesId: 10, level: 18 },  // Bonnethead
-          { speciesId: 73, level: 20 }   // Smooth Hammerhead
+          { speciesId: 68, level: 20 }   // Smooth Hammerhead
         ],
         defeatedDialogue: [
           'A smooth defeat for me!',
@@ -170,11 +170,11 @@ export const MARTILLO_GYM: MapData = {
       trainer: {
         name: 'Dr. Martillo',
         team: [
-          { speciesId: 68, level: 20 },  // Scalloped Bonnethead
+          { speciesId: 63, level: 20 },  // Scalloped Bonnethead
           { speciesId: 10, level: 20 },  // Bonnethead
           { speciesId: 11, level: 21 },  // Scalloped Hammerhead
-          { speciesId: 73, level: 21 },  // Smooth Hammerhead
-          { speciesId: 77, level: 23 }   // Great Hammerhead (ace)
+          { speciesId: 68, level: 21 },  // Smooth Hammerhead
+          { speciesId: 72, level: 23 }   // Great Hammerhead (ace)
         ],
         defeatedDialogue: [
           '...',

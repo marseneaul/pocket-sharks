@@ -169,12 +169,12 @@ export const CAPE_TOWN_COAST: MapData = {
   ],
   encounterTable: [
     // Common catsharks in shallows
-    { speciesId: 103, minLevel: 25, maxLevel: 32, weight: 25 },  // Pyjama Catshark
-    { speciesId: 104, minLevel: 25, maxLevel: 32, weight: 25 },  // Puffader Shyshark
-    { speciesId: 107, minLevel: 25, maxLevel: 32, weight: 20 },  // Tiger Catshark
+    { speciesId: 98, minLevel: 25, maxLevel: 32, weight: 25 },  // Pyjama Catshark
+    { speciesId: 99, minLevel: 25, maxLevel: 32, weight: 25 },  // Puffader Shyshark
+    { speciesId: 102, minLevel: 25, maxLevel: 32, weight: 20 },  // Tiger Catshark
     // Less common
-    { speciesId: 105, minLevel: 28, maxLevel: 35, weight: 15 },  // Dark Shyshark
-    { speciesId: 106, minLevel: 28, maxLevel: 35, weight: 15 }   // Leopard Catshark
+    { speciesId: 100, minLevel: 28, maxLevel: 35, weight: 15 },  // Dark Shyshark
+    { speciesId: 101, minLevel: 28, maxLevel: 35, weight: 15 }   // Leopard Catshark
   ],
   isOutdoor: true,
   palette: 'deep'  // Cold Atlantic current

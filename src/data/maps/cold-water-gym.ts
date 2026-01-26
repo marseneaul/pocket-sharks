@@ -75,10 +75,10 @@ export const COLD_WATER_GYM: MapData = {
       trainer: {
         name: 'Gym Leader Marina',
         team: [
-          { speciesId: 89, level: 32 },  // Little Sleeper Shark
-          { speciesId: 91, level: 34 },  // Porbeagle
-          { speciesId: 92, level: 35 },  // Salmon Shark
-          { speciesId: 90, level: 38 }   // Pacific Sleeper Shark (ace)
+          { speciesId: 84, level: 32 },  // Little Sleeper Shark
+          { speciesId: 86, level: 34 },  // Porbeagle
+          { speciesId: 87, level: 35 },  // Salmon Shark
+          { speciesId: 85, level: 38 }   // Pacific Sleeper Shark (ace)
         ],
         defeatedDialogue: [
           'The cold... has not frozen you.',
@@ -108,8 +108,8 @@ export const COLD_WATER_GYM: MapData = {
       trainer: {
         name: 'Diver Ingrid',
         team: [
-          { speciesId: 89, level: 30 },  // Little Sleeper Shark
-          { speciesId: 89, level: 31 }   // Little Sleeper Shark
+          { speciesId: 84, level: 30 },  // Little Sleeper Shark
+          { speciesId: 84, level: 31 }   // Little Sleeper Shark
         ],
         defeatedDialogue: [
           'My sleepers have been awakened...',
@@ -133,8 +133,8 @@ export const COLD_WATER_GYM: MapData = {
       trainer: {
         name: 'Fisherman Olaf',
         team: [
-          { speciesId: 91, level: 31 },  // Porbeagle
-          { speciesId: 92, level: 32 }   // Salmon Shark
+          { speciesId: 86, level: 31 },  // Porbeagle
+          { speciesId: 87, level: 32 }   // Salmon Shark
         ],
         defeatedDialogue: [
           'Too fast for me to handle...',
@@ -158,7 +158,7 @@ export const COLD_WATER_GYM: MapData = {
       trainer: {
         name: 'Researcher Eva',
         team: [
-          { speciesId: 90, level: 33 }   // Pacific Sleeper Shark
+          { speciesId: 85, level: 33 }   // Pacific Sleeper Shark
         ],
         defeatedDialogue: [
           'Even the deep sea giant fell...',

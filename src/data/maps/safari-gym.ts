@@ -75,10 +75,10 @@ export const SAFARI_GYM: MapData = {
       trainer: {
         name: 'Gym Leader Themba',
         team: [
-          { speciesId: 104, level: 32 },  // Puffader Shyshark
-          { speciesId: 105, level: 34 },  // Dark Shyshark
-          { speciesId: 106, level: 34 },  // Leopard Catshark
-          { speciesId: 103, level: 36 }   // Pyjama Catshark (ace)
+          { speciesId: 99, level: 32 },  // Puffader Shyshark
+          { speciesId: 100, level: 34 },  // Dark Shyshark
+          { speciesId: 101, level: 34 },  // Leopard Catshark
+          { speciesId: 98, level: 36 }   // Pyjama Catshark (ace)
         ],
         defeatedDialogue: [
           'Remarkable! Your bond with your sharks is strong.',
@@ -105,8 +105,8 @@ export const SAFARI_GYM: MapData = {
       trainer: {
         name: 'Diver Zandi',
         team: [
-          { speciesId: 104, level: 30 },  // Puffader Shyshark
-          { speciesId: 105, level: 30 }   // Dark Shyshark
+          { speciesId: 99, level: 30 },  // Puffader Shyshark
+          { speciesId: 100, level: 30 }   // Dark Shyshark
         ],
         defeatedDialogue: [
           'Aww, my shy babies lost...',
@@ -130,8 +130,8 @@ export const SAFARI_GYM: MapData = {
       trainer: {
         name: 'Researcher Naledi',
         team: [
-          { speciesId: 106, level: 31 },  // Leopard Catshark
-          { speciesId: 107, level: 31 }   // Tiger Catshark
+          { speciesId: 101, level: 31 },  // Leopard Catshark
+          { speciesId: 102, level: 31 }   // Tiger Catshark
         ],
         defeatedDialogue: [
           'You spotted my catshark! Impressive!',
@@ -155,7 +155,7 @@ export const SAFARI_GYM: MapData = {
       trainer: {
         name: 'Swimmer Thabo',
         team: [
-          { speciesId: 103, level: 32 }   // Pyjama Catshark
+          { speciesId: 98, level: 32 }   // Pyjama Catshark
         ],
         defeatedDialogue: [
           'My pyjama shark needs a nap after that battle!'

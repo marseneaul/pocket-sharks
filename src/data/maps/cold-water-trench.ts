@@ -142,15 +142,15 @@ export const COLD_WATER_TRENCH: MapData = {
   ],
   encounterTable: [
     // Little Sleeper Shark - uncommon
-    { speciesId: 89, minLevel: 28, maxLevel: 35, weight: 25 },  // Little Sleeper Shark
+    { speciesId: 84, minLevel: 28, maxLevel: 35, weight: 25 },  // Little Sleeper Shark
     // Pacific Sleeper Shark - rare apex predator
-    { speciesId: 90, minLevel: 35, maxLevel: 45, weight: 10 },  // Pacific Sleeper Shark
+    { speciesId: 85, minLevel: 35, maxLevel: 45, weight: 10 },  // Pacific Sleeper Shark
     // Spiny Dogfish - still present
-    { speciesId: 88, minLevel: 25, maxLevel: 32, weight: 35 },  // Spiny Dogfish
+    { speciesId: 83, minLevel: 25, maxLevel: 32, weight: 35 },  // Spiny Dogfish
     // Iceland Catshark - cold water specialist
-    { speciesId: 93, minLevel: 28, maxLevel: 35, weight: 20 },  // Iceland Catshark
+    { speciesId: 88, minLevel: 28, maxLevel: 35, weight: 20 },  // Iceland Catshark
     // Big Skate - bottom dweller
-    { speciesId: 91, minLevel: 26, maxLevel: 33, weight: 10 }   // Big Skate
+    { speciesId: 86, minLevel: 26, maxLevel: 33, weight: 10 }   // Big Skate
   ],
   isOutdoor: true
 };
