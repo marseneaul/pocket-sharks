@@ -2057,6 +2057,7 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       spDefense: 50,
       speed: 55
     },
+    evolvesTo: { speciesId: 95, level: 36 },
     learnableMoves: [
       { level: 1, moveId: 1 },   // Tackle
       { level: 1, moveId: 80 },  // Poison Sting
@@ -2199,6 +2200,247 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 43, moveId: 62 }  // Blizzard
     ],
     description: 'A small catshark found in frigid North Atlantic and Arctic waters. Its pale coloring provides camouflage against icy seafloors.'
+  },
+
+  // ============================================
+  // EUROPE REGION CREATURES (IDs 94-102)
+  // ============================================
+
+  // Shortnose Spurdog - Base form of dogfish line
+  94: {
+    id: 94,
+    name: 'Shortnose Spurdog',
+    types: ['poison'],
+    baseStats: {
+      hp: 40,
+      attack: 35,
+      defense: 45,
+      spAttack: 30,
+      spDefense: 40,
+      speed: 45
+    },
+    evolvesTo: { speciesId: 88, level: 20 },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 80 },  // Poison Sting
+      { level: 5, moveId: 3 },   // Tail Whip
+      { level: 10, moveId: 2 },  // Bite
+      { level: 15, moveId: 81 }, // Acid
+      { level: 18, moveId: 30 }  // Pursuit
+    ],
+    description: 'A small venomous shark found in European waters. The defensive spines in front of its dorsal fins can inject painful venom.'
+  },
+
+  // Longnose Spurdog - Final evolution of dogfish line
+  95: {
+    id: 95,
+    name: 'Longnose Spurdog',
+    types: ['poison'],
+    baseStats: {
+      hp: 70,
+      attack: 65,
+      defense: 75,
+      spAttack: 60,
+      spDefense: 70,
+      speed: 65
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 80 },  // Poison Sting
+      { level: 1, moveId: 2 },   // Bite
+      { level: 1, moveId: 81 },  // Acid
+      { level: 25, moveId: 82 }, // Toxic
+      { level: 31, moveId: 83 }, // Venoshock
+      { level: 37, moveId: 31 }, // Crunch
+      { level: 43, moveId: 84 }, // Poison Jab
+      { level: 50, moveId: 85 }  // Sludge Bomb
+    ],
+    description: 'A large deep-water dogfish with an elongated snout. Its potent venom makes it feared by fishermen throughout the Atlantic.'
+  },
+
+  // Small-spotted Catshark - Common European catshark, base form
+  96: {
+    id: 96,
+    name: 'Small-spotted Catshark',
+    types: ['shark'],
+    baseStats: {
+      hp: 45,
+      attack: 40,
+      defense: 50,
+      spAttack: 35,
+      spDefense: 45,
+      speed: 40
+    },
+    evolvesTo: { speciesId: 97, level: 28 },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 6, moveId: 2 },   // Bite
+      { level: 12, moveId: 20 }, // Ram
+      { level: 18, moveId: 30 }, // Pursuit
+      { level: 24, moveId: 31 }  // Crunch
+    ],
+    description: 'The most common shark in European waters. Its spotted pattern helps it blend into rocky reefs and kelp forests.'
+  },
+
+  // Nursehound - Evolved catshark, fighting type
+  97: {
+    id: 97,
+    name: 'Nursehound',
+    types: ['shark', 'fighting'],
+    baseStats: {
+      hp: 70,
+      attack: 75,
+      defense: 70,
+      spAttack: 50,
+      spDefense: 65,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 2 },   // Bite
+      { level: 1, moveId: 20 },  // Ram
+      { level: 18, moveId: 30 }, // Pursuit
+      { level: 24, moveId: 31 }, // Crunch
+      { level: 30, moveId: 40 }, // Fury Swipes
+      { level: 36, moveId: 41 }, // Body Slam
+      { level: 42, moveId: 42 }, // Counter
+      { level: 48, moveId: 43 }  // Close Combat
+    ],
+    description: 'A large, aggressive catshark that guards its territory fiercely. Named for its habit of "nursing" in caves and crevices during the day.'
+  },
+
+  // Blonde Skate - European skate, evolves to Thornback
+  98: {
+    id: 98,
+    name: 'Blonde Skate',
+    types: ['ray', 'ground'],
+    baseStats: {
+      hp: 55,
+      attack: 50,
+      defense: 65,
+      spAttack: 45,
+      spDefense: 60,
+      speed: 40
+    },
+    evolvesTo: { speciesId: 99, level: 32 },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 8, moveId: 111 }, // Sand Attack
+      { level: 14, moveId: 20 }, // Ram
+      { level: 20, moveId: 112 }, // Mud Shot
+      { level: 26, moveId: 30 }, // Pursuit
+      { level: 30, moveId: 110 }  // Wing Attack
+    ],
+    description: 'A sandy-colored skate found on European seafloors. Its coloring provides perfect camouflage against sandy bottoms.'
+  },
+
+  // Thornback Skate - Evolved European skate with defensive spines
+  99: {
+    id: 99,
+    name: 'Thornback Skate',
+    types: ['ray', 'ground'],
+    baseStats: {
+      hp: 80,
+      attack: 70,
+      defense: 95,
+      spAttack: 55,
+      spDefense: 85,
+      speed: 45
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 111 }, // Sand Attack
+      { level: 1, moveId: 20 },  // Ram
+      { level: 26, moveId: 112 }, // Mud Shot
+      { level: 32, moveId: 80 },  // Poison Sting (thorns)
+      { level: 38, moveId: 110 }, // Wing Attack
+      { level: 44, moveId: 113 }, // Earthquake
+      { level: 50, moveId: 120 }, // Stone Edge
+      { level: 56, moveId: 121 }  // Spiky Shield
+    ],
+    description: 'A large skate covered in thorny spines for protection. The rows of spines down its back give it its name and make it dangerous to handle.'
+  },
+
+  // Roughshark - Deep-sea European shark
+  100: {
+    id: 100,
+    name: 'Roughshark',
+    types: ['deepsea'],
+    baseStats: {
+      hp: 65,
+      attack: 70,
+      defense: 85,
+      spAttack: 55,
+      spDefense: 75,
+      speed: 35
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Shadow Sneak
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 91 }, // Dark Pulse
+      { level: 26, moveId: 30 }, // Pursuit
+      { level: 34, moveId: 31 }, // Crunch
+      { level: 42, moveId: 92 }, // Phantom Force
+      { level: 50, moveId: 93 }  // Night Slash
+    ],
+    description: 'A bizarre deep-sea shark with rough, sandpaper-like skin. Its compressed body helps it navigate rocky crevices in the deep.'
+  },
+
+  // Velvet Belly Lanternshark - Bioluminescent European shark
+  101: {
+    id: 101,
+    name: 'Velvet Belly Lanternshark',
+    types: ['electric', 'deepsea'],
+    baseStats: {
+      hp: 50,
+      attack: 45,
+      defense: 55,
+      spAttack: 80,
+      spDefense: 70,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 70 },  // Thunder Shock
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 71 }, // Spark
+      { level: 22, moveId: 90 }, // Shadow Sneak
+      { level: 29, moveId: 72 }, // Thunder Wave
+      { level: 36, moveId: 91 }, // Dark Pulse
+      { level: 43, moveId: 73 }, // Thunderbolt
+      { level: 50, moveId: 74 }  // Flash Cannon
+    ],
+    description: 'A small shark with bioluminescent photophores on its belly that glow like velvet. Uses its light to communicate and confuse predators.'
+  },
+
+  // Basking Shark - Massive filter-feeding leviathan
+  102: {
+    id: 102,
+    name: 'Basking Shark',
+    types: ['leviathan'],
+    baseStats: {
+      hp: 130,
+      attack: 65,
+      defense: 90,
+      spAttack: 80,
+      spDefense: 85,
+      speed: 40
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 10, moveId: 20 }, // Ram
+      { level: 20, moveId: 150 }, // Aqua Jet
+      { level: 30, moveId: 151 }, // Water Pulse
+      { level: 40, moveId: 152 }, // Surf
+      { level: 50, moveId: 41 },  // Body Slam
+      { level: 60, moveId: 170 }, // Leviathan Rage
+      { level: 70, moveId: 171 }  // Filter Feast
+    ],
+    description: 'The second-largest fish in the world, reaching 40 feet. Despite its massive size, it feeds only on plankton filtered through its gill rakers.'
   }
 };
 
