@@ -16,7 +16,7 @@ interface DebugState {
 }
 
 const TABS: DebugTab[] = ['sprites', 'maps', 'battles', 'screens'];
-const MAX_CREATURE_ID = 102;
+const MAX_CREATURE_ID = 112;
 
 const MAPS = [
   // San Diego Region (Region 1)

@@ -2441,6 +2441,271 @@ export const CREATURES: Record<number, CreatureSpecies> = {
       { level: 70, moveId: 171 }  // Filter Feast
     ],
     description: 'The second-largest fish in the world, reaching 40 feet. Despite its massive size, it feeds only on plankton filtered through its gill rakers.'
+  },
+
+  // ============================================
+  // CAPE TOWN REGION CREATURES (IDs 103-112)
+  // ============================================
+
+  // Pyjama Catshark - Distinctive striped catshark endemic to South Africa
+  103: {
+    id: 103,
+    name: 'Pyjama Catshark',
+    types: ['fairy'],
+    baseStats: {
+      hp: 55,
+      attack: 45,
+      defense: 60,
+      spAttack: 70,
+      spDefense: 65,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 160 }, // Charm
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 161 }, // Fairy Wind
+      { level: 22, moveId: 30 }, // Pursuit
+      { level: 29, moveId: 162 }, // Moonlight
+      { level: 36, moveId: 31 }, // Crunch
+      { level: 43, moveId: 163 }  // Dazzling Gleam
+    ],
+    description: 'A strikingly beautiful catshark with distinctive striped markings like pajamas. Endemic to South African waters and beloved by divers.'
+  },
+
+  // Puffader Shyshark - Shy catshark that curls up when threatened
+  104: {
+    id: 104,
+    name: 'Puffader Shyshark',
+    types: ['fairy'],
+    baseStats: {
+      hp: 50,
+      attack: 40,
+      defense: 70,
+      spAttack: 65,
+      spDefense: 75,
+      speed: 40
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 160 }, // Charm
+      { level: 6, moveId: 3 },   // Tail Whip
+      { level: 12, moveId: 164 }, // Protect
+      { level: 18, moveId: 161 }, // Fairy Wind
+      { level: 24, moveId: 165 }, // Withdraw
+      { level: 30, moveId: 162 }, // Moonlight
+      { level: 36, moveId: 163 }  // Dazzling Gleam
+    ],
+    description: 'When threatened, this shy catshark curls into a ball and covers its eyes with its tail. Named for its puffadder-like markings.'
+  },
+
+  // Dark Shyshark - Another shy endemic catshark
+  105: {
+    id: 105,
+    name: 'Dark Shyshark',
+    types: ['fairy', 'deepsea'],
+    baseStats: {
+      hp: 55,
+      attack: 45,
+      defense: 65,
+      spAttack: 70,
+      spDefense: 70,
+      speed: 45
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 90 },  // Shadow Sneak
+      { level: 8, moveId: 160 }, // Charm
+      { level: 15, moveId: 91 }, // Dark Pulse
+      { level: 22, moveId: 161 }, // Fairy Wind
+      { level: 29, moveId: 164 }, // Protect
+      { level: 36, moveId: 162 }, // Moonlight
+      { level: 43, moveId: 163 }  // Dazzling Gleam
+    ],
+    description: 'A darker variant of the shyshark found in deeper waters. Just as shy as its relatives, hiding in caves during the day.'
+  },
+
+  // Leopard Catshark - Spotted catshark
+  106: {
+    id: 106,
+    name: 'Leopard Catshark',
+    types: ['fairy', 'algae'],
+    baseStats: {
+      hp: 60,
+      attack: 50,
+      defense: 55,
+      spAttack: 75,
+      spDefense: 60,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 50 },  // Vine Whip
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 160 }, // Charm
+      { level: 22, moveId: 51 }, // Razor Leaf
+      { level: 29, moveId: 161 }, // Fairy Wind
+      { level: 36, moveId: 52 }, // Solar Beam
+      { level: 43, moveId: 163 }  // Dazzling Gleam
+    ],
+    description: 'A beautifully spotted catshark that lives among the kelp forests of South Africa. Its pattern provides excellent camouflage.'
+  },
+
+  // Tiger Catshark - Striped catshark variant
+  107: {
+    id: 107,
+    name: 'Tiger Catshark',
+    types: ['fairy'],
+    baseStats: {
+      hp: 55,
+      attack: 55,
+      defense: 55,
+      spAttack: 65,
+      spDefense: 60,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 160 }, // Charm
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 40 }, // Fury Swipes
+      { level: 22, moveId: 161 }, // Fairy Wind
+      { level: 29, moveId: 30 }, // Pursuit
+      { level: 36, moveId: 31 }, // Crunch
+      { level: 43, moveId: 163 }  // Dazzling Gleam
+    ],
+    description: 'A small catshark with tiger-like stripes. More active than other catsharks and often seen hunting small fish at dusk.'
+  },
+
+  // Spotted Gully Shark - Kelp forest hunter
+  108: {
+    id: 108,
+    name: 'Spotted Gully Shark',
+    types: ['algae'],
+    baseStats: {
+      hp: 70,
+      attack: 75,
+      defense: 65,
+      spAttack: 50,
+      spDefense: 60,
+      speed: 60
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 50 },  // Vine Whip
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 20 }, // Ram
+      { level: 22, moveId: 51 }, // Razor Leaf
+      { level: 29, moveId: 30 }, // Pursuit
+      { level: 36, moveId: 31 }, // Crunch
+      { level: 43, moveId: 52 }  // Solar Beam
+    ],
+    description: 'A powerful shark that hunts in the gullies between kelp forests. Named for its spotted pattern and preferred habitat.'
+  },
+
+  // Broadnose Sevengill - Ancient shark with seven gills
+  109: {
+    id: 109,
+    name: 'Broadnose Sevengill',
+    types: ['algae', 'fossil'],
+    baseStats: {
+      hp: 85,
+      attack: 80,
+      defense: 70,
+      spAttack: 55,
+      spDefense: 65,
+      speed: 55
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 130 }, // Ancient Power
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 50 }, // Vine Whip
+      { level: 26, moveId: 131 }, // Rock Slide
+      { level: 34, moveId: 31 }, // Crunch
+      { level: 42, moveId: 132 }, // Stone Edge
+      { level: 50, moveId: 170 }  // Leviathan Rage
+    ],
+    description: 'A living fossil with seven gill slits instead of five. This ancient design has remained unchanged for millions of years.'
+  },
+
+  // Copper Shark - Bronze whaler, powerful coastal predator
+  110: {
+    id: 110,
+    name: 'Copper Shark',
+    types: ['steel'],
+    baseStats: {
+      hp: 75,
+      attack: 85,
+      defense: 75,
+      spAttack: 55,
+      spDefense: 65,
+      speed: 70
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 140 }, // Metal Claw
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 20 }, // Ram
+      { level: 26, moveId: 141 }, // Iron Head
+      { level: 34, moveId: 31 }, // Crunch
+      { level: 42, moveId: 142 }, // Flash Cannon
+      { level: 50, moveId: 143 }  // Heavy Slam
+    ],
+    description: 'Named for its bronze-colored skin, this shark hunts in large schools during sardine runs. Fast and powerful.'
+  },
+
+  // Dusky Shark - Large coastal requiem shark
+  111: {
+    id: 111,
+    name: 'Dusky Shark',
+    types: ['shark'],
+    baseStats: {
+      hp: 80,
+      attack: 80,
+      defense: 70,
+      spAttack: 55,
+      spDefense: 65,
+      speed: 65
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 10, moveId: 2 },  // Bite
+      { level: 18, moveId: 20 }, // Ram
+      { level: 26, moveId: 30 }, // Pursuit
+      { level: 34, moveId: 31 }, // Crunch
+      { level: 42, moveId: 41 }, // Body Slam
+      { level: 50, moveId: 170 }  // Leviathan Rage
+    ],
+    description: 'A large, slow-growing shark that can live over 40 years. Critically endangered due to its vulnerability to overfishing.'
+  },
+
+  // Sand Tiger Shark - Fearsome-looking but docile shark
+  112: {
+    id: 112,
+    name: 'Sand Tiger Shark',
+    types: ['shark'],
+    baseStats: {
+      hp: 85,
+      attack: 75,
+      defense: 70,
+      spAttack: 50,
+      spDefense: 65,
+      speed: 50
+    },
+    learnableMoves: [
+      { level: 1, moveId: 1 },   // Tackle
+      { level: 1, moveId: 3 },   // Tail Whip
+      { level: 8, moveId: 2 },   // Bite
+      { level: 15, moveId: 111 }, // Sand Attack
+      { level: 22, moveId: 20 }, // Ram
+      { level: 29, moveId: 30 }, // Pursuit
+      { level: 36, moveId: 31 }, // Crunch
+      { level: 43, moveId: 41 }, // Body Slam
+      { level: 50, moveId: 170 }  // Leviathan Rage
+    ],
+    description: 'Despite its fearsome rows of teeth, the Sand Tiger is docile and rarely attacks humans. Often seen in aquariums worldwide.'
   }
 };
 
