@@ -16418,14 +16418,29 @@ const CREATURE_PALETTES: Record<number, number> = {
   28: PALETTE.GRAY,    // Tiger Shark
   29: PALETTE.BLUE,    // Blue Shark
   30: PALETTE.BROWN,   // Cladoselache (fossil)
+  31: PALETTE.GRAY,    // Megalodon (fossil/leviathan)
+  32: PALETTE.PURPLE,  // Velvet Belly Lanternshark (electric)
+  36: PALETTE.GRAY,    // Bluntnose Sixgill (fossil)
 
   // San Diego creatures
+  46: PALETTE.WHITE,   // Great White Shark (fire/breaching)
+  47: PALETTE.BROWN,   // Round Stingray (ray/poison)
+  48: PALETTE.GRAY,    // Smoothhound (normal)
+  49: PALETTE.YELLOW,  // Leopard Shark (kelp)
   50: PALETTE.BROWN,   // Horn Shark Egg (algae)
+  51: PALETTE.BROWN,   // Horn Shark (kelp)
   52: PALETTE.YELLOW,  // Swell Shark Egg (algae/fairy)
+  53: PALETTE.YELLOW,  // Swell Shark (kelp/fairy)
+  54: PALETTE.BROWN,   // Guitarfish (ray/ground)
   55: PALETTE.BROWN,   // Giant Guitarfish (ray/ground)
   56: PALETTE.BLUE,    // Bowmouth Guitarfish (ray/steel)
+  57: PALETTE.BLUE,    // Butterfly Ray (ray)
   58: PALETTE.BLUE,    // Smooth Butterfly Ray (ray)
   59: PALETTE.PURPLE,  // Spiny Butterfly Ray (ray/poison)
+  60: PALETTE.BROWN,   // Bat Ray (ray)
+  61: PALETTE.BROWN,   // Angelshark (ground)
+  64: PALETTE.BLUE,    // Shortfin Mako (fire/breaching)
+  65: PALETTE.BLUE,    // Longfin Mako (fire/breaching)
 
   // San Diego rare creatures
   67: PALETTE.GREEN,   // Broadnose Sevengill (algae/fossil)
@@ -16448,12 +16463,15 @@ const CREATURE_PALETTES: Record<number, number> = {
   63: PALETTE.BLUE,    // Blue Shark (normal/fairy)
   66: PALETTE.GRAY,    // Sharpnose Shark (normal)
   69: PALETTE.PURPLE,  // Prickly Shark (deepsea/steel)
+  70: PALETTE.BROWN,   // Mexican Horn Shark (kelp)
 
   // Cabo/Baja creatures
   71: PALETTE.PURPLE,  // Cownose Ray (ray/psychic)
   72: PALETTE.YELLOW,  // Pacific Electric Ray (ray/electric)
   73: PALETTE.PURPLE,  // Smooth Hammerhead (psychic)
   74: PALETTE.BLUE,    // Silky Shark (shark/fairy)
+  75: PALETTE.BLUE,    // Pelagic Thresher (breaching/fighting)
+  76: PALETTE.BLUE,    // Bigeye Thresher (breaching/fighting)
   77: PALETTE.PURPLE,  // Great Hammerhead (psychic/electric)
   78: PALETTE.BROWN,   // Tawny Nurse Shark (ground)
 
