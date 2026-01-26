@@ -53,6 +53,12 @@ const MAPS = [
   'europe-ferry-terminal',
   'european-coast',
   'north-sea',
+  // Cape Town Region (Region 8)
+  'cape-town-harbor',
+  'cape-town-coast',
+  'cape-town-kelp',
+  'seal-island',
+  'safari-gym',
   // Legacy maps
   'route-1',
   'route-2',
