@@ -30,7 +30,9 @@ import {
   getDefeatedTrainers,
   setDefeatedTrainers,
   getCollectedEggs,
-  setCollectedEggs
+  setCollectedEggs,
+  getRepelSteps,
+  setRepelSteps
 } from './game-state.ts';
 import {
   getStorage,
@@ -114,6 +116,9 @@ interface SaveData {
   // Progress tracking
   defeatedTrainers: string[];
   collectedEggs: string[];
+
+  // Repel state
+  repelSteps?: number;  // Optional for backwards compatibility
 }
 
 // Serialize a creature instance to save format
@@ -337,7 +342,9 @@ export function saveGame(): boolean {
       pcStorage: serializeStorage(storage),
 
       defeatedTrainers: getDefeatedTrainers(),
-      collectedEggs: getCollectedEggs()
+      collectedEggs: getCollectedEggs(),
+
+      repelSteps: getRepelSteps()
     };
 
     localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -405,6 +412,9 @@ export function loadGame(): boolean {
     // Restore progress tracking
     setDefeatedTrainers(saveData.defeatedTrainers);
     setCollectedEggs(saveData.collectedEggs);
+
+    // Restore repel state
+    setRepelSteps(saveData.repelSteps || 0);
 
     // Restore NPC defeated status on current map
     for (const npc of map.npcs) {

@@ -24,8 +24,17 @@ import {
   applyEndOfTurnDamage,
   getSpeedModifier,
   getAttackModifier,
-  tryApplyStatus
+  tryApplyStatus,
+  cureStatus
 } from './status-effects.ts';
+import {
+  createStatStages,
+  applyStatChange,
+  getEffectiveStat,
+  getStatChangeMessage,
+  getStageMultiplier,
+  type StatStages
+} from './stat-stages.ts';
 
 /**
  * Create a new creature instance with optional IVs and nature
@@ -105,7 +114,9 @@ export function createBattleState(
     turnState: {
       turnOrder: [],
       currentTurnIndex: 0,
-      firstAttackDone: false
+      firstAttackDone: false,
+      playerFlinched: false,
+      enemyFlinched: false
     },
     cageAnimation: {
       active: false,
@@ -114,6 +125,10 @@ export function createBattleState(
       shakeCount: 0,
       maxShakes: 0,
       success: false
+    },
+    statStages: {
+      player: createStatStages(),
+      enemy: createStatStages()
     }
   };
 }
@@ -373,6 +388,48 @@ export function useBattleItem(state: BattleState, itemId: number): void {
       const pName = state.playerCreature.nickname || state.playerCreature.species.name;
       queueMessage(state, `${pName} fainted!`);
     }
+  } else if (item.type === 'status') {
+    // Status healing items
+    const creature = state.playerCreature;
+    const name = creature.nickname || creature.species.name;
+    queueMessage(state, `Used ${item.name}!`);
+
+    // Check which status this item cures based on item ID
+    // 20: Antidote (poison), 21: Paralyze Heal, 22: Awakening (sleep),
+    // 23: Burn Heal, 24: Ice Heal (frozen), 25: Full Heal (all)
+    const statusToCure: Record<number, string | 'all'> = {
+      20: 'poisoned',
+      21: 'paralyzed',
+      22: 'asleep',
+      23: 'burned',
+      24: 'frozen',
+      25: 'all'
+    };
+
+    const targetStatus = statusToCure[itemId];
+    const currentStatus = creature.status;
+
+    if (!currentStatus) {
+      queueMessage(state, `But ${name} isn't affected by any status!`);
+    } else if (targetStatus === 'all' || currentStatus === targetStatus) {
+      // Cure the status
+      const cureMessage = cureStatus(creature);
+      if (cureMessage) {
+        queueMessage(state, cureMessage);
+      }
+    } else {
+      queueMessage(state, `But it won't have any effect!`);
+    }
+
+    // Enemy gets a turn after using item
+    const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
+    state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
+    executeMove(state, 'enemy');
+
+    if (state.playerCreature.currentHp <= 0) {
+      const pName = state.playerCreature.nickname || state.playerCreature.species.name;
+      queueMessage(state, `${pName} fainted!`);
+    }
   } else {
     // Unknown item type
     queueMessage(state, `Used ${item.name}!`);
@@ -428,13 +485,48 @@ function selectMove(state: BattleState): void {
 function executeTurn(state: BattleState): void {
   state.phase = 'executing';
 
-  // Determine turn order based on speed (faster goes first, random tiebreaker)
-  // Apply speed modifiers from status effects (paralysis halves speed)
-  const playerSpeed = state.playerCreature.stats.speed * getSpeedModifier(state.playerCreature);
-  const enemySpeed = state.enemyCreature.stats.speed * getSpeedModifier(state.enemyCreature);
+  // Reset flinch flags at the start of each turn
+  state.turnState.playerFlinched = false;
+  state.turnState.enemyFlinched = false;
 
-  const playerFirst = playerSpeed > enemySpeed ||
-    (playerSpeed === enemySpeed && Math.random() < 0.5);
+  // Get move priorities (default 0)
+  const playerAction = state.playerAction;
+  const enemyAction = state.enemyAction;
+
+  let playerPriority = 0;
+  let enemyPriority = 0;
+
+  if (playerAction?.type === 'fight') {
+    const playerMove = state.playerCreature.moves[playerAction.moveIndex]?.move;
+    playerPriority = playerMove?.priority ?? 0;
+  }
+  if (enemyAction?.type === 'fight') {
+    const enemyMove = state.enemyCreature.moves[enemyAction.moveIndex]?.move;
+    enemyPriority = enemyMove?.priority ?? 0;
+  }
+
+  // Determine turn order: priority first, then speed, then random tiebreaker
+  let playerFirst: boolean;
+
+  if (playerPriority !== enemyPriority) {
+    // Higher priority goes first
+    playerFirst = playerPriority > enemyPriority;
+  } else {
+    // Same priority - use speed with stat stage modifiers and status effects
+    const playerBaseSpeed = state.playerCreature.stats.speed;
+    const enemyBaseSpeed = state.enemyCreature.stats.speed;
+
+    // Apply stat stage modifiers
+    const playerEffectiveSpeed = getEffectiveStat(playerBaseSpeed, state.statStages.player.speed);
+    const enemyEffectiveSpeed = getEffectiveStat(enemyBaseSpeed, state.statStages.enemy.speed);
+
+    // Apply status modifiers (paralysis halves speed)
+    const playerSpeed = playerEffectiveSpeed * getSpeedModifier(state.playerCreature);
+    const enemySpeed = enemyEffectiveSpeed * getSpeedModifier(state.enemyCreature);
+
+    playerFirst = playerSpeed > enemySpeed ||
+      (playerSpeed === enemySpeed && Math.random() < 0.5);
+  }
 
   // Set turn order
   state.turnState.turnOrder = playerFirst ? ['player', 'enemy'] : ['enemy', 'player'];
@@ -577,6 +669,8 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
   const isPlayer = attacker === 'player';
   const attackerCreature = isPlayer ? state.playerCreature : state.enemyCreature;
   const defenderCreature = isPlayer ? state.enemyCreature : state.playerCreature;
+  const attackerStages = isPlayer ? state.statStages.player : state.statStages.enemy;
+  const defenderStages = isPlayer ? state.statStages.enemy : state.statStages.player;
   const action = isPlayer ? state.playerAction : state.enemyAction;
 
   if (!action || action.type !== 'fight') return;
@@ -586,6 +680,14 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
 
   const move = moveInstance.move;
   const attackerName = attackerCreature.nickname || attackerCreature.species.name;
+  const defenderName = defenderCreature.nickname || defenderCreature.species.name;
+
+  // Check if attacker flinched this turn
+  const flinched = isPlayer ? state.turnState.playerFlinched : state.turnState.enemyFlinched;
+  if (flinched) {
+    queueMessage(state, `${attackerName} flinched and couldn't move!`);
+    return;
+  }
 
   // Check if attacker can act due to status (paralysis, sleep, freeze)
   const actCheck = checkCanAct(attackerCreature);
@@ -613,13 +715,45 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
     return;
   }
 
-  // Calculate damage (with burn modifier for physical moves)
-  const burnMod = move.category === 'physical' ? getAttackModifier(attackerCreature) : 1.0;
-  const result = calculateDamage(attackerCreature, defenderCreature, move, burnMod);
+  // Handle stat-change moves (like Tail Whip, Growl, Swords Dance)
+  if (move.effect?.type === 'stat-change' && move.effect.statChanges) {
+    const target = move.effect.target;
+    const targetStages = target === 'self' ? attackerStages : defenderStages;
+    const targetName = target === 'self' ? attackerName : defenderName;
+
+    for (const [stat, change] of Object.entries(move.effect.statChanges)) {
+      if (change && stat !== 'hp') {
+        const result = applyStatChange(targetStages, stat as keyof StatStages, change);
+        const message = getStatChangeMessage(targetName, stat as keyof StatStages, change, result.capped || result.actualChange === 0);
+        queueMessage(state, message);
+      }
+    }
+
+    // Stat-change moves don't deal damage, so return after applying changes
+    if (move.power === 0) {
+      return;
+    }
+  }
+
+  // Calculate damage with stat stage modifiers
+  let attackMod = 1.0;
+  let defenseMod = 1.0;
+
+  if (move.category === 'physical') {
+    // Apply burn modifier for physical attack
+    attackMod = getAttackModifier(attackerCreature);
+    // Apply stat stages
+    attackMod *= getStageMultiplier(attackerStages.attack);
+    defenseMod = getStageMultiplier(defenderStages.defense);
+  } else if (move.category === 'special') {
+    attackMod = getStageMultiplier(attackerStages.spAttack);
+    defenseMod = getStageMultiplier(defenderStages.spDefense);
+  }
+
+  const result = calculateDamage(attackerCreature, defenderCreature, move, attackMod, defenseMod);
 
   if (result.damage === 0 && move.power > 0) {
     if (result.effectiveness === 0) {
-      const defenderName = defenderCreature.nickname || defenderCreature.species.name;
       queueMessage(state, `It doesn't affect ${defenderName}...`);
     }
     // Don't apply secondary effects if no damage dealt
@@ -641,15 +775,38 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
       queueMessage(state, 'A critical hit!');
     }
 
-    // Apply secondary status effect (if any and defender still alive)
-    if (defenderCreature.currentHp > 0 && move.secondaryEffect?.status) {
-      const statusResult = tryApplyStatus(
-        defenderCreature,
-        move.secondaryEffect.status,
-        move.secondaryEffect.chance
-      );
-      if (statusResult.message) {
-        queueMessage(state, statusResult.message);
+    // Apply secondary effects (if defender still alive)
+    if (defenderCreature.currentHp > 0 && move.secondaryEffect) {
+      // Check if effect triggers (based on chance)
+      if (Math.random() < move.secondaryEffect.chance) {
+        // Apply secondary status effect
+        if (move.secondaryEffect.status) {
+          const statusResult = tryApplyStatus(defenderCreature, move.secondaryEffect.status, 1.0);
+          if (statusResult.message) {
+            queueMessage(state, statusResult.message);
+          }
+        }
+
+        // Apply secondary stat changes
+        if (move.secondaryEffect.statChanges) {
+          for (const [stat, change] of Object.entries(move.secondaryEffect.statChanges)) {
+            if (change && stat !== 'hp') {
+              const result = applyStatChange(defenderStages, stat as keyof StatStages, change);
+              const message = getStatChangeMessage(defenderName, stat as keyof StatStages, change, result.capped || result.actualChange === 0);
+              queueMessage(state, message);
+            }
+          }
+        }
+
+        // Apply flinch (only affects the second attacker)
+        if (move.secondaryEffect.flinch) {
+          // Set flinch flag for defender (they'll be checked when they try to move)
+          if (isPlayer) {
+            state.turnState.enemyFlinched = true;
+          } else {
+            state.turnState.playerFlinched = true;
+          }
+        }
       }
     }
   }

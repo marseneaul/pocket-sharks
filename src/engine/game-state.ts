@@ -1,9 +1,11 @@
 import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel, GroundEgg, Direction } from '../types/overworld.ts';
 import { CERT_HIERARCHY } from '../types/overworld.ts';
-import type { BattleState, CreatureInstance, PartyMember, EggInstance } from '../types/index.ts';
+import type { BattleState, CreatureInstance, PartyMember, EggInstance, StatusCondition } from '../types/index.ts';
 import { isEgg, isCreature } from '../types/index.ts';
 import type { InventorySlot } from '../data/items.ts';
+import { getItem } from '../data/items.ts';
 import { createCreatureInstance, createBattleState, initBattle } from './battle.ts';
+import { cureStatus } from './status-effects.ts';
 import { getCreature } from '../data/creatures.ts';
 import { getEgg } from '../data/eggs.ts';
 import { playBattleMusic, playOverworldMusic } from './audio.ts';
@@ -42,6 +44,9 @@ const MAX_PARTY_SIZE = 6;
 let defeatedTrainers: Set<string> = new Set();
 let collectedEggs: Set<string> = new Set();
 
+// Repel tracking
+let repelStepsRemaining: number = 0;
+
 export function initGameState(): void {
   // Reset module-level state
   playerMoney = 500;
@@ -51,6 +56,7 @@ export function initGameState(): void {
   ];
   defeatedTrainers.clear();
   collectedEggs.clear();
+  repelStepsRemaining = 0;
 
   // Initialize player without a starter (will be chosen later)
   const player: PlayerState = {
@@ -92,6 +98,7 @@ export function resetForNewGame(startingMapId: string = 'scripps-lab'): void {
   ];
   defeatedTrainers.clear();
   collectedEggs.clear();
+  repelStepsRemaining = 0;
   battleState = null;
   currentTrainerNpc = null;
   trainerCreatureIndex = 0;
@@ -691,4 +698,142 @@ export function getCollectedEggs(): string[] {
 
 export function setCollectedEggs(ids: string[]): void {
   collectedEggs = new Set(ids);
+}
+
+// ============================================
+// Repel System
+// ============================================
+
+export function getRepelSteps(): number {
+  return repelStepsRemaining;
+}
+
+export function setRepelSteps(steps: number): void {
+  repelStepsRemaining = steps;
+}
+
+export function activateRepel(steps: number): void {
+  repelStepsRemaining = steps;
+}
+
+export function decrementRepel(): void {
+  if (repelStepsRemaining > 0) {
+    repelStepsRemaining--;
+  }
+}
+
+export function isRepelActive(): boolean {
+  return repelStepsRemaining > 0;
+}
+
+// Check if repel blocks an encounter based on wild creature level vs party lead level
+export function repelBlocksEncounter(wildLevel: number): boolean {
+  if (!isRepelActive()) return false;
+
+  const party = getParty();
+  const lead = party.find(member => isCreature(member) && member.currentHp > 0);
+  if (!lead || !isCreature(lead)) return false;
+
+  // Repel blocks encounters with creatures lower level than party lead
+  return wildLevel < lead.level;
+}
+
+// ============================================
+// Overworld Item Usage
+// ============================================
+
+// Use an item on a party member outside of battle
+// Returns a message describing what happened, or null if item couldn't be used
+export function useItemOnCreature(itemId: number, partyIndex: number): string | null {
+  const item = getItem(itemId);
+  if (!item) return null;
+
+  const party = getParty();
+  const member = party[partyIndex];
+  if (!member || !isCreature(member)) return null;
+
+  const creature = member;
+
+  // Handle different item types
+  if (item.type === 'potion') {
+    // Can't use on fainted creature
+    if (creature.currentHp <= 0) {
+      return `${creature.nickname || creature.species.name} is fainted!`;
+    }
+    // Can't use if already at full HP
+    if (creature.currentHp >= creature.maxHp) {
+      return `${creature.nickname || creature.species.name} is already at full HP!`;
+    }
+
+    const healAmount = item.healAmount || 0;
+    const oldHp = creature.currentHp;
+    creature.currentHp = Math.min(creature.maxHp, creature.currentHp + healAmount);
+    const healed = creature.currentHp - oldHp;
+
+    // Remove item from inventory
+    removeItem(itemId, 1);
+
+    return `${creature.nickname || creature.species.name} recovered ${healed} HP!`;
+  }
+
+  if (item.type === 'status') {
+    // Can't use on fainted creature
+    if (creature.currentHp <= 0) {
+      return `${creature.nickname || creature.species.name} is fainted!`;
+    }
+
+    // Check if creature has a status that this item cures
+    const status = creature.status;
+    if (!status) {
+      return `${creature.nickname || creature.species.name} has no status problem!`;
+    }
+
+    // Map items to the statuses they cure
+    const cureMap: Record<number, StatusCondition[]> = {
+      20: ['poisoned'],           // Antidote
+      21: ['paralyzed'],          // Paralyze Heal
+      22: ['asleep'],             // Awakening
+      23: ['burned'],             // Burn Heal
+      24: ['frozen'],             // Ice Heal
+      25: ['poisoned', 'paralyzed', 'asleep', 'burned', 'frozen']  // Full Heal
+    };
+
+    const curesStatuses = cureMap[itemId];
+    if (!curesStatuses || !curesStatuses.includes(status)) {
+      return `It won't have any effect.`;
+    }
+
+    cureStatus(creature);
+    removeItem(itemId, 1);
+
+    return `${creature.nickname || creature.species.name} was cured!`;
+  }
+
+  return null;
+}
+
+// Use a repel item
+export function useRepelItem(itemId: number): string | null {
+  const item = getItem(itemId);
+  if (!item || item.type !== 'battle') return null;
+
+  // Map repel items to their step counts
+  const repelSteps: Record<number, number> = {
+    30: 100,   // Repel
+    31: 200,   // Super Repel
+    32: 250    // Max Repel
+  };
+
+  const steps = repelSteps[itemId];
+  if (!steps) return null;
+
+  // Can't use if repel is already active
+  if (isRepelActive()) {
+    return `Repel is already active!`;
+  }
+
+  activateRepel(steps);
+  removeItem(itemId, 1);
+
+  return `${item.name}'s effect will last for ${steps} steps!`;
 }

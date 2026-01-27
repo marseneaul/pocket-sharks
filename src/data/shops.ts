@@ -118,6 +118,106 @@ export const KELP_HARBOR_SHOP: ShopInventory = {
   ]
 };
 
+// Maui Airport Shop
+export const MAUI_SHOP: ShopInventory = {
+  id: 'maui-shop',
+  name: 'MAUI DIVE SUPPLY',
+  items: [
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
+    { itemId: 10 },  // Potion
+    { itemId: 11 },  // Super Potion
+    { itemId: 20 },  // Antidote
+    { itemId: 21 },  // Paralyze Heal
+    { itemId: 30 },  // Repel
+  ]
+};
+
+// Key West Reef Shop
+export const KEY_WEST_SHOP: ShopInventory = {
+  id: 'key-west-shop',
+  name: 'REEF SUPPLY',
+  items: [
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
+    { itemId: 3 },   // Ultra Cage
+    { itemId: 10 },  // Potion
+    { itemId: 11 },  // Super Potion
+    { itemId: 12 },  // Hyper Potion
+    { itemId: 20 },  // Antidote
+    { itemId: 21 },  // Paralyze Heal
+    { itemId: 22 },  // Awakening
+    { itemId: 25 },  // Full Heal
+    { itemId: 30 },  // Repel
+    { itemId: 31 },  // Super Repel
+  ]
+};
+
+// Cape Town Harbor Shop
+export const CAPETOWN_SHOP: ShopInventory = {
+  id: 'capetown-shop',
+  name: 'CAPE TOWN SUPPLIES',
+  items: [
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
+    { itemId: 3 },   // Ultra Cage
+    { itemId: 10 },  // Potion
+    { itemId: 11 },  // Super Potion
+    { itemId: 12 },  // Hyper Potion
+    { itemId: 20 },  // Antidote
+    { itemId: 21 },  // Paralyze Heal
+    { itemId: 22 },  // Awakening
+    { itemId: 23 },  // Burn Heal
+    { itemId: 24 },  // Ice Heal
+    { itemId: 25 },  // Full Heal
+    { itemId: 30 },  // Repel
+    { itemId: 31 },  // Super Repel
+    { itemId: 32 },  // Max Repel
+  ]
+};
+
+// Australia Airport Shop
+export const AUSTRALIA_SHOP: ShopInventory = {
+  id: 'aus-shop',
+  name: 'AUSSIE OUTFITTERS',
+  items: [
+    { itemId: 1 },   // Shark Cage
+    { itemId: 2 },   // Great Cage
+    { itemId: 3 },   // Ultra Cage
+    { itemId: 10 },  // Potion
+    { itemId: 11 },  // Super Potion
+    { itemId: 12 },  // Hyper Potion
+    { itemId: 13 },  // Max Potion
+    { itemId: 20 },  // Antidote
+    { itemId: 21 },  // Paralyze Heal
+    { itemId: 22 },  // Awakening
+    { itemId: 23 },  // Burn Heal
+    { itemId: 24 },  // Ice Heal
+    { itemId: 25 },  // Full Heal
+    { itemId: 30 },  // Repel
+    { itemId: 31 },  // Super Repel
+    { itemId: 32 },  // Max Repel
+    { itemId: 33 },  // Escape Rope
+  ]
+};
+
+// Roatan Harbor Shop (Pre-Submarine Area)
+export const ROATAN_SHOP: ShopInventory = {
+  id: 'roatan-shop',
+  name: 'ROATAN DIVE',
+  items: [
+    { itemId: 2 },   // Great Cage
+    { itemId: 3 },   // Ultra Cage
+    { itemId: 11 },  // Super Potion
+    { itemId: 12 },  // Hyper Potion
+    { itemId: 13 },  // Max Potion
+    { itemId: 25 },  // Full Heal
+    { itemId: 31 },  // Super Repel
+    { itemId: 32 },  // Max Repel
+    { itemId: 33 },  // Escape Rope
+  ]
+};
+
 // Registry of all shops by ID
 export const SHOPS: Record<string, ShopInventory> = {
   'la-jolla-shop': LA_JOLLA_SHOP,
@@ -127,6 +227,11 @@ export const SHOPS: Record<string, ShopInventory> = {
   'cabo-town-shop': CABO_TOWN_SHOP,
   'coral-bay': CORAL_BAY_SHOP,
   'kelp-harbor': KELP_HARBOR_SHOP,
+  'maui-shop': MAUI_SHOP,
+  'key-west-shop': KEY_WEST_SHOP,
+  'capetown-shop': CAPETOWN_SHOP,
+  'aus-shop': AUSTRALIA_SHOP,
+  'roatan-shop': ROATAN_SHOP,
 };
 
 export function getShop(id: string): ShopInventory | undefined {

@@ -1,8 +1,9 @@
-import { initCanvas, present, drawFadeOverlay } from './renderer/canvas.ts';
+import { initCanvas, present, drawFadeOverlay, getContext } from './renderer/canvas.ts';
+import { SCREEN_HEIGHT, SCREEN_WIDTH, DMG_PALETTE } from './constants.ts';
 import { renderBattle } from './renderer/battle-ui.ts';
 import { renderOverworld } from './renderer/overworld-ui.ts';
 import { renderDialogue, startDialogue, advanceDialogue, advanceDialogueChar, isDialogueComplete, isCurrentLineComplete, clearDialogue } from './renderer/dialogue-ui.ts';
-import { renderPartyMenu, handlePartyInput, handleBattlePartyInput, initPartyMenu } from './renderer/party-ui.ts';
+import { renderPartyMenu, handlePartyInput, handleBattlePartyInput, initPartyMenu, getPartyMenuIndex } from './renderer/party-ui.ts';
 import { renderBagMenu, handleBagInput, initBagMenu } from './renderer/bag-ui.ts';
 import { renderStarterSelect, handleStarterInput, getSelectedStarterId, initStarterSelect } from './renderer/starter-ui.ts';
 import { renderPC, handlePCInput, initPCUI } from './renderer/pc-ui.ts';
@@ -15,9 +16,10 @@ import { renderSettings, handleSettingsInput, initSettingsUI, getPreviousMode } 
 import { renderDebug, handleDebugInput, initDebugUI } from './renderer/debug-ui.ts';
 import { getItem } from './data/items.ts';
 import { getShop } from './data/shops.ts';
-import { advanceTypewriter, isTypewriterComplete } from './renderer/text.ts';
+import { advanceTypewriter, isTypewriterComplete, drawText } from './renderer/text.ts';
 import { initInput, updateInput, getJustPressed, getDirectionPressed, getInputState } from './engine/input.ts';
 import { handleInput as handleBattleInput, updateHpAnimation, updateEntryAnimation, updateAttackAnimation, updateCageAnimation, useBattleItem } from './engine/battle.ts';
+import { createStatStages } from './engine/stat-stages.ts';
 import { updateOverworld, handleOverworldInput } from './engine/overworld.ts';
 import { initStorage } from './engine/storage.ts';
 import { initAudio, tryStartMusic } from './engine/audio.ts';
@@ -40,7 +42,9 @@ import {
   startTrainerBattle,
   getMap,
   getCurrentMap,
-  resetForNewGame
+  resetForNewGame,
+  useItemOnCreature,
+  useRepelItem
 } from './engine/game-state.ts';
 import { getCreature } from './data/creatures.ts';
 import { isCreature } from './types/index.ts';
@@ -298,6 +302,10 @@ function update(deltaTime: number): void {
     updateStartMenuMode();
   } else if (mode === 'dialogue') {
     updateDialogueMode(deltaTime);
+  } else if (mode === 'item-use-party') {
+    updateItemUsePartyMode();
+  } else if (mode === 'item-message') {
+    updateItemMessageMode();
   }
 }
 
@@ -365,6 +373,10 @@ function updateSettingsMode(): void {
 
 let previousModeBeforeDebug: ReturnType<typeof getGameMode> = 'title';
 let previousModeBeforeSharkedex: ReturnType<typeof getGameMode> = 'overworld';
+
+// Overworld item usage state
+let pendingOverworldItem: number | null = null;
+let overworldItemMessage: string | null = null;
 
 // Debug mode key repeat state
 let debugKeyRepeatTimer = 0;
@@ -670,6 +682,8 @@ function updateBattlePartyMode(): void {
         if (battleState) {
           battleState.playerCreature = newActive;
           battleState.animatingHp.player = newActive.currentHp;
+          // Reset stat stages when switching out
+          battleState.statStages.player = createStatStages();
           // Queue message about switch
           battleState.messageQueue.push(`Go! ${newActive.species.name}!`);
           battleState.phase = 'message';
@@ -705,12 +719,41 @@ function updateBattleBagMode(): void {
           setGameMode('start-menu');
         }
       } else if (result.action === 'use' && result.itemId !== undefined) {
-        // Use the selected item in battle
         const battleState = getBattleState();
         if (battleState) {
+          // Use the selected item in battle
           useBattleItem(battleState, result.itemId);
+          setGameMode('battle');
+        } else {
+          // Use the item outside of battle
+          const item = getItem(result.itemId);
+          if (!item) return;
+
+          // Handle different item types
+          if (item.type === 'potion' || item.type === 'status') {
+            // Need to select a creature to use it on
+            pendingOverworldItem = result.itemId;
+            initPartyMenu();
+            setGameMode('item-use-party');
+          } else if (item.type === 'battle' && (result.itemId === 30 || result.itemId === 31 || result.itemId === 32)) {
+            // Repel items
+            const message = useRepelItem(result.itemId);
+            if (message) {
+              overworldItemMessage = message;
+              setGameMode('item-message');
+            } else {
+              initStartMenu();
+              setGameMode('start-menu');
+            }
+          } else if (item.type === 'tm') {
+            // TM items - use the TM teaching UI
+            useTM(result.itemId);
+          } else {
+            // Item can't be used outside of battle
+            initStartMenu();
+            setGameMode('start-menu');
+          }
         }
-        setGameMode('battle');
       }
     }
   }
@@ -838,6 +881,68 @@ function updateStartMenuMode(): void {
   }
 }
 
+function updateItemUsePartyMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | null = null;
+  if (direction) input = direction;
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+
+  if (input) {
+    const result = handlePartyInput(input);
+    if (result === 'close') {
+      // Cancel item use, go back to bag
+      pendingOverworldItem = null;
+      initBagMenu();
+      setGameMode('battle-bag');
+    } else if (result === 'switch') {
+      // Selected a creature to use item on
+      if (pendingOverworldItem !== null) {
+        const partyIndex = getPartyMenuIndex();
+        const message = useItemOnCreature(pendingOverworldItem, partyIndex);
+        if (message) {
+          overworldItemMessage = message;
+          pendingOverworldItem = null;
+          setGameMode('item-message');
+        } else {
+          // Item couldn't be used
+          pendingOverworldItem = null;
+          initBagMenu();
+          setGameMode('battle-bag');
+        }
+      }
+    }
+  }
+}
+
+function updateItemMessageMode(): void {
+  const pressed = getJustPressed();
+
+  // Any button dismisses the message
+  if (pressed.a || pressed.b) {
+    overworldItemMessage = null;
+    initBagMenu();
+    setGameMode('battle-bag');
+  }
+}
+
+function renderItemMessage(): void {
+  if (!overworldItemMessage) return;
+
+  const ctx = getContext();
+
+  // Draw message box at bottom of screen
+  ctx.fillStyle = DMG_PALETTE.WHITE;
+  ctx.fillRect(4, SCREEN_HEIGHT - 40, SCREEN_WIDTH - 8, 36);
+  ctx.strokeStyle = DMG_PALETTE.BLACK;
+  ctx.strokeRect(3.5, SCREEN_HEIGHT - 40.5, SCREEN_WIDTH - 7, 37);
+
+  // Draw message text
+  drawText(overworldItemMessage, 8, SCREEN_HEIGHT - 34, 0);
+}
+
 function render(): void {
   const mode = getGameMode();
 
@@ -878,6 +983,14 @@ function render(): void {
     // Render overworld behind dialogue box
     renderOverworld();
     renderDialogue();
+  } else if (mode === 'item-use-party') {
+    // Party menu for selecting creature to use item on
+    renderPartyMenu(false);
+  } else if (mode === 'item-message') {
+    // Show message about item use result
+    renderOverworld();
+    // Simple message box rendering
+    renderItemMessage();
   }
 
   // Draw screen transition overlay

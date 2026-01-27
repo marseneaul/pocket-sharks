@@ -1,5 +1,5 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected } from './game-state.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected, decrementRepel, repelBlocksEncounter } from './game-state.ts';
 import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
 import { initNPCStates, updateNPCs } from './npc-movement.ts';
@@ -97,8 +97,9 @@ function onTileLand(player: PlayerState): void {
   const tile = map.tiles[player.y]?.[player.x];
   const tileDef = getTileDef(tile);
 
-  // Increment step counter (for egg hatching)
+  // Increment step counter (for egg hatching) and decrement repel
   incrementStepCount();
+  decrementRepel();
 
   // Check for ground egg at this location
   const groundEgg = getGroundEggAt(player.x, player.y);
@@ -138,8 +139,11 @@ function onTileLand(player: PlayerState): void {
   if (tileDef.encounter && tileDef.encounterRate > 0 && hasBattleableCreature()) {
     const wildCreature = tryEncounter(map, tileDef.encounterRate, getPlayerCertifications());
     if (wildCreature) {
-      startWildBattle(wildCreature);
-      return;
+      // Check if repel blocks this encounter
+      if (!repelBlocksEncounter(wildCreature.level)) {
+        startWildBattle(wildCreature);
+        return;
+      }
     }
   }
 }

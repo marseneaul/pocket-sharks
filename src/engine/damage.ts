@@ -13,7 +13,8 @@ export function calculateDamage(
   attacker: CreatureInstance,
   defender: CreatureInstance,
   move: Move,
-  attackModifier: number = 1.0  // For burn effect (halves physical attack)
+  attackModifier: number = 1.0,  // Combined modifier (burn + stat stages)
+  defenseModifier: number = 1.0  // Stat stage modifier for defense
 ): DamageResult {
   // Status moves don't do damage
   if (move.category === 'status' || move.power === 0) {
@@ -25,11 +26,11 @@ export function calculateDamage(
   let defense: number;
 
   if (move.category === 'physical') {
-    attack = Math.floor(attacker.stats.attack * attackModifier);  // Apply burn modifier
-    defense = defender.stats.defense;
+    attack = Math.floor(attacker.stats.attack * attackModifier);
+    defense = Math.max(1, Math.floor(defender.stats.defense * defenseModifier));
   } else {
-    attack = attacker.stats.spAttack;
-    defense = defender.stats.spDefense;
+    attack = Math.floor(attacker.stats.spAttack * attackModifier);
+    defense = Math.max(1, Math.floor(defender.stats.spDefense * defenseModifier));
   }
 
   // Base damage formula (Pokemon Gen 1 style)

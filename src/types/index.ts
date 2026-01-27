@@ -178,6 +178,8 @@ export interface TurnState {
   turnOrder: ('player' | 'enemy')[];  // Order of attackers this turn
   currentTurnIndex: number;           // 0 = first attacker, 1 = second attacker
   firstAttackDone: boolean;           // Has first attack finished (messages shown)
+  playerFlinched: boolean;            // Player flinched this turn (can't move)
+  enemyFlinched: boolean;             // Enemy flinched this turn (can't move)
 }
 
 // Cage animation phases
@@ -191,6 +193,15 @@ export interface CageAnimation {
   shakeCount: number;    // 0-3 shakes completed
   maxShakes: number;     // Target shakes before catch/escape
   success: boolean;      // Whether catch succeeds
+}
+
+// Stat stages for in-battle stat modifications
+export interface StatStages {
+  attack: number;
+  defense: number;
+  spAttack: number;
+  spDefense: number;
+  speed: number;
 }
 
 // Battle state
@@ -221,6 +232,11 @@ export interface BattleState {
   turnState: TurnState;
   // Cage catching animation
   cageAnimation: CageAnimation;
+  // In-battle stat stages (-6 to +6)
+  statStages: {
+    player: StatStages;
+    enemy: StatStages;
+  };
 }
 
 // Type effectiveness result

@@ -61,6 +61,7 @@ export const MOVES: Record<number, Move> = {
     power: 40,
     accuracy: 100,
     pp: 20,
+    priority: 1,  // Always goes first
     description: 'Strikes first with a jet of water.'
   },
   12: {
@@ -466,6 +467,7 @@ export const MOVES: Record<number, Move> = {
     power: 40,
     accuracy: 100,
     pp: 30,
+    priority: 1,  // Always goes first
     description: 'Attacks from the shadows first.'
   },
   132: {
@@ -746,6 +748,210 @@ export const MOVES: Record<number, Move> = {
     secondaryEffect: {
       chance: 0.3,
       status: 'poisoned'
+    }
+  },
+
+  // Priority moves
+  5: {
+    id: 5,
+    name: 'QUICK STRIKE',
+    type: 'shark',
+    category: 'physical',
+    power: 40,
+    accuracy: 100,
+    pp: 30,
+    priority: 1,  // Always goes first
+    description: 'A lightning-fast strike that always goes first.'
+  },
+  6: {
+    id: 6,
+    name: 'EXTREME SPEED',
+    type: 'shark',
+    category: 'physical',
+    power: 80,
+    accuracy: 100,
+    pp: 5,
+    priority: 2,  // Even higher priority
+    description: 'An extremely fast attack with high priority.'
+  },
+  32: {
+    id: 32,
+    name: 'SUCKER PUNCH',
+    type: 'deepsea',
+    category: 'physical',
+    power: 70,
+    accuracy: 100,
+    pp: 5,
+    priority: 1,  // Goes first
+    description: 'A sneaky attack that goes first if the foe is attacking.'
+  },
+
+  // Stat-boosting moves
+  7: {
+    id: 7,
+    name: 'SHARPEN',
+    type: 'shark',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 30,
+    description: 'Sharpens claws to raise Attack.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { attack: 1 }
+    }
+  },
+  8: {
+    id: 8,
+    name: 'SWORDS DANCE',
+    type: 'fighting',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 20,
+    description: 'A frenetic dance to sharply raise Attack.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { attack: 2 }
+    }
+  },
+  9: {
+    id: 9,
+    name: 'HARDEN',
+    type: 'shark',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 30,
+    description: 'Stiffens the body to raise Defense.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { defense: 1 }
+    }
+  },
+  15: {
+    id: 15,
+    name: 'IRON DEFENSE',
+    type: 'steel',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 15,
+    description: 'Hardens the body to sharply raise Defense.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { defense: 2 }
+    }
+  },
+  16: {
+    id: 16,
+    name: 'AGILITY',
+    type: 'psychic',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 30,
+    description: 'Relaxes and lightens the body to sharply raise Speed.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { speed: 2 }
+    }
+  },
+  17: {
+    id: 17,
+    name: 'CALM MIND',
+    type: 'psychic',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 20,
+    description: 'Focuses the mind to raise Sp. Atk and Sp. Def.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { spAttack: 1, spDefense: 1 }
+    }
+  },
+  18: {
+    id: 18,
+    name: 'DRAGON DANCE',
+    type: 'leviathan',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 20,
+    description: 'A mystical dance that raises Attack and Speed.',
+    effect: {
+      type: 'stat-change',
+      target: 'self',
+      statChanges: { attack: 1, speed: 1 }
+    }
+  },
+
+  // Stat-lowering moves
+  19: {
+    id: 19,
+    name: 'GROWL',
+    type: 'shark',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 40,
+    description: 'Growls to lower the foe\'s Attack.',
+    effect: {
+      type: 'stat-change',
+      target: 'enemy',
+      statChanges: { attack: -1 }
+    }
+  },
+  24: {
+    id: 24,
+    name: 'LEER',
+    type: 'shark',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 30,
+    description: 'Leers at the foe to lower its Defense.',
+    effect: {
+      type: 'stat-change',
+      target: 'enemy',
+      statChanges: { defense: -1 }
+    }
+  },
+  25: {
+    id: 25,
+    name: 'SCREECH',
+    type: 'shark',
+    category: 'status',
+    power: 0,
+    accuracy: 85,
+    pp: 40,
+    description: 'An earsplitting screech that harshly lowers Defense.',
+    effect: {
+      type: 'stat-change',
+      target: 'enemy',
+      statChanges: { defense: -2 }
+    }
+  },
+  26: {
+    id: 26,
+    name: 'SCARY FACE',
+    type: 'shark',
+    category: 'status',
+    power: 0,
+    accuracy: 100,
+    pp: 10,
+    description: 'Frightens the foe to harshly lower its Speed.',
+    effect: {
+      type: 'stat-change',
+      target: 'enemy',
+      statChanges: { speed: -2 }
     }
   }
 };
