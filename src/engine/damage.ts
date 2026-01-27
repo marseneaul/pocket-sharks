@@ -12,16 +12,11 @@ export interface DamageResult {
 export function calculateDamage(
   attacker: CreatureInstance,
   defender: CreatureInstance,
-  move: Move
+  move: Move,
+  attackModifier: number = 1.0  // For burn effect (halves physical attack)
 ): DamageResult {
   // Status moves don't do damage
   if (move.category === 'status' || move.power === 0) {
-    return { damage: 0, effectiveness: 1, isCritical: false, isStab: false };
-  }
-
-  // Check accuracy
-  const accuracyRoll = Math.random() * 100;
-  if (accuracyRoll > move.accuracy) {
     return { damage: 0, effectiveness: 1, isCritical: false, isStab: false };
   }
 
@@ -30,7 +25,7 @@ export function calculateDamage(
   let defense: number;
 
   if (move.category === 'physical') {
-    attack = attacker.stats.attack;
+    attack = Math.floor(attacker.stats.attack * attackModifier);  // Apply burn modifier
     defense = defender.stats.defense;
   } else {
     attack = attacker.stats.spAttack;

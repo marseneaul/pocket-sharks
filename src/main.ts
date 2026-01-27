@@ -110,6 +110,7 @@ import { KELP_HARBOR } from './data/maps/kelp-harbor.ts';
 import { KELP_GYM } from './data/maps/kelp-gym.ts';
 import { ROUTE_4 } from './data/maps/route-4.ts';
 import { FINNER_HQ } from './data/maps/finner-hq.ts';
+import { TEST_BEACH } from './data/maps/test-beach.ts';
 import { TEXT_SPEED } from './constants.ts';
 import { initTileAtlas } from './renderer/tile-atlas.ts';
 
@@ -200,8 +201,12 @@ function init(): void {
   registerMap(KELP_GYM);
   registerMap(ROUTE_4);
   registerMap(FINNER_HQ);
+  // Test map for tileset verification
+  registerMap(TEST_BEACH);
+
   // Start player in Scripps Marine Lab (San Diego starting area)
   setCurrentMap(SCRIPPS_LAB);
+  // setCurrentMap(TEST_BEACH);  // Uncomment to test tileset graphics
 
   // Position player in research station
   const player = getPlayer();

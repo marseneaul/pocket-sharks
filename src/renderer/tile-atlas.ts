@@ -55,35 +55,42 @@ let atlasReady = false;
 let loadPromise: Promise<void> | null = null;
 
 // Mapping from game tile IDs to spritesheet tiles
-// This maps our TILE constants to specific tiles in the categorized spritesheets
+// Tiles are arranged 16 per row in each spritesheet.
+// Index = row * 16 + column (within the spritesheet)
+//
+// These mappings match assets/tiled/game-tileset.png
+// See assets/tiled/tile-mapping.json for the master reference
+//
 const TILE_MAPPINGS: Partial<Record<number, TileMapping>> = {
-  // Terrain tiles
-  [TILE.FLOOR]: { sheet: 'interior-floors', index: 0 },
-  [TILE.WALL]: { sheet: 'terrain-cliffs', index: 5 },
-  [TILE.SAND]: { sheet: 'terrain-ground', index: 8 },
-  [TILE.ROCK]: { sheet: 'terrain-cliffs', index: 12 },
+  // === TERRAIN ===
+  [TILE.FLOOR]: { sheet: 'terrain-ground', index: 0 },      // Tan/beige floor
+  [TILE.WALL]: { sheet: 'terrain-cliffs', index: 8 },       // Brown rock wall
+  [TILE.SAND]: { sheet: 'terrain-ground', index: 1 },       // Sandy ground
+  [TILE.ROCK]: { sheet: 'nature-trees', index: 0 },         // Boulder/rock
+  [TILE.STAIRS]: { sheet: 'terrain-ground', index: 4 },     // Stairs
 
-  // Water tiles - use terrain-water spritesheet
-  [TILE.WATER]: { sheet: 'terrain-water', index: 0 },
-  [TILE.KELP]: { sheet: 'terrain-water', index: 4 },
-  [TILE.DEEP]: { sheet: 'terrain-water', index: 8 },
-  [TILE.REEF]: { sheet: 'terrain-water', index: 1 },
-  [TILE.DEEP_REEF]: { sheet: 'terrain-water', index: 9 },
-  [TILE.PELAGIC]: { sheet: 'terrain-water', index: 12 },
-  [TILE.ABYSS]: { sheet: 'terrain-water', index: 16 },
-  [TILE.REEF_KELP]: { sheet: 'terrain-water', index: 5 },
-  [TILE.TIDE_POOL]: { sheet: 'terrain-water', index: 2 },
-  [TILE.CORAL]: { sheet: 'terrain-water', index: 6 },
-  [TILE.SEAGRASS]: { sheet: 'terrain-water', index: 7 },
-  [TILE.CAVE]: { sheet: 'terrain-water', index: 20 },
+  // === WATER ===
+  [TILE.WATER]: { sheet: 'terrain-ground', index: 21 },     // Blue water
+  [TILE.DEEP]: { sheet: 'terrain-ground', index: 21 },      // Blue water (same)
+  [TILE.REEF]: { sheet: 'terrain-ground', index: 22 },      // Water with waves
+  [TILE.TIDE_POOL]: { sheet: 'terrain-ground', index: 22 }, // Water with waves
+  [TILE.DEEP_REEF]: { sheet: 'terrain-ground', index: 21 }, // Blue water
+  [TILE.PELAGIC]: { sheet: 'terrain-ground', index: 21 },   // Blue water
+  [TILE.ABYSS]: { sheet: 'buildings-dark', index: 32 },     // Very dark
 
-  // Objects
-  [TILE.DOCK]: { sheet: 'objects-outdoor', index: 0 },
-  [TILE.FLOWER]: { sheet: 'nature-small', index: 0 },
-  [TILE.PALM]: { sheet: 'nature-trees', index: 0 },
-  [TILE.SHIPWRECK]: { sheet: 'buildings-dark', index: 0 },
-  [TILE.STAIRS]: { sheet: 'interior-floors', index: 20 },
-  [TILE.HEAL]: { sheet: 'objects-signs', index: 5 }, // Use HEAL sign
+  // === NATURE ===
+  [TILE.KELP]: { sheet: 'nature-trees', index: 5 },         // Green bush (as kelp)
+  [TILE.SEAGRASS]: { sheet: 'nature-trees', index: 6 },     // Bush variant
+  [TILE.REEF_KELP]: { sheet: 'nature-trees', index: 7 },    // Another bush
+  [TILE.CORAL]: { sheet: 'nature-trees', index: 4 },        // Rock/bush as coral
+  [TILE.PALM]: { sheet: 'nature-trees', index: 16 },        // Tree foliage
+  [TILE.FLOWER]: { sheet: 'nature-small', index: 0 },       // Small flower
+
+  // === STRUCTURES ===
+  [TILE.DOCK]: { sheet: 'interior-floors', index: 0 },      // Wooden/floor pattern
+  [TILE.CAVE]: { sheet: 'buildings-dark', index: 0 },       // Dark tile
+  [TILE.SHIPWRECK]: { sheet: 'buildings-dark', index: 16 }, // Dark structure
+  [TILE.HEAL]: { sheet: 'objects-signs', index: 10 },       // HEAL sign
 };
 
 // Load a single spritesheet

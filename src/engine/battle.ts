@@ -19,6 +19,13 @@ import {
 import { initPartyMenu } from '../renderer/party-ui.ts';
 import { initBagMenu } from '../renderer/bag-ui.ts';
 import { playHitSound } from './audio.ts';
+import {
+  checkCanAct,
+  applyEndOfTurnDamage,
+  getSpeedModifier,
+  getAttackModifier,
+  tryApplyStatus
+} from './status-effects.ts';
 
 /**
  * Create a new creature instance with optional IVs and nature
@@ -422,8 +429,9 @@ function executeTurn(state: BattleState): void {
   state.phase = 'executing';
 
   // Determine turn order based on speed (faster goes first, random tiebreaker)
-  const playerSpeed = state.playerCreature.stats.speed;
-  const enemySpeed = state.enemyCreature.stats.speed;
+  // Apply speed modifiers from status effects (paralysis halves speed)
+  const playerSpeed = state.playerCreature.stats.speed * getSpeedModifier(state.playerCreature);
+  const enemySpeed = state.enemyCreature.stats.speed * getSpeedModifier(state.enemyCreature);
 
   const playerFirst = playerSpeed > enemySpeed ||
     (playerSpeed === enemySpeed && Math.random() < 0.5);
@@ -479,6 +487,9 @@ function executeSecondAttack(state: BattleState): void {
 
   if (defenderFainted) {
     handleBattleEndMessages(state, secondAttacker);
+  } else {
+    // Both creatures survived - apply end-of-turn status damage (poison/burn)
+    applyEndOfTurnStatusDamage(state);
   }
 
   // Reset turn state for next turn
@@ -487,6 +498,29 @@ function executeSecondAttack(state: BattleState): void {
 
   state.phase = 'message';
   advanceMessage(state);
+}
+
+// Apply end-of-turn status damage (poison/burn) to both creatures
+function applyEndOfTurnStatusDamage(state: BattleState): void {
+  // Apply damage to player creature first
+  const playerResult = applyEndOfTurnDamage(state.playerCreature);
+  if (playerResult) {
+    queueMessage(state, playerResult.message);
+    if (playerResult.fainted) {
+      const name = state.playerCreature.nickname || state.playerCreature.species.name;
+      queueMessage(state, `${name} fainted!`);
+      return; // Don't process enemy if player fainted
+    }
+  }
+
+  // Apply damage to enemy creature
+  const enemyResult = applyEndOfTurnDamage(state.enemyCreature);
+  if (enemyResult) {
+    queueMessage(state, enemyResult.message);
+    if (enemyResult.fainted) {
+      handleBattleEndMessages(state, 'player'); // Player wins by status damage
+    }
+  }
 }
 
 // Handle victory/defeat messages
@@ -553,6 +587,16 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
   const move = moveInstance.move;
   const attackerName = attackerCreature.nickname || attackerCreature.species.name;
 
+  // Check if attacker can act due to status (paralysis, sleep, freeze)
+  const actCheck = checkCanAct(attackerCreature);
+  if (actCheck.message) {
+    queueMessage(state, actCheck.message);
+  }
+  if (!actCheck.canAct) {
+    // Can't move this turn - skip the rest
+    return;
+  }
+
   // Use PP
   moveInstance.currentPp--;
 
@@ -562,17 +606,27 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
   // Start attack animation based on move category
   startAttackAnimation(state, attacker, move.category);
 
-  // Calculate damage
-  const result = calculateDamage(attackerCreature, defenderCreature, move);
+  // Check accuracy
+  const accuracyRoll = Math.random() * 100;
+  if (accuracyRoll > move.accuracy) {
+    queueMessage(state, `${attackerName}'s attack missed!`);
+    return;
+  }
+
+  // Calculate damage (with burn modifier for physical moves)
+  const burnMod = move.category === 'physical' ? getAttackModifier(attackerCreature) : 1.0;
+  const result = calculateDamage(attackerCreature, defenderCreature, move, burnMod);
 
   if (result.damage === 0 && move.power > 0) {
     if (result.effectiveness === 0) {
       const defenderName = defenderCreature.nickname || defenderCreature.species.name;
       queueMessage(state, `It doesn't affect ${defenderName}...`);
-    } else {
-      queueMessage(state, `${attackerName}'s attack missed!`);
     }
-  } else if (result.damage > 0) {
+    // Don't apply secondary effects if no damage dealt
+    return;
+  }
+
+  if (result.damage > 0) {
     // Apply damage
     defenderCreature.currentHp = Math.max(0, defenderCreature.currentHp - result.damage);
 
@@ -585,6 +639,26 @@ function executeMove(state: BattleState, attacker: 'player' | 'enemy'): void {
     // Critical hit message
     if (result.isCritical) {
       queueMessage(state, 'A critical hit!');
+    }
+
+    // Apply secondary status effect (if any and defender still alive)
+    if (defenderCreature.currentHp > 0 && move.secondaryEffect?.status) {
+      const statusResult = tryApplyStatus(
+        defenderCreature,
+        move.secondaryEffect.status,
+        move.secondaryEffect.chance
+      );
+      if (statusResult.message) {
+        queueMessage(state, statusResult.message);
+      }
+    }
+  }
+
+  // Handle primary status moves (like Thunder Wave, Toxic, etc.)
+  if (move.category === 'status' && move.effect?.type === 'status' && move.effect.status) {
+    const statusResult = tryApplyStatus(defenderCreature, move.effect.status, 1.0);
+    if (statusResult.message) {
+      queueMessage(state, statusResult.message);
     }
   }
 }

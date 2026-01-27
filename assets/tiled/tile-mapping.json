@@ -1,0 +1,138 @@
+{
+  "tileSize": 16,
+  "tilesPerRow": 16,
+  "tiles": [
+    {
+      "id": 0,
+      "name": "FLOOR",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 0
+    },
+    {
+      "id": 1,
+      "name": "WALL",
+      "sourceSheet": "terrain-cliffs",
+      "sourceIndex": 8
+    },
+    {
+      "id": 2,
+      "name": "SAND",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 1
+    },
+    {
+      "id": 3,
+      "name": "ROCK",
+      "sourceSheet": "nature-trees",
+      "sourceIndex": 0
+    },
+    {
+      "id": 4,
+      "name": "WATER",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 21
+    },
+    {
+      "id": 5,
+      "name": "KELP",
+      "sourceSheet": "nature-trees",
+      "sourceIndex": 5
+    },
+    {
+      "id": 6,
+      "name": "DEEP",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 21
+    },
+    {
+      "id": 7,
+      "name": "REEF",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 22
+    },
+    {
+      "id": 8,
+      "name": "DOCK",
+      "sourceSheet": "interior-floors",
+      "sourceIndex": 0
+    },
+    {
+      "id": 9,
+      "name": "HEAL",
+      "sourceSheet": "objects-signs",
+      "sourceIndex": 10
+    },
+    {
+      "id": 10,
+      "name": "DEEP_REEF",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 21
+    },
+    {
+      "id": 11,
+      "name": "PELAGIC",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 21
+    },
+    {
+      "id": 12,
+      "name": "ABYSS",
+      "sourceSheet": "buildings-dark",
+      "sourceIndex": 32
+    },
+    {
+      "id": 13,
+      "name": "REEF_KELP",
+      "sourceSheet": "nature-trees",
+      "sourceIndex": 7
+    },
+    {
+      "id": 14,
+      "name": "TIDE_POOL",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 22
+    },
+    {
+      "id": 15,
+      "name": "CORAL",
+      "sourceSheet": "nature-trees",
+      "sourceIndex": 4
+    },
+    {
+      "id": 16,
+      "name": "SEAGRASS",
+      "sourceSheet": "nature-trees",
+      "sourceIndex": 6
+    },
+    {
+      "id": 17,
+      "name": "CAVE",
+      "sourceSheet": "buildings-dark",
+      "sourceIndex": 0
+    },
+    {
+      "id": 18,
+      "name": "SHIPWRECK",
+      "sourceSheet": "buildings-dark",
+      "sourceIndex": 16
+    },
+    {
+      "id": 19,
+      "name": "FLOWER",
+      "sourceSheet": "nature-small",
+      "sourceIndex": 0
+    },
+    {
+      "id": 20,
+      "name": "PALM",
+      "sourceSheet": "nature-trees",
+      "sourceIndex": 16
+    },
+    {
+      "id": 21,
+      "name": "STAIRS",
+      "sourceSheet": "terrain-ground",
+      "sourceIndex": 4
+    }
+  ]
+}

@@ -20,7 +20,11 @@ export const MOVES: Record<number, Move> = {
     power: 60,
     accuracy: 100,
     pp: 25,
-    description: 'Bites with sharp fangs.'
+    description: 'Bites with sharp fangs. May cause flinching.',
+    secondaryEffect: {
+      chance: 0.3,
+      flinch: true
+    }
   },
   3: {
     id: 3,
@@ -151,7 +155,11 @@ export const MOVES: Record<number, Move> = {
     power: 80,
     accuracy: 100,
     pp: 15,
-    description: 'Crunches with powerful jaws.'
+    description: 'Crunches with powerful jaws. May lower Defense.',
+    secondaryEffect: {
+      chance: 0.2,
+      statChanges: { defense: -1 }
+    }
   },
 
   // Psychic moves
@@ -195,7 +203,11 @@ export const MOVES: Record<number, Move> = {
     power: 65,
     accuracy: 100,
     pp: 20,
-    description: 'An electrically charged tackle.'
+    description: 'An electrically charged tackle. May paralyze.',
+    secondaryEffect: {
+      chance: 0.3,
+      status: 'paralyzed'
+    }
   },
   51: {
     id: 51,
@@ -205,7 +217,11 @@ export const MOVES: Record<number, Move> = {
     power: 40,
     accuracy: 100,
     pp: 30,
-    description: 'An electric shock attack.'
+    description: 'An electric shock attack. May paralyze.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'paralyzed'
+    }
   },
 
   // Fire moves
@@ -217,7 +233,11 @@ export const MOVES: Record<number, Move> = {
     power: 40,
     accuracy: 100,
     pp: 25,
-    description: 'A small flame attack.'
+    description: 'A small flame attack. May burn.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'burned'
+    }
   },
   61: {
     id: 61,
@@ -227,7 +247,11 @@ export const MOVES: Record<number, Move> = {
     power: 65,
     accuracy: 95,
     pp: 15,
-    description: 'Bites with heated fangs.'
+    description: 'Bites with heated fangs. May burn.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'burned'
+    }
   },
   62: {
     id: 62,
@@ -247,7 +271,11 @@ export const MOVES: Record<number, Move> = {
     power: 90,
     accuracy: 100,
     pp: 15,
-    description: 'A powerful stream of fire.'
+    description: 'A powerful stream of fire. May burn.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'burned'
+    }
   },
 
   // Steel moves
@@ -372,7 +400,11 @@ export const MOVES: Record<number, Move> = {
     power: 40,
     accuracy: 100,
     pp: 25,
-    description: 'A chilling flurry of snow.'
+    description: 'A chilling flurry of snow. May freeze.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'frozen'
+    }
   },
   111: {
     id: 111,
@@ -382,7 +414,11 @@ export const MOVES: Record<number, Move> = {
     power: 65,
     accuracy: 95,
     pp: 15,
-    description: 'Bites with freezing fangs.'
+    description: 'Bites with freezing fangs. May freeze.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'frozen'
+    }
   },
 
   // Fairy moves
@@ -416,7 +452,11 @@ export const MOVES: Record<number, Move> = {
     power: 30,
     accuracy: 100,
     pp: 30,
-    description: 'An eerie lick that may paralyze.'
+    description: 'An eerie lick that may paralyze.',
+    secondaryEffect: {
+      chance: 0.3,
+      status: 'paralyzed'
+    }
   },
   131: {
     id: 131,
@@ -521,7 +561,192 @@ export const MOVES: Record<number, Move> = {
     power: 90,
     accuracy: 100,
     pp: 15,
-    description: 'A strong electrical attack.'
+    description: 'A strong electrical attack. May paralyze.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'paralyzed'
+    }
+  },
+
+  // Status moves
+  53: {
+    id: 53,
+    name: 'THUNDER WAVE',
+    type: 'electric',
+    category: 'status',
+    power: 0,
+    accuracy: 90,
+    pp: 20,
+    description: 'A weak electric shock that paralyzes.',
+    effect: {
+      type: 'status',
+      target: 'enemy',
+      status: 'paralyzed'
+    }
+  },
+  54: {
+    id: 54,
+    name: 'STUN SPORE',
+    type: 'algae',
+    category: 'status',
+    power: 0,
+    accuracy: 75,
+    pp: 30,
+    description: 'Scatters paralyzing spores.',
+    effect: {
+      type: 'status',
+      target: 'enemy',
+      status: 'paralyzed'
+    }
+  },
+
+  // Fire status move
+  64: {
+    id: 64,
+    name: 'WILL-O-WISP',
+    type: 'fire',
+    category: 'status',
+    power: 0,
+    accuracy: 85,
+    pp: 15,
+    description: 'Eerie flames that inflict a burn.',
+    effect: {
+      type: 'status',
+      target: 'enemy',
+      status: 'burned'
+    }
+  },
+
+  // Psychic status moves
+  43: {
+    id: 43,
+    name: 'HYPNOSIS',
+    type: 'psychic',
+    category: 'status',
+    power: 0,
+    accuracy: 60,
+    pp: 20,
+    description: 'A hypnotic suggestion that puts the foe to sleep.',
+    effect: {
+      type: 'status',
+      target: 'enemy',
+      status: 'asleep'
+    }
+  },
+  44: {
+    id: 44,
+    name: 'SLEEP POWDER',
+    type: 'algae',
+    category: 'status',
+    power: 0,
+    accuracy: 75,
+    pp: 15,
+    description: 'Scatters sleep-inducing dust.',
+    effect: {
+      type: 'status',
+      target: 'enemy',
+      status: 'asleep'
+    }
+  },
+
+  // Ice moves with freeze chance
+  112: {
+    id: 112,
+    name: 'ICE BEAM',
+    type: 'ice',
+    category: 'special',
+    power: 90,
+    accuracy: 100,
+    pp: 10,
+    description: 'Fires an icy beam. May freeze.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'frozen'
+    }
+  },
+  113: {
+    id: 113,
+    name: 'BLIZZARD',
+    type: 'ice',
+    category: 'special',
+    power: 110,
+    accuracy: 70,
+    pp: 5,
+    description: 'A howling blizzard. May freeze.',
+    secondaryEffect: {
+      chance: 0.1,
+      status: 'frozen'
+    }
+  },
+
+  // Powder Snow should have freeze chance
+  // (overwriting existing entry 110)
+
+  // Crunch with defense drop
+  // Already exists at 31, let's add secondary effect
+
+  // Additional moves with secondary effects
+  65: {
+    id: 65,
+    name: 'SCALD',
+    type: 'freshwater',
+    category: 'special',
+    power: 80,
+    accuracy: 100,
+    pp: 15,
+    description: 'Shoots boiling water. May burn.',
+    secondaryEffect: {
+      chance: 0.3,
+      status: 'burned'
+    }
+  },
+
+  // Body Slam with paralysis
+  4: {
+    id: 4,
+    name: 'BODY SLAM',
+    type: 'shark',
+    category: 'physical',
+    power: 85,
+    accuracy: 100,
+    pp: 15,
+    description: 'A full-body slam attack. May paralyze.',
+    secondaryEffect: {
+      chance: 0.3,
+      status: 'paralyzed'
+    }
+  },
+
+  // Sludge Bomb with poison
+  152: {
+    id: 152,
+    name: 'SLUDGE BOMB',
+    type: 'poison',
+    category: 'special',
+    power: 90,
+    accuracy: 100,
+    pp: 10,
+    description: 'Hurls toxic sludge. May poison.',
+    secondaryEffect: {
+      chance: 0.3,
+      status: 'poisoned'
+    }
+  },
+
+  // Poison Jab
+  153: {
+    id: 153,
+    name: 'POISON JAB',
+    type: 'poison',
+    category: 'physical',
+    power: 80,
+    accuracy: 100,
+    pp: 20,
+    description: 'Stabs with a toxic barb. May poison.',
+    secondaryEffect: {
+      chance: 0.3,
+      status: 'poisoned'
+    }
   }
 };
 

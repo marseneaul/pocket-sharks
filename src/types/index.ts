@@ -60,6 +60,14 @@ export interface MoveEffect {
   healPercent?: number;
 }
 
+// Secondary effect (chance-based effect on damaging moves)
+export interface SecondaryEffect {
+  chance: number;  // 0-1 probability
+  status?: StatusCondition;
+  statChanges?: Partial<Record<keyof Stats, number>>;
+  flinch?: boolean;
+}
+
 // Move definition (template)
 export interface Move {
   id: number;
@@ -71,6 +79,8 @@ export interface Move {
   pp: number;
   description: string;
   effect?: MoveEffect;
+  secondaryEffect?: SecondaryEffect;  // Chance-based effect on hit
+  priority?: number;  // Move priority (-7 to +7, default 0)
 }
 
 // Move instance (in battle, tracks PP usage)

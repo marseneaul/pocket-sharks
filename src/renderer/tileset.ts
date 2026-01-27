@@ -6,7 +6,7 @@ import { drawAtlasTile, isAtlasReady, ATLAS_TILE_SIZE } from './tile-atlas.ts';
 const TILE_SIZE = 8;
 
 // Flag to enable/disable atlas rendering (can be toggled for debugging)
-let useAtlas = true;
+let useAtlas = false;  // Disabled - using procedural tiles while maps are being designed
 
 export function setUseAtlas(enabled: boolean): void {
   useAtlas = enabled;
