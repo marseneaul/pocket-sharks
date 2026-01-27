@@ -197,9 +197,9 @@ export const SEA_OF_CORTEZ: MapData = {
   // Sea of Cortez encounters - hammerhead territory
   encounterTable: [
     { speciesId: 11, minLevel: 16, maxLevel: 20, weight: 25 },  // Scalloped Hammerhead
-    { speciesId: 68, minLevel: 16, maxLevel: 20, weight: 20 },  // Smooth Hammerhead
+    { speciesId: 68, minLevel: 16, maxLevel: 20, weight: 20, seasonal: { seasons: ['summer', 'fall'] } },  // Smooth Hammerhead (seasonal)
     { speciesId: 10, minLevel: 15, maxLevel: 18, weight: 15 },  // Bonnethead
-    { speciesId: 69, minLevel: 16, maxLevel: 19, weight: 15 },  // Silky Shark
+    { speciesId: 69, minLevel: 16, maxLevel: 19, weight: 15, seasonal: { seasons: ['summer'] } },  // Silky Shark (summer only)
     { speciesId: 70, minLevel: 17, maxLevel: 20, weight: 10 },  // Pelagic Thresher
     { speciesId: 21, minLevel: 18, maxLevel: 21, weight: 10, requiredCert: 'openwater' },  // Bull Shark
     { speciesId: 72, minLevel: 20, maxLevel: 23, weight: 5, requiredCert: 'openwater' }   // Great Hammerhead (rare)

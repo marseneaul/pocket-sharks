@@ -3,6 +3,7 @@ import { CERT_HIERARCHY } from '../types/overworld.ts';
 import type { CreatureInstance } from '../types/index.ts';
 import { createCreatureInstance } from '../engine/battle.ts';
 import { getCreature } from './creatures.ts';
+import { isAvailableThisSeason } from '../engine/seasons.ts';
 
 // Check if a wild encounter should occur
 export function checkEncounter(encounterRate: number): boolean {
@@ -30,9 +31,10 @@ export function generateWildCreature(
   encounterTable: EncounterEntry[],
   playerCerts: CertificationLevel[] = ['wading']
 ): CreatureInstance | null {
-  // Filter encounters by player's certification
+  // Filter encounters by player's certification AND seasonal availability
   const availableEncounters = encounterTable.filter(
-    entry => hasRequiredCert(playerCerts, entry.requiredCert)
+    entry => hasRequiredCert(playerCerts, entry.requiredCert) &&
+             isAvailableThisSeason(entry.seasonal)
   );
 
   if (availableEncounters.length === 0) return null;

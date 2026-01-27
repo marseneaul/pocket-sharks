@@ -1,7 +1,10 @@
 // Save/Load System
 // Persists game state to localStorage and restores it on continue
 
-import type { CreatureInstance, PartyMember, EggInstance, Stats, StatusCondition, MoveInstance } from '../types/index.ts';
+import type { CreatureInstance, PartyMember, EggInstance, Stats, StatusCondition, MoveInstance, IVs } from '../types/index.ts';
+import type { NatureId } from '../data/natures.ts';
+import { getRandomNature } from '../data/natures.ts';
+import { generateRandomIVs } from './damage.ts';
 import type { CertificationLevel, Direction } from '../types/overworld.ts';
 import type { InventorySlot } from '../data/items.ts';
 import type { PCStorage, StorageBox } from '../types/storage.ts';
@@ -35,7 +38,7 @@ import {
 } from './storage.ts';
 
 const SAVE_KEY = 'pocket-sharks-save';
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2;
 
 // Serialized creature format (stores IDs instead of objects)
 interface SerializedCreature {
@@ -48,6 +51,8 @@ interface SerializedCreature {
   stats: Stats;
   moves: { moveId: number; currentPp: number }[];
   status: StatusCondition;
+  ivs?: IVs;           // Added in v2
+  nature?: NatureId;   // Added in v2
 }
 
 // Serialized party member (can be creature or egg)
@@ -63,6 +68,8 @@ interface SerializedPartyMember {
   stats?: Stats;
   moves?: { moveId: number; currentPp: number }[];
   status?: StatusCondition;
+  ivs?: IVs;           // Added in v2
+  nature?: NatureId;   // Added in v2
   // Egg fields (when isEgg=true)
   eggItemId?: number;
   stepsRemaining?: number;
@@ -123,7 +130,9 @@ function serializeCreature(c: CreatureInstance): SerializedCreature {
       moveId: m.move.id,
       currentPp: m.currentPp
     })),
-    status: c.status
+    status: c.status,
+    ivs: c.ivs ? { ...c.ivs } : undefined,
+    nature: c.nature
   };
 }
 
@@ -163,7 +172,9 @@ function deserializeCreature(data: SerializedCreature): CreatureInstance | null 
     maxHp: data.maxHp,
     stats: { ...data.stats },
     moves,
-    status: data.status
+    status: data.status,
+    ivs: data.ivs ? { ...data.ivs } : undefined,
+    nature: data.nature
   };
 }
 
@@ -256,6 +267,47 @@ function deserializeStorage(data: SerializedStorage): PCStorage {
   };
 }
 
+// Migrate save data from older versions
+function migrateSave(saveData: SaveData): void {
+  // v1 -> v2: Add IVs and natures to all creatures
+  if (saveData.version === 1) {
+    console.log('Migrating v1 save: Adding IVs and natures to creatures');
+
+    // Migrate party creatures
+    for (const member of saveData.party) {
+      if (!member.isEgg) {
+        // Add random IVs if not present
+        if (!member.ivs) {
+          member.ivs = generateRandomIVs();
+        }
+        // Add random nature if not present
+        if (!member.nature) {
+          member.nature = getRandomNature();
+        }
+      }
+    }
+
+    // Migrate PC storage creatures
+    for (const box of saveData.pcStorage.boxes) {
+      for (const creature of box.creatures) {
+        if (creature) {
+          if (!creature.ivs) {
+            creature.ivs = generateRandomIVs();
+          }
+          if (!creature.nature) {
+            creature.nature = getRandomNature();
+          }
+        }
+      }
+    }
+
+    saveData.version = 2;
+  }
+
+  // Future migrations can be added here
+  // if (saveData.version === 2) { ... }
+}
+
 // Main save function
 export function saveGame(): boolean {
   try {
@@ -306,10 +358,10 @@ export function loadGame(): boolean {
 
     const saveData: SaveData = JSON.parse(savedJson);
 
-    // Version check (for future migrations)
-    if (saveData.version !== SAVE_VERSION) {
-      console.warn(`Save version mismatch: ${saveData.version} vs ${SAVE_VERSION}`);
-      // Future: handle migrations here
+    // Handle save migrations
+    if (saveData.version < SAVE_VERSION) {
+      console.log(`Migrating save from v${saveData.version} to v${SAVE_VERSION}`);
+      migrateSave(saveData);
     }
 
     // Restore map

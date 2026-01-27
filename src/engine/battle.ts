@@ -1,5 +1,6 @@
-import type { BattleState, CreatureInstance, CreatureSpecies, MoveInstance } from '../types/index.ts';
-import { calculateDamage, calculateStats } from './damage.ts';
+import type { BattleState, CreatureInstance, CreatureSpecies, MoveInstance, IVs } from '../types/index.ts';
+import { calculateDamage, calculateStats, generateRandomIVs } from './damage.ts';
+import { getRandomNature, type NatureId } from '../data/natures.ts';
 import { getEffectivenessText } from '../data/type-chart.ts';
 import { getMove } from '../data/moves.ts';
 import { getCreature } from '../data/creatures.ts';
@@ -19,8 +20,21 @@ import { initPartyMenu } from '../renderer/party-ui.ts';
 import { initBagMenu } from '../renderer/bag-ui.ts';
 import { playHitSound } from './audio.ts';
 
-export function createCreatureInstance(species: CreatureSpecies, level: number): CreatureInstance {
-  const stats = calculateStats(species, level);
+/**
+ * Create a new creature instance with optional IVs and nature
+ * If not provided, random IVs and nature will be generated
+ */
+export function createCreatureInstance(
+  species: CreatureSpecies,
+  level: number,
+  ivs?: IVs,
+  nature?: NatureId
+): CreatureInstance {
+  // Generate random IVs and nature if not provided
+  const creatureIvs = ivs || generateRandomIVs();
+  const creatureNature = nature || getRandomNature();
+
+  const stats = calculateStats(species, level, creatureIvs, creatureNature);
 
   // Get moves for this level
   const learnedMoves = species.learnableMoves
@@ -43,7 +57,9 @@ export function createCreatureInstance(species: CreatureSpecies, level: number):
     stats,
     moves: learnedMoves,
     status: null,
-    exp: getExpForLevel(level) // Start with exp matching current level
+    exp: getExpForLevel(level), // Start with exp matching current level
+    ivs: creatureIvs,
+    nature: creatureNature
   };
 }
 
@@ -295,7 +311,7 @@ export function useBattleItem(state: BattleState, itemId: number): void {
 
       // Try to add to party
       if (canAddToParty()) {
-        // Create a fresh instance of the caught creature
+        // Create a fresh instance of the caught creature, preserving IVs and nature
         const caughtCreature: CreatureInstance = {
           species: enemy.species,
           level: enemy.level,
@@ -304,7 +320,9 @@ export function useBattleItem(state: BattleState, itemId: number): void {
           stats: { ...enemy.stats },
           moves: enemy.moves.map(m => ({ ...m })),
           status: enemy.status,
-          exp: enemy.exp
+          exp: enemy.exp,
+          ivs: enemy.ivs,
+          nature: enemy.nature
         };
         addToParty(caughtCreature);
         queueMessage(state, `${enemy.species.name} joined your team!`);
@@ -627,9 +645,9 @@ export function processExpGain(creature: CreatureInstance, expGain: number): str
     creature.level++;
     messages.push(`${creature.species.name} grew to LV ${creature.level}!`);
 
-    // Recalculate stats
+    // Recalculate stats using creature's existing IVs and nature
     const oldMaxHp = creature.maxHp;
-    creature.stats = calculateStats(creature.species, creature.level);
+    creature.stats = calculateStats(creature.species, creature.level, creature.ivs, creature.nature);
     creature.maxHp = creature.stats.hp;
 
     // Heal the HP difference (like in Pokemon)
@@ -693,9 +711,9 @@ export function checkEvolution(creature: CreatureInstance): CreatureSpecies | nu
 export function evolveCreature(creature: CreatureInstance, newSpecies: CreatureSpecies): void {
   creature.species = newSpecies;
 
-  // Recalculate stats for new species
+  // Recalculate stats for new species using creature's existing IVs and nature
   const oldMaxHp = creature.maxHp;
-  creature.stats = calculateStats(newSpecies, creature.level);
+  creature.stats = calculateStats(newSpecies, creature.level, creature.ivs, creature.nature);
   creature.maxHp = creature.stats.hp;
 
   // Scale current HP proportionally

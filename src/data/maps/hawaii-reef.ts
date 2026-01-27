@@ -169,7 +169,8 @@ export const HAWAII_REEF: MapData = {
     // For now, encounters exist but catching should be blocked by game logic
     { speciesId: 4, minLevel: 10, maxLevel: 15, weight: 40 },   // Whitetip Reef Shark
     { speciesId: 1, minLevel: 10, maxLevel: 15, weight: 40 },   // Blacktip Reef Shark
-    { speciesId: 52, minLevel: 8, maxLevel: 12, weight: 20 }    // Butterfly Ray
+    { speciesId: 52, minLevel: 8, maxLevel: 12, weight: 20 },   // Butterfly Ray
+    { speciesId: 22, minLevel: 20, maxLevel: 25, weight: 10, seasonal: { months: [10] } }  // Tiger Shark (October only)
   ],
   isOutdoor: true,
   palette: 'tropical'  // Warm Hawaiian reef colors

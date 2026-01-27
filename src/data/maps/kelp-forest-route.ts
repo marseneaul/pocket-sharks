@@ -214,7 +214,7 @@ export const KELP_FOREST_ROUTE: MapData = {
     { speciesId: 47, minLevel: 6, maxLevel: 8, weight: 15 },   // Horn Shark
     { speciesId: 55, minLevel: 5, maxLevel: 7, weight: 15 },   // Bat Ray
     { speciesId: 50, minLevel: 6, maxLevel: 8, weight: 10 },   // Giant Guitarfish
-    { speciesId: 62, minLevel: 8, maxLevel: 10, weight: 5 },  // Broadnose Sevengill (rare - spring only once seasonal system implemented)
+    { speciesId: 62, minLevel: 8, maxLevel: 10, weight: 5, seasonal: { seasons: ['spring'] } },  // Broadnose Sevengill (rare, spring only)
     { speciesId: 10, minLevel: 7, maxLevel: 9, weight: 5 },    // Bonnethead (uncommon)
     // SCUBA-only encounters in reef area (requires openwater cert)
     { speciesId: 56, minLevel: 10, maxLevel: 13, weight: 0, requiredCert: 'openwater' },  // Angelshark

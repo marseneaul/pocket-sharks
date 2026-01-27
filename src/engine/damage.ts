@@ -1,5 +1,6 @@
-import type { CreatureInstance, Move, Effectiveness } from '../types/index.ts';
+import type { CreatureInstance, Move, Effectiveness, IVs } from '../types/index.ts';
 import { getTypeEffectiveness } from '../data/type-chart.ts';
+import { getNatureModifiers, type NatureId } from '../data/natures.ts';
 
 export interface DamageResult {
   damage: number;
@@ -75,21 +76,56 @@ export function calculateDamage(
   };
 }
 
-// Calculate stats from base stats and level (simplified IV/EV formula)
-export function calculateStats(species: { baseStats: CreatureInstance['stats'] }, level: number): CreatureInstance['stats'] {
+/**
+ * Generate random IVs (Individual Values) for a creature
+ * Each stat gets a value from 0-31
+ */
+export function generateRandomIVs(): IVs {
+  return {
+    hp: Math.floor(Math.random() * 32),
+    attack: Math.floor(Math.random() * 32),
+    defense: Math.floor(Math.random() * 32),
+    spAttack: Math.floor(Math.random() * 32),
+    spDefense: Math.floor(Math.random() * 32),
+    speed: Math.floor(Math.random() * 32)
+  };
+}
+
+/**
+ * Calculate stats from base stats, level, IVs, and nature
+ * Formula based on Pokemon mechanics:
+ * - HP: floor((2 * base + iv) * level / 100 + level + 10)
+ * - Other: floor(((2 * base + iv) * level / 100 + 5) * natureModifier)
+ */
+export function calculateStats(
+  species: { baseStats: CreatureInstance['stats'] },
+  level: number,
+  ivs?: IVs,
+  nature?: NatureId
+): CreatureInstance['stats'] {
   const base = species.baseStats;
 
-  // Simplified stat calculation (no IVs/EVs for now)
-  const hp = Math.floor((2 * base.hp * level) / 100 + level + 10);
-  const otherStat = (baseStat: number) =>
-    Math.floor((2 * baseStat * level) / 100 + 5);
+  // Use provided IVs or default to 0 (for backwards compatibility)
+  const iv: IVs = ivs || { hp: 0, attack: 0, defense: 0, spAttack: 0, spDefense: 0, speed: 0 };
+
+  // Get nature modifiers (1.0, 1.1, or 0.9 for each stat)
+  const natureMod = nature ? getNatureModifiers(nature) : {
+    attack: 1, defense: 1, spAttack: 1, spDefense: 1, speed: 1
+  };
+
+  // HP calculation (not affected by nature)
+  const hp = Math.floor((2 * base.hp + iv.hp) * level / 100 + level + 10);
+
+  // Other stat calculation (affected by nature)
+  const calcStat = (baseStat: number, ivStat: number, modifier: number) =>
+    Math.floor(((2 * baseStat + ivStat) * level / 100 + 5) * modifier);
 
   return {
     hp,
-    attack: otherStat(base.attack),
-    defense: otherStat(base.defense),
-    spAttack: otherStat(base.spAttack),
-    spDefense: otherStat(base.spDefense),
-    speed: otherStat(base.speed)
+    attack: calcStat(base.attack, iv.attack, natureMod.attack),
+    defense: calcStat(base.defense, iv.defense, natureMod.defense),
+    spAttack: calcStat(base.spAttack, iv.spAttack, natureMod.spAttack),
+    spDefense: calcStat(base.spDefense, iv.spDefense, natureMod.spDefense),
+    speed: calcStat(base.speed, iv.speed, natureMod.speed)
   };
 }

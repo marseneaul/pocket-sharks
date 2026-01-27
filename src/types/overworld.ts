@@ -1,4 +1,5 @@
 import type { PartyMember } from './index.ts';
+import type { SeasonalConfig } from '../engine/seasons.ts';
 
 // Diving certification levels (progression system)
 export type CertificationLevel =
@@ -116,7 +117,11 @@ export interface EncounterEntry {
   weight: number;
   requiredCert?: CertificationLevel;  // Only encounter if player has this cert
   method?: 'wading' | 'snorkel' | 'scuba' | 'fishing' | 'night' | 'submarine';  // How this species is encountered
+  seasonal?: SeasonalConfig;  // Seasonal/monthly availability restrictions
 }
+
+// Re-export Season type for convenience
+export type { Season, SeasonalConfig } from '../engine/seasons.ts';
 
 // Ground egg - collectible egg found in overworld
 export interface GroundEgg {

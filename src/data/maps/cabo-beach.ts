@@ -182,7 +182,8 @@ export const CABO_BEACH: MapData = {
     { speciesId: 65, minLevel: 12, maxLevel: 15, weight: 25 },  // Mexican Horn Shark
     { speciesId: 66, minLevel: 13, maxLevel: 16, weight: 20 },  // Cownose Ray
     { speciesId: 67, minLevel: 13, maxLevel: 16, weight: 15 },  // Pacific Electric Ray
-    { speciesId: 1, minLevel: 14, maxLevel: 17, weight: 10 }    // Blacktip Reef Shark
+    { speciesId: 1, minLevel: 14, maxLevel: 17, weight: 10 },   // Blacktip Reef Shark
+    { speciesId: 71, minLevel: 18, maxLevel: 22, weight: 5, seasonal: { seasons: ['winter', 'spring'] } }  // Blue Shark (winter-spring)
   ],
   isOutdoor: true
 };

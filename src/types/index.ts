@@ -41,6 +41,16 @@ export interface Stats {
   speed: number;
 }
 
+// Individual Values (IVs) - genetic potential for each stat (0-31)
+export interface IVs {
+  hp: number;
+  attack: number;
+  defense: number;
+  spAttack: number;
+  spDefense: number;
+  speed: number;
+}
+
 // Move effect types
 export interface MoveEffect {
   type: 'damage' | 'status' | 'stat-change' | 'heal';
@@ -80,6 +90,9 @@ export interface CreatureSpecies {
   description: string;
 }
 
+// Import NatureId type for creature instances
+import type { NatureId } from '../data/natures.ts';
+
 // Creature instance (actual creature in party/battle)
 export interface CreatureInstance {
   species: CreatureSpecies;
@@ -91,6 +104,8 @@ export interface CreatureInstance {
   moves: MoveInstance[];
   status: StatusCondition;
   exp: number;
+  ivs?: IVs;          // Individual Values (optional for backwards compat)
+  nature?: NatureId;  // Nature affecting stats (optional for backwards compat)
 }
 
 // Egg instance (egg in party, not a creature)
