@@ -6,6 +6,8 @@ import type { NatureId } from '../data/natures.ts';
 import { getRandomNature } from '../data/natures.ts';
 import { generateRandomIVs } from './damage.ts';
 import type { CertificationLevel, Direction } from '../types/overworld.ts';
+import type { BadgeId } from '../data/badges.ts';
+import type { StoryFlagId } from '../data/story-flags.ts';
 import type { InventorySlot } from '../data/items.ts';
 import type { PCStorage, StorageBox } from '../types/storage.ts';
 import { getCreature } from '../data/creatures.ts';
@@ -20,12 +22,16 @@ import {
   getInventory,
   getParty,
   getPlayerCertifications,
+  getPlayerBadges,
+  getStoryFlags,
   getStepCount,
   setPlayerMoney,
   setPlayerInventory,
   setPlayerPosition,
   setPlayerStepCount,
   setPlayerCertifications,
+  setPlayerBadges,
+  setStoryFlags,
   setParty,
   getDefeatedTrainers,
   setDefeatedTrainers,
@@ -40,7 +46,7 @@ import {
 } from './storage.ts';
 
 const SAVE_KEY = 'pocket-sharks-save';
-const SAVE_VERSION = 2;
+const SAVE_VERSION = 4;
 
 // Serialized creature format (stores IDs instead of objects)
 interface SerializedCreature {
@@ -98,6 +104,7 @@ interface SaveData {
     facing: Direction;
     stepCount: number;
     certifications: CertificationLevel[];
+    badges?: BadgeId[];  // Added in v3
   };
 
   // Current location
@@ -116,6 +123,7 @@ interface SaveData {
   // Progress tracking
   defeatedTrainers: string[];
   collectedEggs: string[];
+  storyFlags?: StoryFlagId[];  // Added in v4
 
   // Repel state
   repelSteps?: number;  // Optional for backwards compatibility
@@ -309,8 +317,26 @@ function migrateSave(saveData: SaveData): void {
     saveData.version = 2;
   }
 
+  // v2 -> v3: Add badges array
+  if (saveData.version === 2) {
+    console.log('Migrating v2 save: Adding badges array');
+    if (!saveData.player.badges) {
+      saveData.player.badges = [];
+    }
+    saveData.version = 3;
+  }
+
+  // v3 -> v4: Add story flags array
+  if (saveData.version === 3) {
+    console.log('Migrating v3 save: Adding story flags');
+    if (!saveData.storyFlags) {
+      saveData.storyFlags = [];
+    }
+    saveData.version = 4;
+  }
+
   // Future migrations can be added here
-  // if (saveData.version === 2) { ... }
+  // if (saveData.version === 4) { ... }
 }
 
 // Main save function
@@ -330,7 +356,8 @@ export function saveGame(): boolean {
         y: player.y,
         facing: player.facing,
         stepCount: getStepCount(),
-        certifications: [...getPlayerCertifications()]
+        certifications: [...getPlayerCertifications()],
+        badges: [...getPlayerBadges()]
       },
 
       currentMapId: currentMap.id,
@@ -343,6 +370,7 @@ export function saveGame(): boolean {
 
       defeatedTrainers: getDefeatedTrainers(),
       collectedEggs: getCollectedEggs(),
+      storyFlags: getStoryFlags(),
 
       repelSteps: getRepelSteps()
     };
@@ -383,6 +411,7 @@ export function loadGame(): boolean {
     setPlayerPosition(saveData.player.x, saveData.player.y, saveData.player.facing);
     setPlayerStepCount(saveData.player.stepCount);
     setPlayerCertifications(saveData.player.certifications);
+    setPlayerBadges(saveData.player.badges || []);
 
     // Restore economy
     setPlayerMoney(saveData.money);
@@ -412,6 +441,7 @@ export function loadGame(): boolean {
     // Restore progress tracking
     setDefeatedTrainers(saveData.defeatedTrainers);
     setCollectedEggs(saveData.collectedEggs);
+    setStoryFlags(saveData.storyFlags || []);
 
     // Restore repel state
     setRepelSteps(saveData.repelSteps || 0);

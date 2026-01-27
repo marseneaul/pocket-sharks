@@ -1,5 +1,8 @@
 import type { PartyMember } from './index.ts';
 import type { SeasonalConfig } from '../engine/seasons.ts';
+import type { BadgeId } from '../data/badges.ts';
+import type { StoryFlagId } from '../data/story-flags.ts';
+export type { StoryFlagId } from '../data/story-flags.ts';
 
 // Diving certification levels (progression system)
 export type CertificationLevel =
@@ -59,7 +62,9 @@ export interface Warp {
   targetX: number;
   targetY: number;
   requiredCert?: CertificationLevel;  // Certification needed to use this warp
-  blockedMessage?: string;            // Message shown if player lacks cert
+  requiredBadge?: BadgeId;            // Badge needed to use this warp
+  requiredFlag?: StoryFlagId;         // Story flag needed to use this warp
+  blockedMessage?: string;            // Message shown if player lacks requirement
 }
 
 // Trainer definition for NPC battles
@@ -116,6 +121,7 @@ export interface EncounterEntry {
   maxLevel: number;
   weight: number;
   requiredCert?: CertificationLevel;  // Only encounter if player has this cert
+  requiredFlag?: StoryFlagId;         // Only catchable if player has this story flag
   method?: 'wading' | 'snorkel' | 'scuba' | 'fishing' | 'night' | 'submarine';  // How this species is encountered
   seasonal?: SeasonalConfig;  // Seasonal/monthly availability restrictions
   minRodPower?: number;  // For fishing: minimum rod power needed (1=old, 2=good, 3=super)
@@ -164,6 +170,7 @@ export interface PlayerState {
   party: PartyMember[];        // Can contain creatures or eggs
   stepCount: number;           // Total steps walked (for egg hatching)
   certifications: CertificationLevel[];  // Diving certifications earned
+  badges: BadgeId[];           // Gym badges earned
 }
 
 // Overworld state
@@ -174,7 +181,7 @@ export interface OverworldState {
 }
 
 // Game mode
-export type GameMode = 'title' | 'settings' | 'debug' | 'overworld' | 'battle' | 'menu' | 'dialogue' | 'party-menu' | 'battle-party' | 'battle-bag' | 'starter-select' | 'pc' | 'shop' | 'tm' | 'sharkedex' | 'start-menu' | 'item-use-party' | 'item-message' | 'fishing';
+export type GameMode = 'title' | 'settings' | 'debug' | 'overworld' | 'battle' | 'menu' | 'dialogue' | 'party-menu' | 'battle-party' | 'battle-bag' | 'starter-select' | 'pc' | 'shop' | 'tm' | 'sharkedex' | 'badges' | 'start-menu' | 'item-use-party' | 'item-message' | 'fishing';
 
 // Global game state
 export interface GameState {

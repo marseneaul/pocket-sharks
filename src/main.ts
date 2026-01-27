@@ -10,6 +10,7 @@ import { renderPC, handlePCInput, initPCUI } from './renderer/pc-ui.ts';
 import { renderShop, handleShopInput, initShopUI } from './renderer/shop-ui.ts';
 import { renderTMUI, handleTMInput, initTMUI } from './renderer/tm-ui.ts';
 import { renderSharkedex, handleSharkedexInput, initSharkedexUI } from './renderer/sharkedex-ui.ts';
+import { renderBadgeMenu, handleBadgeInput, initBadgeMenu } from './renderer/badge-ui.ts';
 import { renderStartMenu, handleStartMenuInput, initStartMenu } from './renderer/start-menu-ui.ts';
 import { renderTitleScreen, handleTitleInput, initTitleScreen } from './renderer/title-ui.ts';
 import { renderSettings, handleSettingsInput, initSettingsUI, getPreviousMode } from './renderer/settings-ui.ts';
@@ -301,6 +302,8 @@ function update(deltaTime: number): void {
     updateTMMode();
   } else if (mode === 'sharkedex') {
     updateSharkedexMode();
+  } else if (mode === 'badges') {
+    updateBadgesMode();
   } else if (mode === 'start-menu') {
     updateStartMenuMode();
   } else if (mode === 'dialogue') {
@@ -857,6 +860,24 @@ function updateSharkedexMode(): void {
   }
 }
 
+function updateBadgesMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | null = null;
+  if (direction) input = direction;
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+
+  if (input) {
+    const result = handleBadgeInput(input);
+    if (result === 'close') {
+      initStartMenu();
+      setGameMode('start-menu');
+    }
+  }
+}
+
 function updateStartMenuMode(): void {
   const pressed = getJustPressed();
   const direction = getDirectionPressed();
@@ -880,6 +901,10 @@ function updateStartMenuMode(): void {
         case 'BAG':
           initBagMenu();
           setGameMode('battle-bag');
+          break;
+        case 'BADGES':
+          initBadgeMenu();
+          setGameMode('badges');
           break;
         case 'SHARKEDEX':
           previousModeBeforeSharkedex = 'start-menu';
@@ -1018,6 +1043,8 @@ function render(): void {
     renderTMUI();
   } else if (mode === 'sharkedex') {
     renderSharkedex();
+  } else if (mode === 'badges') {
+    renderBadgeMenu();
   } else if (mode === 'start-menu') {
     // Render overworld behind start menu
     renderOverworld();

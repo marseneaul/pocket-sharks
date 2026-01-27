@@ -84,13 +84,13 @@ export const SAN_DIEGO_BAY: MapData = {
       targetY: 10
     },
     // West dock to Hawaii (boat travel, requires Ray Badge)
-    // TODO: Implement badge check for warps
     {
       x: 1,
       y: 2,
       targetMap: 'hawaii-airport',
       targetX: 10,
       targetY: 14,
+      requiredBadge: 'ray',
       blockedMessage: 'The boat to Hawaii requires the Ray Badge.'
     },
     {
@@ -99,6 +99,7 @@ export const SAN_DIEGO_BAY: MapData = {
       targetMap: 'hawaii-airport',
       targetX: 10,
       targetY: 14,
+      requiredBadge: 'ray',
       blockedMessage: 'The boat to Hawaii requires the Ray Badge.'
     }
   ],

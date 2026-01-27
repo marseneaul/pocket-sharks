@@ -1,9 +1,15 @@
-import type { EncounterEntry, MapData, CertificationLevel } from '../types/overworld.ts';
+import type { EncounterEntry, MapData, CertificationLevel, StoryFlagId } from '../types/overworld.ts';
 import { CERT_HIERARCHY } from '../types/overworld.ts';
 import type { CreatureInstance } from '../types/index.ts';
 import { createCreatureInstance } from '../engine/battle.ts';
 import { getCreature } from './creatures.ts';
 import { isAvailableThisSeason } from '../engine/seasons.ts';
+
+// Result of generating a wild creature, includes catch restriction info
+export interface WildEncounterResult {
+  creature: CreatureInstance;
+  requiredFlag?: StoryFlagId;  // Story flag needed to catch this creature
+}
 
 // Check if a wild encounter should occur
 export function checkEncounter(encounterRate: number): boolean {
@@ -27,10 +33,11 @@ function hasRequiredCert(
 }
 
 // Generate a wild creature from encounter table
-export function generateWildCreature(
+// Returns both the creature and any story flag required to catch it
+export function generateWildCreatureWithFlag(
   encounterTable: EncounterEntry[],
   playerCerts: CertificationLevel[] = ['wading']
-): CreatureInstance | null {
+): WildEncounterResult | null {
   // Filter encounters by player's certification AND seasonal availability
   const availableEncounters = encounterTable.filter(
     entry => hasRequiredCert(playerCerts, entry.requiredCert) &&
@@ -66,17 +73,40 @@ export function generateWildCreature(
   const level = selectedEntry.minLevel +
     Math.floor(Math.random() * (selectedEntry.maxLevel - selectedEntry.minLevel + 1));
 
-  return createCreatureInstance(species, level);
+  return {
+    creature: createCreatureInstance(species, level),
+    requiredFlag: selectedEntry.requiredFlag
+  };
+}
+
+// Backwards-compatible wrapper that just returns the creature
+export function generateWildCreature(
+  encounterTable: EncounterEntry[],
+  playerCerts: CertificationLevel[] = ['wading']
+): CreatureInstance | null {
+  const result = generateWildCreatureWithFlag(encounterTable, playerCerts);
+  return result ? result.creature : null;
 }
 
 // Try to trigger an encounter on a kelp tile
+// Returns both creature and required flag info
+export function tryEncounterWithFlag(
+  map: MapData,
+  encounterRate: number,
+  playerCerts: CertificationLevel[] = ['wading']
+): WildEncounterResult | null {
+  if (!checkEncounter(encounterRate)) return null;
+  return generateWildCreatureWithFlag(map.encounterTable, playerCerts);
+}
+
+// Backwards-compatible wrapper
 export function tryEncounter(
   map: MapData,
   encounterRate: number,
   playerCerts: CertificationLevel[] = ['wading']
 ): CreatureInstance | null {
-  if (!checkEncounter(encounterRate)) return null;
-  return generateWildCreature(map.encounterTable, playerCerts);
+  const result = tryEncounterWithFlag(map, encounterRate, playerCerts);
+  return result ? result.creature : null;
 }
 
 // Generate a fishing encounter based on rod power

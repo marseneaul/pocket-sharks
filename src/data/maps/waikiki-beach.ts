@@ -112,14 +112,14 @@ export const WAIKIKI_BEACH: MapData = {
       targetY: 1
     },
     // West boat dock to Cabo (after SCUBA certification)
-    // TODO: Implement certification check
     {
       x: 0,
       y: 6,
       targetMap: 'cabo-harbor',
       targetX: 10,
       targetY: 10,
-      blockedMessage: 'The boat to Cabo requires SCUBA certification.'
+      requiredCert: 'openwater',
+      blockedMessage: 'The boat to Cabo requires Open Water SCUBA certification.'
     }
   ],
   npcs: [

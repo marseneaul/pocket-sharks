@@ -3,7 +3,7 @@ import { getContext, drawBox } from './canvas.ts';
 import { drawText } from './text.ts';
 
 // Menu options
-const MENU_OPTIONS = ['PARTY', 'BAG', 'SHARKEDEX', 'SAVE', 'OPTIONS'] as const;
+const MENU_OPTIONS = ['PARTY', 'BAG', 'BADGES', 'SHARKEDEX', 'SAVE', 'OPTIONS'] as const;
 type MenuOption = typeof MENU_OPTIONS[number];
 
 // State

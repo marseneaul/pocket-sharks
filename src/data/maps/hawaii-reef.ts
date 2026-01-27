@@ -159,18 +159,14 @@ export const HAWAII_REEF: MapData = {
       ]
     }
   ],
-  // SPECIAL: Encounters here show sharks but with "can't catch" message
-  // The game should display "No captures during certification dives!"
-  // when trying to catch in this area
-  // For now, using empty encounters - to be implemented with story flags
+  // SPECIAL: Encounters here require conservation permit to catch
+  // Without permit, player can see but not catch (requiredFlag check)
   encounterTable: [
-    // These sharks are VISIBLE but should not be catchable
-    // TODO: Implement story flag check for "hasConservationPermit"
-    // For now, encounters exist but catching should be blocked by game logic
-    { speciesId: 4, minLevel: 10, maxLevel: 15, weight: 40 },   // Whitetip Reef Shark
-    { speciesId: 1, minLevel: 10, maxLevel: 15, weight: 40 },   // Blacktip Reef Shark
-    { speciesId: 52, minLevel: 8, maxLevel: 12, weight: 20 },   // Butterfly Ray
-    { speciesId: 22, minLevel: 20, maxLevel: 25, weight: 10, seasonal: { months: [10] } }  // Tiger Shark (October only)
+    // These sharks require conservation permit to catch
+    { speciesId: 4, minLevel: 10, maxLevel: 15, weight: 40, requiredFlag: 'has_conservation_permit' },   // Whitetip Reef Shark
+    { speciesId: 1, minLevel: 10, maxLevel: 15, weight: 40, requiredFlag: 'has_conservation_permit' },   // Blacktip Reef Shark
+    { speciesId: 52, minLevel: 8, maxLevel: 12, weight: 20, requiredFlag: 'has_conservation_permit' },   // Butterfly Ray
+    { speciesId: 22, minLevel: 20, maxLevel: 25, weight: 10, requiredFlag: 'has_conservation_permit', seasonal: { months: [10] } }  // Tiger Shark (October only)
   ],
   isOutdoor: true,
   palette: 'tropical'  // Warm Hawaiian reef colors

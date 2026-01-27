@@ -217,6 +217,7 @@ export interface BattleState {
   enemyAction: BattleAction | null;
   isWildBattle: boolean;
   canRun: boolean;
+  catchBlockedMessage?: string;  // If set, catching is blocked with this message
   animatingHp: {
     player: number;
     enemy: number;

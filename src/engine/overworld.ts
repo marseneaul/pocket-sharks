@@ -1,8 +1,8 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected, decrementRepel, repelBlocksEncounter, getBestRod } from './game-state.ts';
-import { hasFishingEncounters } from '../data/encounters.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected, decrementRepel, repelBlocksEncounter, getBestRod, hasBadge, hasStoryFlag } from './game-state.ts';
+import { hasFishingEncounters, tryEncounterWithFlag } from '../data/encounters.ts';
 import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
-import { tryEncounter } from '../data/encounters.ts';
+import { STORY_FLAGS } from '../data/story-flags.ts';
 import { initNPCStates, updateNPCs } from './npc-movement.ts';
 import { getEgg } from '../data/eggs.ts';
 
@@ -132,17 +132,36 @@ function onTileLand(player: PlayerState): void {
       showBlockedMessage(message);
       return;
     }
+    // Check badge requirement for warp
+    if (warp.requiredBadge && !hasBadge(warp.requiredBadge)) {
+      const message = warp.blockedMessage || `You need to earn a badge first.`;
+      showBlockedMessage(message);
+      return;
+    }
+    // Check story flag requirement for warp
+    if (warp.requiredFlag && !hasStoryFlag(warp.requiredFlag)) {
+      const message = warp.blockedMessage || `You can't go there yet.`;
+      showBlockedMessage(message);
+      return;
+    }
     doWarp(warp);
     return;
   }
 
   // Check for wild encounter (only if player has a creature that can battle)
   if (tileDef.encounter && tileDef.encounterRate > 0 && hasBattleableCreature()) {
-    const wildCreature = tryEncounter(map, tileDef.encounterRate, getPlayerCertifications());
-    if (wildCreature) {
+    const encounterResult = tryEncounterWithFlag(map, tileDef.encounterRate, getPlayerCertifications());
+    if (encounterResult) {
+      const { creature, requiredFlag } = encounterResult;
       // Check if repel blocks this encounter
-      if (!repelBlocksEncounter(wildCreature.level)) {
-        startWildBattle(wildCreature);
+      if (!repelBlocksEncounter(creature.level)) {
+        // Check if catching is blocked by a missing story flag
+        let catchBlockedMessage: string | undefined;
+        if (requiredFlag && !hasStoryFlag(requiredFlag)) {
+          const flagData = STORY_FLAGS[requiredFlag as keyof typeof STORY_FLAGS];
+          catchBlockedMessage = `No captures allowed! You need: ${flagData?.name || requiredFlag}`;
+        }
+        startWildBattle(creature, catchBlockedMessage);
         return;
       }
     }

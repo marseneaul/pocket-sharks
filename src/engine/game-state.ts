@@ -1,6 +1,8 @@
 import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel, GroundEgg, Direction } from '../types/overworld.ts';
 import { CERT_HIERARCHY } from '../types/overworld.ts';
 import type { BattleState, CreatureInstance, PartyMember, EggInstance, StatusCondition } from '../types/index.ts';
+import { getBadgeByGymLeader, type BadgeId } from '../data/badges.ts';
+import { type StoryFlagId, GYM_LEADER_FLAGS, BADGE_UNLOCKS } from '../data/story-flags.ts';
 import { isEgg, isCreature } from '../types/index.ts';
 import type { InventorySlot } from '../data/items.ts';
 import { getItem } from '../data/items.ts';
@@ -43,6 +45,7 @@ const MAX_PARTY_SIZE = 6;
 // Progress tracking
 let defeatedTrainers: Set<string> = new Set();
 let collectedEggs: Set<string> = new Set();
+let storyFlags: Set<StoryFlagId> = new Set();
 
 // Repel tracking
 let repelStepsRemaining: number = 0;
@@ -57,6 +60,7 @@ export function initGameState(): void {
   ];
   defeatedTrainers.clear();
   collectedEggs.clear();
+  storyFlags.clear();
   repelStepsRemaining = 0;
 
   // Initialize player without a starter (will be chosen later)
@@ -71,7 +75,8 @@ export function initGameState(): void {
     moveProgress: 0,
     party: [],  // Empty until starter is chosen
     stepCount: 0,  // For egg hatching
-    certifications: ['wading']  // Start with basic wading/snorkeling
+    certifications: ['wading'],  // Start with basic wading/snorkeling
+    badges: []  // No badges at start
   };
 
   // Maps will be loaded separately
@@ -100,6 +105,7 @@ export function resetForNewGame(startingMapId: string = 'scripps-lab'): void {
   ];
   defeatedTrainers.clear();
   collectedEggs.clear();
+  storyFlags.clear();
   repelStepsRemaining = 0;
   battleState = null;
   currentTrainerNpc = null;
@@ -118,6 +124,7 @@ export function resetForNewGame(startingMapId: string = 'scripps-lab'): void {
   player.party = [];
   player.stepCount = 0;
   player.certifications = ['wading'];
+  player.badges = [];
 
   // Reset NPC states on all maps
   for (const map of gameState.overworld.maps.values()) {
@@ -244,6 +251,9 @@ export function getBattleState(): BattleState | null {
 }
 
 // Internal battle start (called after transition)
+// Track catch blocked message for current battle
+let pendingCatchBlockedMessage: string | undefined;
+
 function _startWildBattleInternal(enemyCreature: CreatureInstance): void {
   const playerCreature = getFirstBattleableCreature();
   if (!playerCreature) throw new Error('No battleable creature in party');
@@ -252,6 +262,13 @@ function _startWildBattleInternal(enemyCreature: CreatureInstance): void {
   trainerCreatureIndex = 0;
 
   battleState = createBattleState(playerCreature, enemyCreature, true);
+
+  // Apply catch restriction if set
+  if (pendingCatchBlockedMessage) {
+    battleState.catchBlockedMessage = pendingCatchBlockedMessage;
+    pendingCatchBlockedMessage = undefined;
+  }
+
   initBattle(battleState);
   gameState.mode = 'battle';
 
@@ -285,7 +302,8 @@ function _startTrainerBattleInternal(npc: NPC): void {
 }
 
 // Public battle start functions with transitions
-export function startWildBattle(enemyCreature: CreatureInstance): void {
+export function startWildBattle(enemyCreature: CreatureInstance, catchBlockedMessage?: string): void {
+  pendingCatchBlockedMessage = catchBlockedMessage;
   startTransition(() => _startWildBattleInternal(enemyCreature));
 }
 
@@ -368,6 +386,23 @@ function _endBattleInternal(): void {
       currentTrainerNpc.defeated = true;
       markTrainerDefeated(currentTrainerNpc.id);
       playerMoney += currentTrainerNpc.trainer.prizeMoney;
+
+      // Check if this is a gym leader and award badge + story flag
+      const badge = getBadgeByGymLeader(currentTrainerNpc.id);
+      if (badge) {
+        awardBadge(badge.id);
+      }
+
+      // Set story flag for gym leader defeat
+      const storyFlag = GYM_LEADER_FLAGS[currentTrainerNpc.id];
+      if (storyFlag) {
+        setStoryFlag(storyFlag);
+      }
+
+      // Special story flags for specific trainers
+      if (currentTrainerNpc.id === 'finner-boss') {
+        setStoryFlag('defeated_boss_finley');
+      }
 
       // Gym leader TM rewards
       if (currentTrainerNpc.id === 'gym-leader-marina') {
@@ -565,6 +600,87 @@ export const CERT_NAMES: Record<CertificationLevel, string> = {
   'openocean': 'Open Ocean Swimming',
   'submarine': 'Submarine Operation'
 };
+
+// Badge management
+export function getPlayerBadges(): BadgeId[] {
+  return gameState.overworld.player.badges;
+}
+
+export function setPlayerBadges(badges: BadgeId[]): void {
+  gameState.overworld.player.badges = badges;
+}
+
+export function hasBadge(badgeId: BadgeId): boolean {
+  return gameState.overworld.player.badges.includes(badgeId);
+}
+
+export function awardBadge(badgeId: BadgeId): boolean {
+  if (hasBadge(badgeId)) return false;
+  gameState.overworld.player.badges.push(badgeId);
+  return true;
+}
+
+export function getBadgeCount(): number {
+  return gameState.overworld.player.badges.length;
+}
+
+// ============================================
+// Story Flag Management
+// ============================================
+
+export function hasStoryFlag(flagId: StoryFlagId): boolean {
+  return storyFlags.has(flagId);
+}
+
+export function setStoryFlag(flagId: StoryFlagId): boolean {
+  if (storyFlags.has(flagId)) return false;
+  storyFlags.add(flagId);
+
+  // Check for automatic unlocks when setting certain flags
+  const unlocks = BADGE_UNLOCKS[flagId];
+  if (unlocks) {
+    for (const unlockFlag of unlocks) {
+      storyFlags.add(unlockFlag);
+    }
+  }
+
+  return true;
+}
+
+export function clearStoryFlag(flagId: StoryFlagId): void {
+  storyFlags.delete(flagId);
+}
+
+export function getStoryFlags(): StoryFlagId[] {
+  return Array.from(storyFlags);
+}
+
+export function setStoryFlags(flags: StoryFlagId[]): void {
+  storyFlags = new Set(flags);
+}
+
+export function getStoryFlagCount(): number {
+  return storyFlags.size;
+}
+
+// Check if player can access a region based on story flags
+export function canAccessRegion(regionFlag: StoryFlagId): boolean {
+  return storyFlags.has(regionFlag);
+}
+
+// Get story progress percentage (main story flags only)
+export function getStoryProgress(): number {
+  const mainFlags: StoryFlagId[] = [
+    'intro_complete', 'first_badge', 'witnessed_finning', 'met_dr_martillo',
+    'second_badge', 'third_badge', 'fourth_badge', 'fifth_badge',
+    'sixth_badge', 'seventh_badge', 'found_finner_hq', 'defeated_boss_finley',
+    'rescued_dr_vance', 'eighth_badge', 'discovered_megalodon_lab',
+    'obtained_megalodon_tooth', 'elite_four_unlocked', 'champion_defeated'
+  ];
+
+  const completed = mainFlags.filter(f => storyFlags.has(f)).length;
+  return Math.floor((completed / mainFlags.length) * 100);
+}
 
 // ============================================
 // Egg Collection & Hatching System

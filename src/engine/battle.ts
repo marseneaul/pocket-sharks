@@ -308,6 +308,14 @@ export function useBattleItem(state: BattleState, itemId: number): void {
   removeItem(itemId, 1);
 
   if (item.type === 'cage') {
+    // Check if catching is blocked by story flag
+    if (state.catchBlockedMessage) {
+      queueMessage(state, state.catchBlockedMessage);
+      state.phase = 'message';
+      advanceMessage(state);
+      return;
+    }
+
     // Use cage to catch
     queueMessage(state, `Used ${item.name}!`);
 
