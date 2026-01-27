@@ -5,10 +5,23 @@ import { drawTile, drawPlayer } from './tileset.ts';
 import { drawNPC } from './npc-sprites.ts';
 import { getPlayer, getCurrentMap } from '../engine/game-state.ts';
 import { getNPCRenderPosition, getNPCWalkFrame } from '../engine/npc-movement.ts';
+import { initTileAtlas } from './tile-atlas.ts';
 import type { MapData, PlayerState, NPC, MapPaletteId } from '../types/overworld.ts';
 
-const TILE_SIZE = 8;
+// Tile size for rendering - use atlas size (16) for better graphics
+// Maps are still stored with 8x8 logical tiles, but we render at 16x16
+const TILE_SIZE = 8;  // Logical tile size (map data)
+const RENDER_TILE_SIZE = 8;  // Can be changed to ATLAS_TILE_SIZE (16) for high-res mode
 const PLAYER_SIZE = 16;
+
+// Initialize tile atlas on module load
+let atlasInitialized = false;
+export async function ensureAtlasLoaded(): Promise<void> {
+  if (!atlasInitialized) {
+    atlasInitialized = true;
+    await initTileAtlas();
+  }
+}
 
 // Sprite entity for sorting
 interface SpriteEntity {
@@ -93,7 +106,8 @@ function renderTiles(map: MapData, cameraX: number, cameraY: number, paletteColo
       if (tileIndex !== undefined) {
         const screenX = x * TILE_SIZE - cameraX;
         const screenY = y * TILE_SIZE - cameraY;
-        drawTile(tileIndex, screenX, screenY, paletteColors);
+        // Pass RENDER_TILE_SIZE for atlas tile scaling
+        drawTile(tileIndex, screenX, screenY, paletteColors, RENDER_TILE_SIZE);
       }
     }
   }

@@ -111,6 +111,7 @@ import { KELP_GYM } from './data/maps/kelp-gym.ts';
 import { ROUTE_4 } from './data/maps/route-4.ts';
 import { FINNER_HQ } from './data/maps/finner-hq.ts';
 import { TEXT_SPEED } from './constants.ts';
+import { initTileAtlas } from './renderer/tile-atlas.ts';
 
 let lastTime = 0;
 let typewriterTimer = 0;
@@ -123,6 +124,13 @@ function init(): void {
   initInput();
   initStorage();
   initAudio();
+
+  // Load tile atlas (async, but game can start without it)
+  initTileAtlas().then(() => {
+    console.log('Tile atlas ready');
+  }).catch(err => {
+    console.warn('Failed to load tile atlas, using procedural tiles:', err);
+  });
 
   // Initialize game state
   initGameState();

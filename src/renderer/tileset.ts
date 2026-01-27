@@ -1,8 +1,20 @@
 import { getContext } from './canvas.ts';
 import { DMG_PALETTE } from '../constants.ts';
 import { TILE } from '../data/tiles.ts';
+import { drawAtlasTile, isAtlasReady, ATLAS_TILE_SIZE } from './tile-atlas.ts';
 
 const TILE_SIZE = 8;
+
+// Flag to enable/disable atlas rendering (can be toggled for debugging)
+let useAtlas = true;
+
+export function setUseAtlas(enabled: boolean): void {
+  useAtlas = enabled;
+}
+
+export function getUseAtlas(): boolean {
+  return useAtlas;
+}
 
 interface TileSprite {
   pixels: number[][]; // 8x8, values 0-3 for palette index
@@ -368,16 +380,52 @@ export function getTileSprite(tileIndex: number): TileSprite {
 // Default colors for tiles (used when no palette specified)
 const DEFAULT_TILE_COLORS = [DMG_PALETTE.BLACK, DMG_PALETTE.DARK, DMG_PALETTE.LIGHT, DMG_PALETTE.WHITE];
 
-export function drawTile(tileIndex: number, x: number, y: number, paletteColors?: readonly [string, string, string, string]): void {
+// Draw a tile - tries atlas first, falls back to procedural
+export function drawTile(
+  tileIndex: number,
+  x: number,
+  y: number,
+  paletteColors?: readonly [string, string, string, string],
+  tileSize: number = TILE_SIZE
+): void {
+  // Try atlas rendering first if enabled and ready
+  if (useAtlas && isAtlasReady()) {
+    // Scale factor: atlas tiles are 16x16, game might want different size
+    const scale = tileSize / ATLAS_TILE_SIZE;
+    if (drawAtlasTile(tileIndex, x, y, scale)) {
+      return; // Successfully drew from atlas
+    }
+  }
+
+  // Fall back to procedural tile rendering
+  drawProceduralTile(tileIndex, x, y, paletteColors, tileSize);
+}
+
+// Draw procedural tile (original method)
+function drawProceduralTile(
+  tileIndex: number,
+  x: number,
+  y: number,
+  paletteColors?: readonly [string, string, string, string],
+  tileSize: number = TILE_SIZE
+): void {
   const ctx = getContext();
   const sprite = getTileSprite(tileIndex);
   const colors = paletteColors || DEFAULT_TILE_COLORS;
+
+  // Scale factor for different tile sizes
+  const pixelScale = tileSize / TILE_SIZE;
 
   for (let row = 0; row < TILE_SIZE; row++) {
     for (let col = 0; col < TILE_SIZE; col++) {
       const colorIndex = sprite.pixels[row][col];
       ctx.fillStyle = colors[colorIndex];
-      ctx.fillRect(Math.floor(x + col), Math.floor(y + row), 1, 1);
+      ctx.fillRect(
+        Math.floor(x + col * pixelScale),
+        Math.floor(y + row * pixelScale),
+        Math.ceil(pixelScale),
+        Math.ceil(pixelScale)
+      );
     }
   }
 }
