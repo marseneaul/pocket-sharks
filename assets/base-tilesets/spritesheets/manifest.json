@@ -1,0 +1,92 @@
+{
+  "buildings-dark": {
+    "file": "buildings-dark.png",
+    "tileCount": 86,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "buildings-large": {
+    "file": "buildings-large.png",
+    "tileCount": 92,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "buildings-small": {
+    "file": "buildings-small.png",
+    "tileCount": 121,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "furniture": {
+    "file": "furniture.png",
+    "tileCount": 74,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "interior-floors": {
+    "file": "interior-floors.png",
+    "tileCount": 175,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "interior-walls": {
+    "file": "interior-walls.png",
+    "tileCount": 32,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "misc": {
+    "file": "misc.png",
+    "tileCount": 199,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "nature-small": {
+    "file": "nature-small.png",
+    "tileCount": 5,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "nature-trees": {
+    "file": "nature-trees.png",
+    "tileCount": 28,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "objects-outdoor": {
+    "file": "objects-outdoor.png",
+    "tileCount": 12,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "objects-signs": {
+    "file": "objects-signs.png",
+    "tileCount": 11,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "roofs": {
+    "file": "roofs.png",
+    "tileCount": 34,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "terrain-cliffs": {
+    "file": "terrain-cliffs.png",
+    "tileCount": 36,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "terrain-ground": {
+    "file": "terrain-ground.png",
+    "tileCount": 34,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  },
+  "terrain-water": {
+    "file": "terrain-water.png",
+    "tileCount": 24,
+    "tilesPerRow": 16,
+    "tileSize": 16
+  }
+}
