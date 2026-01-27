@@ -10,9 +10,9 @@ const TEXT_SPEEDS = ['SLOW', 'NORMAL', 'FAST'];
 
 let menuIndex = 0;
 let textSpeedIndex = 1; // Default to NORMAL
-let previousMode: 'title' | 'party-menu' = 'title';
+let previousMode: 'title' | 'party-menu' | 'start-menu' = 'title';
 
-export function initSettingsUI(fromMode: 'title' | 'party-menu'): void {
+export function initSettingsUI(fromMode: 'title' | 'party-menu' | 'start-menu'): void {
   menuIndex = 0;
   previousMode = fromMode;
   // Load settings from localStorage
@@ -99,7 +99,7 @@ export function handleSettingsInput(input: 'up' | 'down' | 'left' | 'right' | 'a
   return null;
 }
 
-export function getPreviousMode(): 'title' | 'party-menu' {
+export function getPreviousMode(): 'title' | 'party-menu' | 'start-menu' {
   return previousMode;
 }
 

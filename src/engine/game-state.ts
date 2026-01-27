@@ -1,4 +1,4 @@
-import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel, GroundEgg } from '../types/overworld.ts';
+import type { GameState, GameMode, OverworldState, PlayerState, MapData, NPC, CertificationLevel, GroundEgg, Direction } from '../types/overworld.ts';
 import { CERT_HIERARCHY } from '../types/overworld.ts';
 import type { BattleState, CreatureInstance, PartyMember, EggInstance } from '../types/index.ts';
 import { isEgg, isCreature } from '../types/index.ts';
@@ -7,6 +7,7 @@ import { createCreatureInstance, createBattleState, initBattle } from './battle.
 import { getCreature } from '../data/creatures.ts';
 import { getEgg } from '../data/eggs.ts';
 import { playBattleMusic, playOverworldMusic } from './audio.ts';
+import { initStorage } from './storage.ts';
 
 // Screen transition state
 export interface TransitionState {
@@ -37,7 +38,20 @@ let playerInventory: InventorySlot[] = [   // Player's items
 ];
 const MAX_PARTY_SIZE = 6;
 
+// Progress tracking
+let defeatedTrainers: Set<string> = new Set();
+let collectedEggs: Set<string> = new Set();
+
 export function initGameState(): void {
+  // Reset module-level state
+  playerMoney = 500;
+  playerInventory = [
+    { itemId: 1, quantity: 5 },  // Start with 5 Shark Cages
+    { itemId: 10, quantity: 3 }  // Start with 3 Potions
+  ];
+  defeatedTrainers.clear();
+  collectedEggs.clear();
+
   // Initialize player without a starter (will be chosen later)
   const player: PlayerState = {
     x: 10,
@@ -68,12 +82,75 @@ export function getGameState(): GameState {
   return gameState;
 }
 
+// Reset game state for new game (preserves map registry)
+export function resetForNewGame(startingMapId: string = 'scripps-lab'): void {
+  // Reset module-level state
+  playerMoney = 500;
+  playerInventory = [
+    { itemId: 1, quantity: 5 },  // Start with 5 Shark Cages
+    { itemId: 10, quantity: 3 }  // Start with 3 Potions
+  ];
+  defeatedTrainers.clear();
+  collectedEggs.clear();
+  battleState = null;
+  currentTrainerNpc = null;
+  trainerCreatureIndex = 0;
+
+  // Reset player state
+  const player = gameState.overworld.player;
+  player.x = 10;
+  player.y = 10;
+  player.pixelX = player.x * 8;
+  player.pixelY = player.y * 8;
+  player.facing = 'up';
+  player.isMoving = false;
+  player.isSwimming = false;
+  player.moveProgress = 0;
+  player.party = [];
+  player.stepCount = 0;
+  player.certifications = ['wading'];
+
+  // Reset NPC states on all maps
+  for (const map of gameState.overworld.maps.values()) {
+    for (const npc of map.npcs) {
+      if (npc.trainer) {
+        npc.defeated = false;
+      }
+    }
+    if (map.groundEggs) {
+      for (const egg of map.groundEggs) {
+        egg.collected = false;
+      }
+    }
+  }
+
+  // Reset PC storage
+  initStorage();
+
+  // Set starting map
+  const startMap = gameState.overworld.maps.get(startingMapId);
+  if (startMap) {
+    gameState.overworld.currentMap = startMap;
+  }
+}
+
 export function getOverworldState(): OverworldState {
   return gameState.overworld;
 }
 
 export function getPlayer(): PlayerState {
   return gameState.overworld.player;
+}
+
+export function setPlayerPosition(x: number, y: number, facing: Direction): void {
+  const player = gameState.overworld.player;
+  player.x = x;
+  player.y = y;
+  player.pixelX = x * 8;
+  player.pixelY = y * 8;
+  player.facing = facing;
+  player.isMoving = false;
+  player.moveProgress = 0;
 }
 
 export function getGameMode(): GameMode {
@@ -220,6 +297,10 @@ export function getPlayerMoney(): number {
   return playerMoney;
 }
 
+export function setPlayerMoney(amount: number): void {
+  playerMoney = amount;
+}
+
 export function addMoney(amount: number): void {
   playerMoney += amount;
 }
@@ -276,6 +357,7 @@ function _endBattleInternal(): void {
     // Handle trainer battle victory
     if (currentTrainerNpc?.trainer && battleState.phase === 'victory') {
       currentTrainerNpc.defeated = true;
+      markTrainerDefeated(currentTrainerNpc.id);
       playerMoney += currentTrainerNpc.trainer.prizeMoney;
 
       // Gym leader TM rewards
@@ -323,6 +405,10 @@ export function getInventory(): InventorySlot[] {
   return playerInventory;
 }
 
+export function setPlayerInventory(inv: InventorySlot[]): void {
+  playerInventory = inv;
+}
+
 export function getItemCount(itemId: number): number {
   const slot = playerInventory.find(s => s.itemId === itemId);
   return slot?.quantity || 0;
@@ -368,6 +454,10 @@ export function getParty(): PartyMember[] {
   return gameState.overworld.player.party;
 }
 
+export function setParty(party: PartyMember[]): void {
+  gameState.overworld.player.party = party;
+}
+
 // Get only creatures (not eggs) from party
 export function getPartyCreatures(): CreatureInstance[] {
   return gameState.overworld.player.party.filter(isCreature) as CreatureInstance[];
@@ -399,6 +489,10 @@ export function setStarterCreature(speciesId: number): void {
 // Certification management
 export function getPlayerCertifications(): CertificationLevel[] {
   return gameState.overworld.player.certifications;
+}
+
+export function setPlayerCertifications(certs: CertificationLevel[]): void {
+  gameState.overworld.player.certifications = certs;
 }
 
 export function hasCertification(cert: CertificationLevel): boolean {
@@ -490,6 +584,10 @@ export function getStepCount(): number {
   return gameState.overworld.player.stepCount;
 }
 
+export function setPlayerStepCount(count: number): void {
+  gameState.overworld.player.stepCount = count;
+}
+
 // Hatch an egg at the given party index
 export function hatchEgg(partyIndex: number): boolean {
   const player = gameState.overworld.player;
@@ -534,8 +632,9 @@ export function collectGroundEgg(groundEgg: GroundEgg): boolean {
   // Add egg to party
   addToParty(eggInstance);
 
-  // Mark as collected
+  // Mark as collected (both local and global tracking)
   groundEgg.collected = true;
+  markEggCollected(groundEgg.id);
 
   return true;
 }
@@ -548,4 +647,48 @@ export function getGroundEggAt(x: number, y: number): GroundEgg | null {
   return map.groundEggs.find(
     egg => egg.x === x && egg.y === y && !egg.collected
   ) || null;
+}
+
+// ============================================
+// Progress Tracking (for save/load)
+// ============================================
+
+// Reset all progress (for new game)
+export function resetProgressTracking(): void {
+  defeatedTrainers.clear();
+  collectedEggs.clear();
+}
+
+// Defeated trainers
+export function markTrainerDefeated(npcId: string): void {
+  defeatedTrainers.add(npcId);
+}
+
+export function isTrainerDefeated(npcId: string): boolean {
+  return defeatedTrainers.has(npcId);
+}
+
+export function getDefeatedTrainers(): string[] {
+  return Array.from(defeatedTrainers);
+}
+
+export function setDefeatedTrainers(ids: string[]): void {
+  defeatedTrainers = new Set(ids);
+}
+
+// Collected eggs
+export function markEggCollected(eggId: string): void {
+  collectedEggs.add(eggId);
+}
+
+export function isEggCollected(eggId: string): boolean {
+  return collectedEggs.has(eggId);
+}
+
+export function getCollectedEggs(): string[] {
+  return Array.from(collectedEggs);
+}
+
+export function setCollectedEggs(ids: string[]): void {
+  collectedEggs = new Set(ids);
 }

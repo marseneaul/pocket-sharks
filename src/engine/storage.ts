@@ -27,6 +27,10 @@ export function getStorage(): PCStorage {
   return pcStorage;
 }
 
+export function setStorage(storage: PCStorage): void {
+  pcStorage = storage;
+}
+
 export function getCurrentBox(): StorageBox {
   return pcStorage.boxes[pcStorage.currentBox];
 }

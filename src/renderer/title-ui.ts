@@ -1,25 +1,17 @@
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../constants.ts';
 import { clear, fillRect, drawBox } from './canvas.ts';
 import { drawText, drawTextCentered } from './text.ts';
+import { hasSaveData as checkSaveData } from '../engine/save-system.ts';
 
 const MENU_ITEMS = ['NEW GAME', 'CONTINUE', 'OPTIONS'];
 
 let menuIndex = 0;
-let hasSaveData = false;
+let saveExists = false;
 
 export function initTitleScreen(): void {
   menuIndex = 0;
   // Check for saved game data
-  hasSaveData = checkSaveData();
-}
-
-function checkSaveData(): boolean {
-  try {
-    const saved = localStorage.getItem('pocket-sharks-save');
-    return saved !== null;
-  } catch {
-    return false;
-  }
+  saveExists = checkSaveData();
 }
 
 export function handleTitleInput(input: 'up' | 'down' | 'a' | 'b' | null): 'new-game' | 'continue' | 'options' | null {
@@ -28,13 +20,13 @@ export function handleTitleInput(input: 'up' | 'down' | 'a' | 'b' | null): 'new-
   if (input === 'up') {
     menuIndex = (menuIndex - 1 + MENU_ITEMS.length) % MENU_ITEMS.length;
     // Skip CONTINUE if no save data
-    if (menuIndex === 1 && !hasSaveData) {
+    if (menuIndex === 1 && !saveExists) {
       menuIndex = 0;
     }
   } else if (input === 'down') {
     menuIndex = (menuIndex + 1) % MENU_ITEMS.length;
     // Skip CONTINUE if no save data
-    if (menuIndex === 1 && !hasSaveData) {
+    if (menuIndex === 1 && !saveExists) {
       menuIndex = 2;
     }
   } else if (input === 'a') {
@@ -42,7 +34,7 @@ export function handleTitleInput(input: 'up' | 'down' | 'a' | 'b' | null): 'new-
       case 0:
         return 'new-game';
       case 1:
-        if (hasSaveData) {
+        if (saveExists) {
           return 'continue';
         }
         break;
@@ -80,7 +72,7 @@ export function renderTitleScreen(): void {
     const item = MENU_ITEMS[i];
 
     // Dim CONTINUE if no save data
-    if (i === 1 && !hasSaveData) {
+    if (i === 1 && !saveExists) {
       drawText(item, itemX, y, 1);
     } else {
       // Draw selector arrow

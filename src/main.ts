@@ -3,11 +3,13 @@ import { renderBattle } from './renderer/battle-ui.ts';
 import { renderOverworld } from './renderer/overworld-ui.ts';
 import { renderDialogue, startDialogue, advanceDialogue, advanceDialogueChar, isDialogueComplete, isCurrentLineComplete, clearDialogue } from './renderer/dialogue-ui.ts';
 import { renderPartyMenu, handlePartyInput, handleBattlePartyInput, initPartyMenu } from './renderer/party-ui.ts';
-import { renderBagMenu, handleBagInput } from './renderer/bag-ui.ts';
+import { renderBagMenu, handleBagInput, initBagMenu } from './renderer/bag-ui.ts';
 import { renderStarterSelect, handleStarterInput, getSelectedStarterId, initStarterSelect } from './renderer/starter-ui.ts';
 import { renderPC, handlePCInput, initPCUI } from './renderer/pc-ui.ts';
 import { renderShop, handleShopInput, initShopUI } from './renderer/shop-ui.ts';
 import { renderTMUI, handleTMInput, initTMUI } from './renderer/tm-ui.ts';
+import { renderSharkedex, handleSharkedexInput, initSharkedexUI } from './renderer/sharkedex-ui.ts';
+import { renderStartMenu, handleStartMenuInput, initStartMenu } from './renderer/start-menu-ui.ts';
 import { renderTitleScreen, handleTitleInput, initTitleScreen } from './renderer/title-ui.ts';
 import { renderSettings, handleSettingsInput, initSettingsUI, getPreviousMode } from './renderer/settings-ui.ts';
 import { renderDebug, handleDebugInput, initDebugUI } from './renderer/debug-ui.ts';
@@ -19,6 +21,7 @@ import { handleInput as handleBattleInput, updateHpAnimation, updateEntryAnimati
 import { updateOverworld, handleOverworldInput } from './engine/overworld.ts';
 import { initStorage } from './engine/storage.ts';
 import { initAudio, tryStartMusic } from './engine/audio.ts';
+import { saveGame, loadGame } from './engine/save-system.ts';
 import {
   initGameState,
   getGameMode,
@@ -36,7 +39,8 @@ import {
   startWildBattle,
   startTrainerBattle,
   getMap,
-  getCurrentMap
+  getCurrentMap,
+  resetForNewGame
 } from './engine/game-state.ts';
 import { getCreature } from './data/creatures.ts';
 import { isCreature } from './types/index.ts';
@@ -275,6 +279,10 @@ function update(deltaTime: number): void {
     updateShopMode();
   } else if (mode === 'tm') {
     updateTMMode();
+  } else if (mode === 'sharkedex') {
+    updateSharkedexMode();
+  } else if (mode === 'start-menu') {
+    updateStartMenuMode();
   } else if (mode === 'dialogue') {
     updateDialogueMode(deltaTime);
   }
@@ -293,14 +301,19 @@ function updateTitleMode(): void {
   if (input) {
     const result = handleTitleInput(input);
     if (result === 'new-game') {
-      // Start new game - go to starter selection
+      // Start new game - reset all progress and go to starter selection
+      resetForNewGame();
       initStarterSelect();
       setGameMode('starter-select');
     } else if (result === 'continue') {
-      // Load saved game (not implemented yet)
-      // For now, just start new game
-      initStarterSelect();
-      setGameMode('starter-select');
+      // Load saved game
+      if (loadGame()) {
+        setGameMode('overworld');
+      } else {
+        // Save corrupted or invalid, start new game
+        initStarterSelect();
+        setGameMode('starter-select');
+      }
     } else if (result === 'options') {
       // Go to settings
       initSettingsUI('title');
@@ -326,6 +339,9 @@ function updateSettingsMode(): void {
       if (prevMode === 'title') {
         initTitleScreen();
         setGameMode('title');
+      } else if (prevMode === 'start-menu') {
+        initStartMenu();
+        setGameMode('start-menu');
       } else {
         initPartyMenu();
         setGameMode('party-menu');
@@ -335,6 +351,7 @@ function updateSettingsMode(): void {
 }
 
 let previousModeBeforeDebug: ReturnType<typeof getGameMode> = 'title';
+let previousModeBeforeSharkedex: ReturnType<typeof getGameMode> = 'overworld';
 
 // Debug mode key repeat state
 let debugKeyRepeatTimer = 0;
@@ -421,6 +438,11 @@ function updateDebugMode(): void {
           initSettingsUI('title');
           setGameMode('settings');
           break;
+        case 'sharkedex':
+          previousModeBeforeSharkedex = 'debug';
+          initSharkedexUI();
+          setGameMode('sharkedex');
+          break;
       }
     }
   }
@@ -434,10 +456,10 @@ function updateOverworldMode(deltaTime: number): void {
   const pressed = getJustPressed();
   const direction = getDirectionPressed();
 
-  // Start button opens party menu
+  // Start button opens start menu
   if (pressed.start) {
-    initPartyMenu();
-    setGameMode('party-menu');
+    initStartMenu();
+    setGameMode('start-menu');
     return;
   }
 
@@ -595,7 +617,8 @@ function updatePartyMenuMode(): void {
   if (input) {
     const result = handlePartyInput(input);
     if (result === 'close') {
-      setGameMode('overworld');
+      initStartMenu();
+      setGameMode('start-menu');
     }
   }
 }
@@ -660,7 +683,14 @@ function updateBattleBagMode(): void {
     const result = handleBagInput(input);
     if (result) {
       if (result.action === 'close') {
-        setGameMode('battle');
+        // Return to battle if in battle, otherwise to start menu
+        const battleState = getBattleState();
+        if (battleState) {
+          setGameMode('battle');
+        } else {
+          initStartMenu();
+          setGameMode('start-menu');
+        }
       } else if (result.action === 'use' && result.itemId !== undefined) {
         // Use the selected item in battle
         const battleState = getBattleState();
@@ -726,6 +756,75 @@ function updateTMMode(): void {
   }
 }
 
+function updateSharkedexMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'l' | 'r' | null = null;
+  if (direction) input = direction;
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+  else if (pressed.l) input = 'l';
+  else if (pressed.r) input = 'r';
+
+  if (input) {
+    const result = handleSharkedexInput(input);
+    if (result === 'close') {
+      if (previousModeBeforeSharkedex === 'start-menu') {
+        initStartMenu();
+      }
+      setGameMode(previousModeBeforeSharkedex);
+    }
+  }
+}
+
+function updateStartMenuMode(): void {
+  const pressed = getJustPressed();
+  const direction = getDirectionPressed();
+
+  let input: 'up' | 'down' | 'a' | 'b' | null = null;
+  if (direction === 'up') input = 'up';
+  else if (direction === 'down') input = 'down';
+  else if (pressed.a) input = 'a';
+  else if (pressed.b) input = 'b';
+
+  if (input) {
+    const result = handleStartMenuInput(input);
+    if (result === 'close') {
+      setGameMode('overworld');
+    } else if (result && result.action === 'select') {
+      switch (result.option) {
+        case 'PARTY':
+          initPartyMenu();
+          setGameMode('party-menu');
+          break;
+        case 'BAG':
+          initBagMenu();
+          setGameMode('battle-bag');
+          break;
+        case 'SHARKEDEX':
+          previousModeBeforeSharkedex = 'start-menu';
+          initSharkedexUI();
+          setGameMode('sharkedex');
+          break;
+        case 'SAVE':
+          // Save the game
+          if (saveGame()) {
+            startDialogue(['Game saved!']);
+          } else {
+            startDialogue(['Save failed!']);
+          }
+          setGameMode('dialogue');
+          break;
+        case 'OPTIONS':
+          initSettingsUI('start-menu');
+          setGameMode('settings');
+          break;
+      }
+    }
+  }
+}
+
 function render(): void {
   const mode = getGameMode();
 
@@ -756,6 +855,12 @@ function render(): void {
     renderShop();
   } else if (mode === 'tm') {
     renderTMUI();
+  } else if (mode === 'sharkedex') {
+    renderSharkedex();
+  } else if (mode === 'start-menu') {
+    // Render overworld behind start menu
+    renderOverworld();
+    renderStartMenu();
   } else if (mode === 'dialogue') {
     // Render overworld behind dialogue box
     renderOverworld();

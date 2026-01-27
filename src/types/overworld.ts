@@ -168,7 +168,7 @@ export interface OverworldState {
 }
 
 // Game mode
-export type GameMode = 'title' | 'settings' | 'debug' | 'overworld' | 'battle' | 'menu' | 'dialogue' | 'party-menu' | 'battle-party' | 'battle-bag' | 'starter-select' | 'pc' | 'shop' | 'tm';
+export type GameMode = 'title' | 'settings' | 'debug' | 'overworld' | 'battle' | 'menu' | 'dialogue' | 'party-menu' | 'battle-party' | 'battle-bag' | 'starter-select' | 'pc' | 'shop' | 'tm' | 'sharkedex' | 'start-menu';
 
 // Global game state
 export interface GameState {

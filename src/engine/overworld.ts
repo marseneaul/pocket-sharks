@@ -1,5 +1,5 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty } from './game-state.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected } from './game-state.ts';
 import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
 import { initNPCStates, updateNPCs } from './npc-movement.ts';
@@ -169,8 +169,21 @@ function doWarp(warp: Warp): void {
     player.isSwimming = shouldSwim(newTile);
 
     // Reset NPC states for new map (will be re-initialized on next update)
+    // Also restore defeated status from save data
     for (const npc of targetMap.npcs) {
       npc.state = undefined;
+      if (npc.trainer && isTrainerDefeated(npc.id)) {
+        npc.defeated = true;
+      }
+    }
+
+    // Restore collected egg status from save data
+    if (targetMap.groundEggs) {
+      for (const egg of targetMap.groundEggs) {
+        if (isEggCollected(egg.id)) {
+          egg.collected = true;
+        }
+      }
     }
   });
 }
