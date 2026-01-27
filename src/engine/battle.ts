@@ -35,6 +35,7 @@ import {
   getStageMultiplier,
   type StatStages
 } from './stat-stages.ts';
+import { selectAIMove, getWildAIDifficulty, getTrainerAIDifficulty } from './battle-ai.ts';
 
 /**
  * Create a new creature instance with optional IVs and nature
@@ -358,7 +359,8 @@ export function useBattleItem(state: BattleState, itemId: number): void {
       queueMessage(state, 'Oh no! It broke free!');
 
       // Enemy gets a turn after failed catch
-      const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
+      const difficulty = state.isWildBattle ? getWildAIDifficulty() : getTrainerAIDifficulty(getCurrentTrainer()?.trainer?.name);
+      const enemyMoveIndex = selectAIMove(state.enemyCreature, state.playerCreature, difficulty);
       state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
       executeMove(state, 'enemy');
 
@@ -380,7 +382,8 @@ export function useBattleItem(state: BattleState, itemId: number): void {
     queueMessage(state, `${name} recovered ${healed} HP!`);
 
     // Enemy gets a turn after using item
-    const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
+    const potionDifficulty = state.isWildBattle ? getWildAIDifficulty() : getTrainerAIDifficulty(getCurrentTrainer()?.trainer?.name);
+    const enemyMoveIndex = selectAIMove(state.enemyCreature, state.playerCreature, potionDifficulty);
     state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
     executeMove(state, 'enemy');
 
@@ -422,8 +425,9 @@ export function useBattleItem(state: BattleState, itemId: number): void {
     }
 
     // Enemy gets a turn after using item
-    const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
-    state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
+    const statusDifficulty = state.isWildBattle ? getWildAIDifficulty() : getTrainerAIDifficulty(getCurrentTrainer()?.trainer?.name);
+    const statusEnemyMoveIndex = selectAIMove(state.enemyCreature, state.playerCreature, statusDifficulty);
+    state.enemyAction = { type: 'fight', moveIndex: statusEnemyMoveIndex };
     executeMove(state, 'enemy');
 
     if (state.playerCreature.currentHp <= 0) {
@@ -474,9 +478,10 @@ function selectMove(state: BattleState): void {
   // Set player action
   state.playerAction = { type: 'fight', moveIndex: state.moveMenuIndex };
 
-  // Generate enemy action (random move for now)
-  const enemyMoveIndex = Math.floor(Math.random() * state.enemyCreature.moves.length);
-  state.enemyAction = { type: 'fight', moveIndex: enemyMoveIndex };
+  // Generate enemy action using AI
+  const aiDifficulty = state.isWildBattle ? getWildAIDifficulty() : getTrainerAIDifficulty(getCurrentTrainer()?.trainer?.name);
+  const aiMoveIndex = selectAIMove(state.enemyCreature, state.playerCreature, aiDifficulty);
+  state.enemyAction = { type: 'fight', moveIndex: aiMoveIndex };
 
   // Execute turn
   executeTurn(state);

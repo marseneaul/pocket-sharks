@@ -118,6 +118,7 @@ export interface EncounterEntry {
   requiredCert?: CertificationLevel;  // Only encounter if player has this cert
   method?: 'wading' | 'snorkel' | 'scuba' | 'fishing' | 'night' | 'submarine';  // How this species is encountered
   seasonal?: SeasonalConfig;  // Seasonal/monthly availability restrictions
+  minRodPower?: number;  // For fishing: minimum rod power needed (1=old, 2=good, 3=super)
 }
 
 // Re-export Season type for convenience
@@ -173,7 +174,7 @@ export interface OverworldState {
 }
 
 // Game mode
-export type GameMode = 'title' | 'settings' | 'debug' | 'overworld' | 'battle' | 'menu' | 'dialogue' | 'party-menu' | 'battle-party' | 'battle-bag' | 'starter-select' | 'pc' | 'shop' | 'tm' | 'sharkedex' | 'start-menu' | 'item-use-party' | 'item-message';
+export type GameMode = 'title' | 'settings' | 'debug' | 'overworld' | 'battle' | 'menu' | 'dialogue' | 'party-menu' | 'battle-party' | 'battle-bag' | 'starter-select' | 'pc' | 'shop' | 'tm' | 'sharkedex' | 'start-menu' | 'item-use-party' | 'item-message' | 'fishing';
 
 // Global game state
 export interface GameState {

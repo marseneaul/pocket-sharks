@@ -193,7 +193,12 @@ export const LA_JOLLA_SHORES: MapData = {
   encounterTable: [
     { speciesId: 44, minLevel: 2, maxLevel: 4, weight: 45 },  // Round Stingray (common)
     { speciesId: 52, minLevel: 2, maxLevel: 4, weight: 30 },  // Butterfly Ray
-    { speciesId: 45, minLevel: 3, maxLevel: 5, weight: 25 }   // Smoothhound
+    { speciesId: 45, minLevel: 3, maxLevel: 5, weight: 25 },  // Smoothhound
+    // Fishing encounters
+    { speciesId: 45, minLevel: 4, maxLevel: 7, weight: 50, method: 'fishing', minRodPower: 1 },  // Smoothhound (Old Rod)
+    { speciesId: 64, minLevel: 5, maxLevel: 8, weight: 30, method: 'fishing', minRodPower: 1 },  // Sharpnose Shark (Old Rod)
+    { speciesId: 38, minLevel: 8, maxLevel: 12, weight: 15, method: 'fishing', minRodPower: 2 }, // Blue Shark (Good Rod)
+    { speciesId: 35, minLevel: 10, maxLevel: 14, weight: 5, method: 'fishing', minRodPower: 3 }  // Mako Shark (Super Rod)
   ],
   // Collectible eggs found on the ground
   groundEggs: [

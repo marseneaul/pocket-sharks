@@ -197,6 +197,14 @@ export const SAN_DIEGO_BAY: MapData = {
       ]
     }
   ],
-  encounterTable: [], // No encounters in town (it's a harbor)
+  // No swimming encounters in town, but fishing is available from the docks
+  encounterTable: [
+    { speciesId: 45, minLevel: 5, maxLevel: 8, weight: 40, method: 'fishing', minRodPower: 1 },  // Smoothhound (Old Rod)
+    { speciesId: 64, minLevel: 6, maxLevel: 9, weight: 35, method: 'fishing', minRodPower: 1 },  // Sharpnose Shark (Old Rod)
+    { speciesId: 46, minLevel: 7, maxLevel: 10, weight: 20, method: 'fishing', minRodPower: 2 }, // Leopard Shark (Good Rod)
+    { speciesId: 38, minLevel: 10, maxLevel: 15, weight: 15, method: 'fishing', minRodPower: 2 }, // Blue Shark (Good Rod)
+    { speciesId: 35, minLevel: 12, maxLevel: 16, weight: 8, method: 'fishing', minRodPower: 3 },  // Mako Shark (Super Rod)
+    { speciesId: 68, minLevel: 14, maxLevel: 18, weight: 5, method: 'fishing', minRodPower: 3 }   // Thresher (Super Rod)
+  ],
   isOutdoor: true
 };

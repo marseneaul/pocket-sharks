@@ -1,5 +1,5 @@
 // Item types
-export type ItemType = 'cage' | 'potion' | 'status' | 'battle' | 'key' | 'tm';
+export type ItemType = 'cage' | 'potion' | 'status' | 'battle' | 'key' | 'tm' | 'rod';
 
 export interface Item {
   id: number;
@@ -13,6 +13,8 @@ export interface Item {
   healAmount?: number;
   // For TMs: the move ID this TM teaches
   tmMoveId?: number;
+  // For fishing rods: power level (1=old, 2=good, 3=super)
+  rodPower?: number;
 }
 
 export const ITEMS: Record<number, Item> = {
@@ -206,6 +208,32 @@ export const ITEMS: Record<number, Item> = {
     description: 'Teaches ICE FANG. Bites with freezing fangs.',
     price: 5000, // Kelp Harbor shop
     tmMoveId: 111  // Ice Fang
+  },
+
+  // Fishing Rods (key items - not consumed)
+  60: {
+    id: 60,
+    name: 'OLD ROD',
+    type: 'rod',
+    description: 'An old fishing rod. Can catch common sharks from the shore.',
+    price: 0,  // Given by NPC
+    rodPower: 1  // Basic rod - only common fishing encounters
+  },
+  61: {
+    id: 61,
+    name: 'GOOD ROD',
+    type: 'rod',
+    description: 'A decent rod. Can catch uncommon sharks from piers and boats.',
+    price: 0,  // Given by NPC
+    rodPower: 2  // Better rod - uncommon fishing encounters
+  },
+  62: {
+    id: 62,
+    name: 'SUPER ROD',
+    type: 'rod',
+    description: 'A high-quality rod. Can catch rare pelagic sharks in deep water.',
+    price: 0,  // Given by NPC
+    rodPower: 3  // Best rod - rare fishing encounters
   }
 };
 

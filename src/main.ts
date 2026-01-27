@@ -14,6 +14,7 @@ import { renderStartMenu, handleStartMenuInput, initStartMenu } from './renderer
 import { renderTitleScreen, handleTitleInput, initTitleScreen } from './renderer/title-ui.ts';
 import { renderSettings, handleSettingsInput, initSettingsUI, getPreviousMode } from './renderer/settings-ui.ts';
 import { renderDebug, handleDebugInput, initDebugUI } from './renderer/debug-ui.ts';
+import { renderFishing, initFishing, updateFishing, handleFishingInput } from './renderer/fishing-ui.ts';
 import { getItem } from './data/items.ts';
 import { getShop } from './data/shops.ts';
 import { advanceTypewriter, isTypewriterComplete, drawText } from './renderer/text.ts';
@@ -44,8 +45,10 @@ import {
   getCurrentMap,
   resetForNewGame,
   useItemOnCreature,
-  useRepelItem
+  useRepelItem,
+  getPlayerCertifications
 } from './engine/game-state.ts';
+import { generateFishingEncounter } from './data/encounters.ts';
 import { getCreature } from './data/creatures.ts';
 import { isCreature } from './types/index.ts';
 import { createCreatureInstance } from './engine/battle.ts';
@@ -306,6 +309,8 @@ function update(deltaTime: number): void {
     updateItemUsePartyMode();
   } else if (mode === 'item-message') {
     updateItemMessageMode();
+  } else if (mode === 'fishing') {
+    updateFishingMode(deltaTime);
   }
 }
 
@@ -377,6 +382,10 @@ let previousModeBeforeSharkedex: ReturnType<typeof getGameMode> = 'overworld';
 // Overworld item usage state
 let pendingOverworldItem: number | null = null;
 let overworldItemMessage: string | null = null;
+
+// Fishing state
+import type { CreatureInstance } from './types/index.ts';
+let pendingFishingCreature: CreatureInstance | null = null;
 
 // Debug mode key repeat state
 let debugKeyRepeatTimer = 0;
@@ -507,6 +516,20 @@ function updateOverworldMode(deltaTime: number): void {
       startDialogue(result.dialogue);
       pendingTrainerNpcId = result.npcId;
       setGameMode('dialogue');
+    } else if (result.type === 'fishing') {
+      // Start fishing mini-game
+      const map = getCurrentMap();
+      const certs = getPlayerCertifications();
+      const creature = generateFishingEncounter(map.encounterTable, result.rodPower, certs);
+      if (creature) {
+        pendingFishingCreature = creature;
+        initFishing();
+        setGameMode('fishing');
+      } else {
+        // No fishing encounters available - shouldn't happen but handle gracefully
+        startDialogue(['Nothing seems to be biting here...']);
+        setGameMode('dialogue');
+      }
     }
   }
 }
@@ -943,6 +966,26 @@ function renderItemMessage(): void {
   drawText(overworldItemMessage, 8, SCREEN_HEIGHT - 34, 0);
 }
 
+function updateFishingMode(deltaTime: number): void {
+  const pressed = getJustPressed();
+
+  // Update fishing mini-game
+  updateFishing(deltaTime);
+
+  // Handle input
+  const result = handleFishingInput(pressed.a, pressed.b);
+
+  if (result === 'battle' && pendingFishingCreature) {
+    // Start battle with the fishing creature
+    startWildBattle(pendingFishingCreature);
+    pendingFishingCreature = null;
+  } else if (result === 'close') {
+    // Return to overworld
+    pendingFishingCreature = null;
+    setGameMode('overworld');
+  }
+}
+
 function render(): void {
   const mode = getGameMode();
 
@@ -991,6 +1034,10 @@ function render(): void {
     renderOverworld();
     // Simple message box rendering
     renderItemMessage();
+  } else if (mode === 'fishing') {
+    // Render overworld behind fishing UI
+    renderOverworld();
+    renderFishing();
   }
 
   // Draw screen transition overlay

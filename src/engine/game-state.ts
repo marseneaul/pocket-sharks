@@ -52,7 +52,8 @@ export function initGameState(): void {
   playerMoney = 500;
   playerInventory = [
     { itemId: 1, quantity: 5 },  // Start with 5 Shark Cages
-    { itemId: 10, quantity: 3 }  // Start with 3 Potions
+    { itemId: 10, quantity: 3 }, // Start with 3 Potions
+    { itemId: 60, quantity: 1 }  // Start with Old Rod (for testing fishing)
   ];
   defeatedTrainers.clear();
   collectedEggs.clear();
@@ -94,7 +95,8 @@ export function resetForNewGame(startingMapId: string = 'scripps-lab'): void {
   playerMoney = 500;
   playerInventory = [
     { itemId: 1, quantity: 5 },  // Start with 5 Shark Cages
-    { itemId: 10, quantity: 3 }  // Start with 3 Potions
+    { itemId: 10, quantity: 3 }, // Start with 3 Potions
+    { itemId: 60, quantity: 1 }  // Start with Old Rod (for testing fishing)
   ];
   defeatedTrainers.clear();
   collectedEggs.clear();
@@ -440,6 +442,30 @@ export function removeItem(itemId: number, quantity: number = 1): boolean {
     playerInventory.splice(index, 1);
   }
   return true;
+}
+
+// Fishing Rod Management
+const ROD_IDS = [60, 61, 62];  // Old Rod, Good Rod, Super Rod
+
+export function getBestRod(): { itemId: number; rodPower: number } | null {
+  // Check from best to worst
+  for (let i = ROD_IDS.length - 1; i >= 0; i--) {
+    const rodId = ROD_IDS[i];
+    if (getItemCount(rodId) > 0) {
+      const item = getItem(rodId);
+      return { itemId: rodId, rodPower: item?.rodPower || 1 };
+    }
+  }
+  return null;
+}
+
+export function hasAnyRod(): boolean {
+  return ROD_IDS.some(id => getItemCount(id) > 0);
+}
+
+export function getRodPower(itemId: number): number {
+  const item = getItem(itemId);
+  return item?.rodPower || 0;
 }
 
 // Party management

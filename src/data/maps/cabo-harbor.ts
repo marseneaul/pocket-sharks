@@ -187,6 +187,14 @@ export const CABO_HARBOR: MapData = {
       ]
     }
   ],
-  encounterTable: [], // No wild encounters in harbor
+  // No swimming encounters in harbor, but fishing is available
+  encounterTable: [
+    { speciesId: 64, minLevel: 15, maxLevel: 18, weight: 35, method: 'fishing', minRodPower: 1 },   // Sharpnose Shark (Old Rod)
+    { speciesId: 63, minLevel: 16, maxLevel: 19, weight: 30, method: 'fishing', minRodPower: 1 },   // Nurse Shark (Old Rod)
+    { speciesId: 38, minLevel: 18, maxLevel: 22, weight: 20, method: 'fishing', minRodPower: 2 },   // Blue Shark (Good Rod)
+    { speciesId: 35, minLevel: 20, maxLevel: 25, weight: 10, method: 'fishing', minRodPower: 2 },   // Mako Shark (Good Rod)
+    { speciesId: 68, minLevel: 22, maxLevel: 28, weight: 10, method: 'fishing', minRodPower: 3 },   // Thresher (Super Rod)
+    { speciesId: 10, minLevel: 25, maxLevel: 30, weight: 5, method: 'fishing', minRodPower: 3 }     // Hammerhead (Super Rod)
+  ],
   isOutdoor: true
 };

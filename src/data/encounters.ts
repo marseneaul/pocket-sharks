@@ -78,3 +78,70 @@ export function tryEncounter(
   if (!checkEncounter(encounterRate)) return null;
   return generateWildCreature(map.encounterTable, playerCerts);
 }
+
+// Generate a fishing encounter based on rod power
+export function generateFishingEncounter(
+  encounterTable: EncounterEntry[],
+  rodPower: number,
+  playerCerts: CertificationLevel[] = ['wading']
+): CreatureInstance | null {
+  // Filter encounters to only fishing method AND matching rod power
+  const fishingEncounters = encounterTable.filter(entry => {
+    // Must be a fishing encounter
+    if (entry.method !== 'fishing') return false;
+
+    // Check rod power requirement (default to 1 if not specified)
+    const requiredRod = entry.minRodPower || 1;
+    if (rodPower < requiredRod) return false;
+
+    // Check certification
+    if (!hasRequiredCert(playerCerts, entry.requiredCert)) return false;
+
+    // Check seasonal availability
+    if (!isAvailableThisSeason(entry.seasonal)) return false;
+
+    return true;
+  });
+
+  if (fishingEncounters.length === 0) return null;
+
+  // Calculate total weight
+  const totalWeight = fishingEncounters.reduce((sum, entry) => sum + entry.weight, 0);
+
+  // Roll for which species
+  let roll = Math.random() * totalWeight;
+  let selectedEntry: EncounterEntry | null = null;
+
+  for (const entry of fishingEncounters) {
+    roll -= entry.weight;
+    if (roll <= 0) {
+      selectedEntry = entry;
+      break;
+    }
+  }
+
+  if (!selectedEntry) {
+    selectedEntry = fishingEncounters[0];
+  }
+
+  // Get species
+  const species = getCreature(selectedEntry.speciesId);
+  if (!species) return null;
+
+  // Random level within range
+  const level = selectedEntry.minLevel +
+    Math.floor(Math.random() * (selectedEntry.maxLevel - selectedEntry.minLevel + 1));
+
+  return createCreatureInstance(species, level);
+}
+
+// Check if a map has any fishing encounters for the given rod
+export function hasFishingEncounters(
+  encounterTable: EncounterEntry[],
+  rodPower: number
+): boolean {
+  return encounterTable.some(entry =>
+    entry.method === 'fishing' &&
+    (entry.minRodPower || 1) <= rodPower
+  );
+}

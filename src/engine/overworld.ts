@@ -1,5 +1,6 @@
 import type { Direction, MapData, PlayerState, Warp } from '../types/overworld.ts';
-import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected, decrementRepel, repelBlocksEncounter } from './game-state.ts';
+import { getPlayer, getCurrentMap, setCurrentMap, getMap, healParty, startWildBattle, startTrainerBattle, startTransition, getPlayerCertifications, hasCertification, incrementStepCount, getGroundEggAt, collectGroundEgg, hasBattleableCreature, canAddToParty, isTrainerDefeated, isEggCollected, decrementRepel, repelBlocksEncounter, getBestRod } from './game-state.ts';
+import { hasFishingEncounters } from '../data/encounters.ts';
 import { getTileDef, canWalkOn, shouldSwim, getBlockedMessage } from '../data/tiles.ts';
 import { tryEncounter } from '../data/encounters.ts';
 import { initNPCStates, updateNPCs } from './npc-movement.ts';
@@ -291,6 +292,7 @@ export type NPCInteractionResult =
   | { type: 'shop'; shopId: string }
   | { type: 'dialogue'; lines: string[]; speakerName?: string }
   | { type: 'trainer'; npcId: string; dialogue: string[] }
+  | { type: 'fishing'; rodPower: number }
   | null;
 
 export function handleOverworldInput(direction: Direction | null, confirm: boolean, _cancel: boolean): NPCInteractionResult {
@@ -357,6 +359,24 @@ function interactWithFacing(): NPCInteractionResult {
     } else if (npc.dialogue) {
       // Regular NPC dialogue
       return { type: 'dialogue', lines: npc.dialogue };
+    }
+
+    return null;
+  }
+
+  // No NPC - check if facing water and can fish
+  // Must be standing on land, facing water
+  if (!player.isSwimming) {
+    const targetTile = map.tiles[targetY]?.[targetX];
+    if (targetTile !== undefined && shouldSwim(targetTile)) {
+      // Facing water - check if player has a rod and can battle
+      const rod = getBestRod();
+      if (rod && hasBattleableCreature()) {
+        // Check if this map has fishing encounters for this rod
+        if (hasFishingEncounters(map.encounterTable, rod.rodPower)) {
+          return { type: 'fishing', rodPower: rod.rodPower };
+        }
+      }
     }
   }
 
