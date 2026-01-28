@@ -121,6 +121,7 @@ import { FINNER_HQ } from './data/maps/finner-hq.ts';
 import { TEST_BEACH } from './data/maps/test-beach.ts';
 import { TEXT_SPEED } from './constants.ts';
 import { initTileAtlas } from './renderer/tile-atlas.ts';
+import { loadPlayerSpriteSheet } from './renderer/tileset.ts';
 
 let lastTime = 0;
 let typewriterTimer = 0;
@@ -139,6 +140,11 @@ function init(): void {
     console.log('Tile atlas ready');
   }).catch(err => {
     console.warn('Failed to load tile atlas, using procedural tiles:', err);
+  });
+
+  // Load player sprite sheet (async, falls back to procedural if unavailable)
+  loadPlayerSpriteSheet().then(() => {
+    console.log('Player sprite sheet loaded');
   });
 
   // Initialize game state

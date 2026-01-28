@@ -5,6 +5,79 @@ import { drawAtlasTile, isAtlasReady, ATLAS_TILE_SIZE } from './tile-atlas.ts';
 
 const TILE_SIZE = 8;
 
+// Player sprite sheet loading
+let playerSpriteSheet: HTMLImageElement | null = null;
+let playerSpriteSheetLoaded = false;
+
+// Load the player sprite sheet
+export function loadPlayerSpriteSheet(): Promise<void> {
+  return new Promise((resolve) => {
+    if (playerSpriteSheetLoaded) {
+      resolve();
+      return;
+    }
+
+    playerSpriteSheet = new Image();
+    playerSpriteSheet.onload = () => {
+      playerSpriteSheetLoaded = true;
+      resolve();
+    };
+    playerSpriteSheet.onerror = () => {
+      console.warn('Failed to load player sprite sheet, falling back to procedural sprites');
+      resolve(); // Don't reject - fall back to procedural
+    };
+    playerSpriteSheet.src = '/assets/main-character-submerged-head.png';
+  });
+}
+
+// Sprite sheet layout (160x32, 16x16 frames):
+// Row 0: down_idle(0), down_walk1(1), down_idle2(2), up_idle(3), up_walk1(4), up_idle2(5), left_idle(6), left_walk1(7), right_walk1(8), right_idle(9)
+// Row 1: empty(0), down_walk2(1), empty(2-3), up_walk2(4), empty(5-6), left_walk2(7), right_walk2(8), empty(9)
+const SPRITE_FRAME_SIZE = 16;
+
+// Explicit frame positions: [column, row] for each direction + frame
+const SPRITE_POSITIONS: Record<string, [number, number]> = {
+  // Down: idle at col 1, walk1 at col 0, walk2 at row 1 col 1
+  'down_0': [1, 0],
+  'down_1': [0, 0],
+  'down_2': [1, 1],
+  // Up: idle at col 4, walk1 at col 3, walk2 at row 1 col 4
+  'up_0': [4, 0],
+  'up_1': [3, 0],
+  'up_2': [4, 1],
+  // Left: idle at col 7, walk1 at col 6, walk2 at row 1 col 7
+  'left_0': [7, 0],
+  'left_1': [6, 0],
+  'left_2': [7, 1],
+  // Right: idle at col 8, walk1 at col 9, walk2 at row 1 col 8
+  'right_0': [8, 0],
+  'right_1': [9, 0],
+  'right_2': [8, 1],
+  // Swimming (Row 3) - submerged head only, one frame per direction
+  'swim_down_0': [0, 3],
+  'swim_down_1': [0, 3],
+  'swim_down_2': [0, 3],
+  'swim_up_0': [1, 3],
+  'swim_up_1': [1, 3],
+  'swim_up_2': [1, 3],
+  'swim_left_0': [2, 3],
+  'swim_left_1': [2, 3],
+  'swim_left_2': [2, 3],
+  'swim_right_0': [3, 3],
+  'swim_right_1': [3, 3],
+  'swim_right_2': [3, 3],
+};
+
+function getPlayerSpriteSheetPosition(direction: string, frame: number, swimming: boolean): { sx: number; sy: number } {
+  const f = Math.min(frame, 2);
+  const key = swimming ? `swim_${direction}_${f}` : `${direction}_${f}`;
+  const pos = SPRITE_POSITIONS[key] || SPRITE_POSITIONS['down_0'];
+  return {
+    sx: pos[0] * SPRITE_FRAME_SIZE,
+    sy: pos[1] * SPRITE_FRAME_SIZE
+  };
+}
+
 // Flag to enable/disable atlas rendering (can be toggled for debugging)
 let useAtlas = false;  // Disabled - using procedural tiles while maps are being designed
 
@@ -917,6 +990,19 @@ export function getPlayerSprite(direction: string, frame: number, swimming: bool
 
 export function drawPlayer(x: number, y: number, direction: string, frame: number, swimming: boolean): void {
   const ctx = getContext();
+
+  // Try to use sprite sheet first
+  if (playerSpriteSheetLoaded && playerSpriteSheet) {
+    const { sx, sy } = getPlayerSpriteSheetPosition(direction, frame, swimming);
+    ctx.drawImage(
+      playerSpriteSheet,
+      sx, sy, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE,
+      Math.floor(x), Math.floor(y), SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE
+    );
+    return;
+  }
+
+  // Fall back to procedural sprites
   const sprite = getPlayerSprite(direction, frame, swimming);
   const colors = [null, DMG_PALETTE.BLACK, DMG_PALETTE.DARK, DMG_PALETTE.LIGHT, DMG_PALETTE.WHITE];
 
